@@ -1,0 +1,31 @@
+{
+  "name": "@zargu/couchdb-designer",
+  "version": "1.0.0",
+  "description": "Create couchdb design document from directory structure.",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarolyRobert/couchdb-designer.git"
+  },
+  "keywords": [
+    "couchdb",
+    "design-documents"
+  ],
+  "author": "RoGeR",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KarolyRobert/couchdb-designer/issues"
+  },
+  "homepage": "https://github.com/KarolyRobert/couchdb-designer#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.15.4",
+    "@babel/core": "^7.15.5",
+    "@babel/node": "^7.15.4",
+    "@babel/preset-env": "^7.15.6",
+    "babel-jest": "^27.1.1",
+    "jest": "^27.1.1"
+  }
+}
