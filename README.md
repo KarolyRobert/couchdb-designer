@@ -1,5 +1,11 @@
 # couchdb-designer
 
+With this package you can easily manage your couchdb design documents by storing them in directory structure and create javascript object from them. Chouchdb-designer provide two functions for that purpose: The first "designer" wait for a path of root directory of multiple design documents and gives back the array of design document objects. The second "createDesignDocument" do the same but only with one design document. 
+
+>### Warnings
+>This package doesn't check if the directory structure matching to the rules of couchdb design document syntax, although able to generate any of type of them. For proper use you need to know this rules.
+
+It is work the way. if a directory... becomes to object type field and a file becomes to string field except if it a json file then becomes field contain the json file content.
 
 ```bash
 
