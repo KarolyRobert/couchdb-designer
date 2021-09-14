@@ -4,7 +4,8 @@
   "description": "Create couchdb design document from directory structure.",
   "main": "build/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "babel src -d build"
   },
   "repository": {
     "type": "git",

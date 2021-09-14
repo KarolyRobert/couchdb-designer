@@ -1,0 +1,95 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`designer_edge success edge test 1`] = `
+Array [
+  Object {
+    "_id": "_design/appdesign",
+    "language": "javascript",
+    "lib": Object {
+      "couchdb": Object {
+        "lib": "exports.libfunction = function (){
+   // https://docs.couchdb.org/en/stable/query-server/javascript.html?highlight=commonJS%20modules#commonjs-modules
+}",
+      },
+    },
+    "options": Object {
+      "partitioned": true,
+    },
+    "validate_doc_update": "function(newDoc, oldDoc, userCtx, secObj) {
+    if (newDoc._deleted === true) {
+        // allow deletes by admins and matching users
+        // without checking the other fields
+        if ((userCtx.roles.indexOf('_admin') !== -1) ||
+            (userCtx.name == oldDoc.name)) {
+            return;
+        } else {
+            throw({forbidden: 'Only admins may delete other user docs.'});
+        }
+    }
+}",
+    "views": Object {
+      "byDate": Object {
+        "map": "function (doc) {
+  if (doc.type === 'post' && doc.tags && Array.isArray(doc.tags)) {
+    doc.tags.forEach(function (tag) {
+      emit(tag.toLowerCase(), 1);
+    });
+  }
+}",
+        "reducer": "function(keys, values, rereduce) {
+    if (rereduce) {
+        return sum(values);
+    } else {
+        return values.length;
+    }
+}",
+      },
+      "byName": Object {
+        "map": "function(doc){
+    if(doc.name){
+        emit(doc.name,1);
+    }
+}",
+      },
+    },
+  },
+  Object {
+    "_id": "_design/querys",
+    "language": "query",
+    "views": Object {
+      "bar-index": Object {
+        "map": Object {
+          "fields": Object {
+            "bar": "asc",
+          },
+          "partial_filter_selector": Object {},
+        },
+        "options": Object {
+          "def": Object {
+            "fields": Array [
+              "bar",
+            ],
+          },
+        },
+        "reduce": "_count",
+      },
+      "foo-index": Object {
+        "map": Object {
+          "fields": Object {
+            "foo": "asc",
+          },
+          "partial_filter_selector": Object {},
+        },
+        "options": Object {
+          "def": Object {
+            "fields": Array [
+              "foo",
+            ],
+          },
+        },
+        "reduce": "_sum",
+      },
+    },
+  },
+]
+`;

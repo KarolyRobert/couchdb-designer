@@ -1,0 +1,16 @@
+{
+    "map": {
+      "fields": {
+        "bar": "asc"
+      },
+      "partial_filter_selector": {}
+    },
+    "reduce": "_count",
+    "options": {
+      "def": {
+        "fields": [
+          "bar"
+        ]
+      }
+    }
+  }

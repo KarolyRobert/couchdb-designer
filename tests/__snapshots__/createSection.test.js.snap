@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createSection success on directory 1`] = `
+Object {
+  "shows": Object {
+    "egy": "content of design/root/shows/egy.js",
+    "kettő": "content of design/root/shows/kettő.js",
+  },
+}
+`;
