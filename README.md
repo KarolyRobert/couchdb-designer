@@ -6,12 +6,12 @@ With this package you can easily manage your couchdb design documents by storing
 >This package doesn't check if the directory structure matching to the rules of couchdb design document syntax, although able to generate any of type of them. For proper use you need to know this rules.
 
 It is work the way. if a directory then becomes to object type field and a file becomes to string or object field depend on rules belove:
-- If the file is json file then becomes field contain the json file content.
-- If the file is js file like **name.lib.js** then becomes to String field by the name containing the js file content.
-- If the file is a js file contain a function or functions for example view map function and reduce function then additional rules apply.
- - These functions must be named. (This is a benefit because the syntax check doesn't indicated as wrong.)
- - The functions must be exported with **module.exports = { functionName, otherFunction }**
- - If the file conatin only one function with the same name as file itself then becomes to String field containing the proper function implementation. Otherwise if it contain more then one function or different named function then becomes to object type field with the proper content.
+1. If the file is json file then becomes field contain the json file content.
+2. If the file is js file like **name.lib.js** then becomes to String field by the name containing the js file content.
+3. If the file is a js file contain a function or functions for example view map function and reduce function then additional rules apply.
+     - These functions must be named. (This is a benefit because the syntax check doesn't indicated as wrong.)
+     - The functions must be exported with **module.exports = { functionName, otherFunction }**
+     - If the file conatin only one function with the same name as file itself then becomes to String field containing the proper function implementation. Otherwise if it contain more then one function or different named function then becomes to object type field with the proper content.
 
 Example directory structure for two design documents;
 
