@@ -1,6 +1,8 @@
 import createSection from '../src/createSection';
 import fs from 'fs/promises';
+import loadModule from '../src/loadModule';
 
+jest.mock('../src/loadModule');
 jest.mock('fs/promises');
 
 
@@ -13,11 +15,11 @@ jest.mock('fs/promises');
 
     test('success on file',() => {
         fs.stat.mockResolvedValue({isFile:() => true,isDirectory:() => false});
-        fs.readFile.mockResolvedValue('content of regular file');
+        loadModule.mockResolvedValue({
+            validate_doc_update:function validate_doc_update(doc,req){}
+        });
         return createSection('./root','validate_doc_update.js').then(result => {
-            expect(result).toStrictEqual({validate_doc_update:'content of regular file'});
-            expect(fs.readFile.mock.calls.length).toBe(1);
-            expect(fs.readFile.mock.calls[0][0]).toBe('root/validate_doc_update.js');
+            expect(result).toStrictEqual({validate_doc_update:'function (doc, req) {}'});
         });
     });
 
@@ -26,10 +28,10 @@ jest.mock('fs/promises');
         fs.stat.mockResolvedValueOnce({isFile:() => false,isDirectory:() => true});
         fs.stat.mockResolvedValue({isFile:() => true,isDirectory:() => false});
         fs.readdir.mockResolvedValue(['egy.js','kettő.js']);
-        fs.readFile.mockImplementation(name => Promise.resolve(`content of ${name}`));
+        loadModule.mockResolvedValueOnce({egy:function egy(){}});
+        loadModule.mockResolvedValueOnce({kettő:function map(doc){ emit(doc._id,1)}});
         return createSection('design/root','shows').then(result => {
             expect(result).toMatchSnapshot();
-            expect(fs.readFile.mock.calls.length).toBe(2);
         });
     });
 
@@ -48,4 +50,5 @@ jest.mock('fs/promises');
             expect(fs.readFile).not.toHaveBeenCalled();
         });
     });
+
 });

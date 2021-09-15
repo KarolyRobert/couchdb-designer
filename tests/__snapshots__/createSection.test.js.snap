@@ -3,8 +3,12 @@
 exports[`createSection success on directory 1`] = `
 Object {
   "shows": Object {
-    "egy": "content of design/root/shows/egy.js",
-    "kettő": "content of design/root/shows/kettő.js",
+    "egy": "function () {}",
+    "kettő": Object {
+      "map": "function (doc) {
+        emit(doc._id, 1);
+      }",
+    },
   },
 }
 `;

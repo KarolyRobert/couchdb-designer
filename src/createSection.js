@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import createSectionFromFile from './createSectionFromFile';
 import createSectionFromDirectory from './createSectionFromDirectory';
 
+
 const createSection = (directory, name ) => {
     return new Promise((resolve, reject) => {
         let sectionPath = path.join(directory,name);

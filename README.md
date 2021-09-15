@@ -5,7 +5,13 @@ With this package you can easily manage your couchdb design documents by storing
 >### Warnings
 >This package doesn't check if the directory structure matching to the rules of couchdb design document syntax, although able to generate any of type of them. For proper use you need to know this rules.
 
-It is work the way. if a directory... becomes to object type field and a file becomes to string field except if it a json file then becomes field contain the json file content.
+It is work the way. if a directory then becomes to object type field and a file becomes to string or object field depend on rules belove:
+- If the file is json file then becomes field contain the json file content.
+- If the file is js file like **name.lib.js** then becomes to String field by the name containing the js file content.
+- If the file is a js file contain a function or functions for example view map function and reduce function then additional rules apply.
+ - These functions must be named. (This is a benefit because the syntax check doesn't indicated as wrong.)
+ - The functions must be exported with **module.exports = { functionName, otherFunction }**
+ - If the file conatin only one function with the same name as file itself then becomes to String field containing the proper function implementation. Otherwise if it contain more then one function or different named function then becomes to object type field with the proper content.
 
 Example directory structure for two design documents;
 
@@ -14,18 +20,19 @@ Example directory structure for two design documents;
 design
 ├── appdesign
 │   ├── lib
-│   │   └── couchdb
-│   │       └── lib.js
+│   │   └── couchdb.lib.js
+│   │    
 │   ├── options.json
-│   ├── validate_doc_update.djs
+│   ├── validate_doc_update.js
 │   └── views
 │       ├── byDate
-│       │   ├── map.djs
-│       │   └── reducer.djs
-│       └── byName
-│           └── map.djs
+│       │   ├── map.js
+│       │   └── reducer.js
+│       ├── byName
+│       │   └── map.js
+│       └── pyParent.js
 └── querys
-    ├── language
+    ├── language.txt
     └── views
         ├── bar-index.json
         └── foo-index
@@ -57,16 +64,5 @@ Create single design document.
 ```javascript
 
 createDesignDocument('./design/appdesign').then(document => {
-    /*  document here
-    {
-        _id: '_design/appdesign',
-        language: 'javascript',
-        lib: {
-        couchdb: {
-            lib: 'exports.libfunction = function (){\n'// https://docs.couchdb.org/en/stable/query-server javascript.html?highlight=commonJS%20modules#commonjs-modules\n}'
-        }
-    },
-    options: { partitioned: true },
-    validate_doc_update: 'function(newDoc, oldDoc, userCtx, secObj) {\n ... 
-    */
+    // documents here: {_id:'_design/appdesign',lib:{couchdb:{...}} ...}
 },err => console.log(err));

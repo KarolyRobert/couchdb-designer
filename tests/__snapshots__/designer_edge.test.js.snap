@@ -6,26 +6,25 @@ Array [
     "_id": "_design/appdesign",
     "language": "javascript",
     "lib": Object {
-      "couchdb": Object {
-        "lib": "exports.libfunction = function (){
+      "couchdb": "module.exports.libfunction = function (){
    // https://docs.couchdb.org/en/stable/query-server/javascript.html?highlight=commonJS%20modules#commonjs-modules
 }",
-      },
     },
     "options": Object {
       "partitioned": true,
     },
-    "validate_doc_update": "function(newDoc, oldDoc, userCtx, secObj) {
-    if (newDoc._deleted === true) {
-        // allow deletes by admins and matching users
-        // without checking the other fields
-        if ((userCtx.roles.indexOf('_admin') !== -1) ||
-            (userCtx.name == oldDoc.name)) {
-            return;
-        } else {
-            throw({forbidden: 'Only admins may delete other user docs.'});
-        }
+    "validate_doc_update": "function (newDoc, oldDoc, userCtx, secObj) {
+  if (newDoc._deleted === true) {
+    // allow deletes by admins and matching users
+    // without checking the other fields
+    if (userCtx.roles.indexOf('_admin') !== -1 || userCtx.name == oldDoc.name) {
+      return;
+    } else {
+      throw {
+        forbidden: 'Only admins may delete other user docs.'
+      };
     }
+  }
 }",
     "views": Object {
       "byDate": Object {
@@ -36,19 +35,35 @@ Array [
     });
   }
 }",
-        "reducer": "function(keys, values, rereduce) {
-    if (rereduce) {
-        return sum(values);
-    } else {
-        return values.length;
-    }
+        "reduce": "function (keys, values, rereduce) {
+  if (rereduce) {
+    return sum(values);
+  } else {
+    return values.length;
+  }
 }",
       },
       "byName": Object {
-        "map": "function(doc){
-    if(doc.name){
-        emit(doc.name,1);
-    }
+        "map": "function (doc) {
+  if (doc.name) {
+    emit(doc.name, 1);
+  }
+}",
+      },
+      "byParent": Object {
+        "map": "function (doc) {
+  const myfuncts = function () {
+    console.log('Helo');
+  };
+
+  if (doc.parent) {
+    myfuncts();
+  }
+}",
+        "reduce": "function (keys, values, rereduce) {
+  if (doc.parent) {
+    emit();
+  }
 }",
       },
     },

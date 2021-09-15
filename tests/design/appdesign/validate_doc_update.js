@@ -1,4 +1,4 @@
-function(newDoc, oldDoc, userCtx, secObj) {
+function validate_doc_update(newDoc, oldDoc, userCtx, secObj) {
     if (newDoc._deleted === true) {
         // allow deletes by admins and matching users
         // without checking the other fields
@@ -10,3 +10,5 @@ function(newDoc, oldDoc, userCtx, secObj) {
         }
     }
 }
+
+module.exports = { validate_doc_update };
