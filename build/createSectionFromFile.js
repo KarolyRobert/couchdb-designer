@@ -16,28 +16,29 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const extractFileStats = (directory, fileName) => {
   let fileParts = fileName.split('.');
   let isJSON = fileParts[fileParts.length - 1].toLowerCase() === 'json';
+  let isJavaScript = fileParts[fileParts.length - 1].toLowerCase() === 'js';
   let isLib = false;
   let name = fileParts[0];
 
   let filePath = _path.default.join(directory, fileName);
 
-  if (!isJSON && fileParts.length === 3) isLib = false;
+  if (!isJSON && fileParts.length === 3) isLib = true;
   return {
     isJSON,
     isLib,
     name,
-    filePath
+    filePath,
+    isJavaScript
   };
 };
 
 const nameRegexp = /^function\s{1,}(\S{1,})\s{0,}\(/;
 
 const createSectionFromFile = (directory, fileName) => {
-  console.log('createSectionFromFile');
   return new Promise((resolve, reject) => {
     let fileStats = extractFileStats(directory, fileName);
 
-    if (fileStats.isJSON || fileStats.isLib) {
+    if (!fileStats.isJavaScript || fileStats.isLib) {
       _promises.default.readFile(fileStats.filePath, {
         encoding: 'utf8'
       }).then(content => {
@@ -57,47 +58,33 @@ const createSectionFromFile = (directory, fileName) => {
         }
       }, err => reject(`Bad structure! ${fileStats.filePath} must be regular file! ${err.message}`));
     } else {
-      try {
-        console.log('Itt még futok');
-        (0, _loadModule.default)(directory, fileStats.name).then(designModule => {
-          console.log('Itt még futok', designModule);
-          let moduleFunctions = Object.keys(designModule).map(funcName => {
-            let functionString = designModule[funcName].toString();
-            let functionName = nameRegexp.exec(functionString)[1];
-            let designFunction = functionString.replace(nameRegexp, 'function (');
-            return {
-              functionName,
-              designFunction
-            };
-          });
-
-          if (moduleFunctions.length === 1 && moduleFunctions[0].functionName === fileStats.name) {
-            resolve({
-              [fileStats.name]: moduleFunctions[0].designFunction
-            });
-          } else {
-            let moduleFunctionsObject = {};
-            moduleFunctions.forEach(moduleFunction => {
-              moduleFunctionsObject = Object.assign(moduleFunctionsObject, {
-                [moduleFunction.functionName]: moduleFunction.designFunction
-              });
-            });
-            resolve({
-              [fileStats.name]: moduleFunctionsObject
-            });
-          }
+      (0, _loadModule.default)(directory, fileStats.name).then(designModule => {
+        let moduleFunctions = Object.keys(designModule).map(funcName => {
+          let functionString = designModule[funcName].toString();
+          let functionName = nameRegexp.exec(functionString)[1];
+          let designFunction = functionString.replace(nameRegexp, 'function (');
+          return {
+            functionName,
+            designFunction
+          };
         });
-      } catch (err) {
-        err => reject(`Bad structure! ${fileStats.filePath} must be regular file! ${err.message}`);
-      }
-      /*
-       fs.readFile(fileStats.filePath,{encoding:'utf8'}).then(content => {
-         
-               resolve({[fileStats.name]:content.trim()});
-       
-       },err => reject(`Bad structure! ${fileStats.filePath} must be regular file! ${err.message}`));
-       */
 
+        if (moduleFunctions.length === 1 && moduleFunctions[0].functionName === fileStats.name) {
+          resolve({
+            [fileStats.name]: moduleFunctions[0].designFunction
+          });
+        } else {
+          let moduleFunctionsObject = {};
+          moduleFunctions.forEach(moduleFunction => {
+            moduleFunctionsObject = Object.assign(moduleFunctionsObject, {
+              [moduleFunction.functionName]: moduleFunction.designFunction
+            });
+          });
+          resolve({
+            [fileStats.name]: moduleFunctionsObject
+          });
+        }
+      }, err => reject(`Can't load module from ${fileStats.filePath}! ${err.message}`));
     }
   });
 };

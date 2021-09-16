@@ -24,7 +24,12 @@ const createSectionFromDirectory = (directory, sectionName) => {
         let directorySection = {};
 
         for (let section of sections) {
-          directorySection = Object.assign(directorySection, section);
+          if (directorySection.hasOwnProperty(Object.keys(section)[0])) {
+            let sectionKey = Object.keys(section)[0];
+            directorySection[sectionKey] = Object.assign(directorySection[sectionKey], section[sectionKey]);
+          } else {
+            directorySection = Object.assign(directorySection, section);
+          }
         }
 
         resolve({

@@ -13,13 +13,23 @@ describe('createSectionFromFile',() => {
     });
 
 
-    test('success on modul with other name function',() => {
+    test('success on modul with different named function',() => {
         loadModule.mockResolvedValue({
             validate_doc_update:function map(){}
         });
         //fs.readFile.mockResolvedValue('content of regular file');
         return createSectionFromFile('./root','validate_doc_update.js').then(result => {
             expect(result).toStrictEqual({validate_doc_update:{map:'function () {}'}});
+        });
+    });
+
+    test('success on modul with same named function',() => {
+        loadModule.mockResolvedValue({
+            validate_doc_update:function validate_doc_update(){}
+        });
+        //fs.readFile.mockResolvedValue('content of regular file');
+        return createSectionFromFile('./root','validate_doc_update.js').then(result => {
+            expect(result).toStrictEqual({validate_doc_update:'function () {}'});
         });
     });
 
@@ -34,16 +44,19 @@ describe('createSectionFromFile',() => {
 
 
     test('fail on fileread', () => {
-        fs.readFile.mockRejectedValue({message:'reading error'});
+        expect.assertions(1);
+        //fs.readFile.mockRejectedValue({message:'reading error'});
+        loadModule.mockRejectedValue({message:'module loading error'});
         return createSectionFromFile('./root','validate_doc_update.js').catch(error => {
-            expect(error).toBe('Bad structure! root/validate_doc_update.js must be regular file! reading error');
+            expect(error).toBe('Can\'t load module from root/validate_doc_update.js! module loading error');
+           // expect(fs.readFile.mock.calls.length).toBe(0);
         });
     });
 
     test('fail on bad json', () => {
         fs.readFile.mockResolvedValue('{helo:"json",}');
-        return createSectionFromFile('./root','validate_doc_update.js',true).catch(error => {
-            expect(error).toMatch(/^Bad content in root\/validate_doc_update.js. It must be valid json!.{0,}/);
+        return createSectionFromFile('./root','options.json',true).catch(error => {
+            expect(error).toMatch(/^Bad content in root\/options.json. It must be valid json!.{0,}/);
         });
     });
 

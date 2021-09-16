@@ -32,27 +32,25 @@ const createSectionFromFile = (directory, fileName ) => {
                 }
             },err => reject(`Bad structure! ${fileStats.filePath} must be regular file! ${err.message}`));
         }else{
-            try{
-                loadModule(directory,fileStats.name).then(designModule => {
-                    let moduleFunctions = Object.keys(designModule).map(funcName => {
-                        let functionString = designModule[funcName].toString();
-                        let functionName = nameRegexp.exec(functionString)[1];
-                        let designFunction = functionString.replace(nameRegexp,'function (');
-                        return {functionName,designFunction}
-                    });
-                    if(moduleFunctions.length === 1 && moduleFunctions[0].functionName === fileStats.name){
-                        resolve({[fileStats.name]:moduleFunctions[0].designFunction});
-                    }else{
-                        let moduleFunctionsObject = {}
-                        moduleFunctions.forEach(moduleFunction => {
-                            moduleFunctionsObject = Object.assign(moduleFunctionsObject,{[moduleFunction.functionName]:moduleFunction.designFunction});
-                        });
-                        resolve({[fileStats.name]:moduleFunctionsObject});
-                    }
+          
+            loadModule(directory,fileStats.name).then(designModule => {
+                let moduleFunctions = Object.keys(designModule).map(funcName => {
+                    let functionString = designModule[funcName].toString();
+                    let functionName = nameRegexp.exec(functionString)[1];
+                    let designFunction = functionString.replace(nameRegexp,'function (');
+                    return {functionName,designFunction}
                 });
-            }catch(err){
-                err => reject(`Bad structure! ${fileStats.filePath} must be regular file! ${err.message}`);
-            }
+                if(moduleFunctions.length === 1 && moduleFunctions[0].functionName === fileStats.name){
+                    resolve({[fileStats.name]:moduleFunctions[0].designFunction});
+                }else{
+                    let moduleFunctionsObject = {}
+                    moduleFunctions.forEach(moduleFunction => {
+                        moduleFunctionsObject = Object.assign(moduleFunctionsObject,{[moduleFunction.functionName]:moduleFunction.designFunction});
+                    });
+                    resolve({[fileStats.name]:moduleFunctionsObject});
+                }
+            },err => reject(`Can't load module from ${fileStats.filePath}! ${err.message}`));
+         
         }
     });
 }
