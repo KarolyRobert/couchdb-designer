@@ -18,7 +18,8 @@ It is work the way. if a directory then becomes to object type field and a file 
 Example directory structure for two design documents:
 
 ```bash
-tests/design
+
+design
 ├── appdesign
 │   ├── lib
 │   │   └── couchdb.lib.js
