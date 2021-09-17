@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`testStatSupplement modifyed 1`] = `
+Object {
+  "filePath": "./appdesign/views/cloud/map.js",
+  "isJSON": false,
+  "isJavaScript": true,
+  "isLib": true,
+  "isModified": true,
+  "name": "map",
+  "testModule": "../../temp/24ff7500092412df698fc70591ebaabc",
+  "testPath": "../../temp/24ff7500092412df698fc70591ebaabc.js",
+}
+`;
+
+exports[`testStatSupplement modifyed on testStatfile not exist 1`] = `
+Object {
+  "filePath": "./appdesign/views/cloud/map.js",
+  "isJSON": false,
+  "isJavaScript": true,
+  "isLib": true,
+  "isModified": true,
+  "name": "map",
+  "testModule": "../../temp/24ff7500092412df698fc70591ebaabc",
+  "testPath": "../../temp/24ff7500092412df698fc70591ebaabc.js",
+}
+`;
+
+exports[`testStatSupplement unmodifyed 1`] = `
+Object {
+  "filePath": "./appdesign/views/cloud/map.js",
+  "isJSON": false,
+  "isJavaScript": true,
+  "isLib": true,
+  "isModified": false,
+  "name": "map",
+  "testModule": "../../temp/24ff7500092412df698fc70591ebaabc",
+  "testPath": "../../temp/24ff7500092412df698fc70591ebaabc.js",
+}
+`;

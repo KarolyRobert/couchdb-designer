@@ -1,10 +1,10 @@
 import fs from 'fs/promises';
-import createSection from '../src/createSection';
-import createSectionFromDirectory from '../src/createSectionFromDirectory';
+import createSection from '../src/section/createSection';
+import createSectionFromDirectory from '../src/section/createSectionFromDirectory';
 
 
 jest.mock('fs/promises');
-jest.mock('../src/createSection');
+jest.mock('../src/section/createSection');
 
 describe('createDeisgnDocument',() => {
     beforeEach(() => {

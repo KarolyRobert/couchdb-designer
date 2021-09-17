@@ -1,5 +1,4 @@
-import createSectionFromDirectory from './createSectionFromDirectory';
-
+import createSectionFromDirectory from './section/createSectionFromDirectory';
 
 
 export default function createDesignDocument(root,name){
@@ -12,6 +11,5 @@ export default function createDesignDocument(root,name){
         createSectionFromDirectory(root,name).then(section => {
             resolve(Object.assign(designDocument,section[name]));
         },err => reject(err));        
-
     });
 }

@@ -1,21 +1,12 @@
-import path from 'path';
 import fs from 'fs/promises';
-import loadModule from './loadModule';
-
-const extractFileStats = (directory, fileName) => {
-    let fileParts = fileName.split('.');
-    let isJSON = fileParts[fileParts.length - 1].toLowerCase() === 'json';
-    let isJavaScript = fileParts[fileParts.length - 1].toLowerCase() === 'js';
-    let isLib = false;
-    let name = fileParts[0];
-    let filePath = path.join(directory, fileName);
-    if(!isJSON && fileParts.length === 3) isLib = true;
-    return { isJSON, isLib, name, filePath, isJavaScript}
-}
+import loadModule from '../util/loadModule';
+import extractFileStats from '../util/extractFileStats';
 
 const nameRegexp = /^function\s{1,}(\S{1,})\s{0,}\(/
 
-const createSectionFromFile = (directory, fileName ) => {
+
+const createDesignSectionFromFile = (directory, fileName) => {
+   
     return new Promise((resolve,reject) => {
         let fileStats = extractFileStats(directory, fileName);
         if(!fileStats.isJavaScript || fileStats.isLib){
@@ -32,7 +23,6 @@ const createSectionFromFile = (directory, fileName ) => {
                 }
             },err => reject(`Bad structure! ${fileStats.filePath} must be regular file! ${err.message}`));
         }else{
-          
             loadModule(directory,fileStats.name).then(designModule => {
                 let moduleFunctions = Object.keys(designModule).map(funcName => {
                     let functionString = designModule[funcName].toString();
@@ -50,9 +40,10 @@ const createSectionFromFile = (directory, fileName ) => {
                     resolve({[fileStats.name]:moduleFunctionsObject});
                 }
             },err => reject(`Can't load module from ${fileStats.filePath}! ${err.message}`));
-         
         }
     });
+
+    
 }
 
-export default createSectionFromFile;
+export default createDesignSectionFromFile;

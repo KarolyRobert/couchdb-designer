@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = createDesignDocument;
 
-var _createSectionFromDirectory = _interopRequireDefault(require("./createSectionFromDirectory"));
+var _createSectionFromDirectory = _interopRequireDefault(require("./section/createSectionFromDirectory"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

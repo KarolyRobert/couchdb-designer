@@ -3,13 +3,13 @@ import fs from 'fs/promises';
 import createSection from './createSection';
 
 
-const createSectionFromDirectory = (directory, sectionName) => {
+const createSectionFromDirectory = (directory, sectionName, testContextName = false) => {
     return new Promise((resolve, reject) => {
         let directoryPath = path.join(directory,sectionName);
         fs.readdir(directoryPath).then(names => {
             Promise.all(names.map(name => {
               
-                    return createSection(directoryPath,name);
+                    return createSection(directoryPath, name, testContextName);
                 
                 })).then(sections => {
                     let directorySection = {};

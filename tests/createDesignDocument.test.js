@@ -1,7 +1,7 @@
 import createDeisgnDocument from '../src/createDeisgnDocument';
-import createSectionFromDirectory from '../src/createSectionFromDirectory';
+import createSectionFromDirectory from '../src/section/createSectionFromDirectory';
 
-jest.mock('../src/createSectionFromDirectory');
+jest.mock('../src/section/createSectionFromDirectory');
 
 describe('createDeisgnDocument',() => {
     beforeEach(() => {

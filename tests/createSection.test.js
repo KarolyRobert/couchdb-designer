@@ -1,8 +1,8 @@
-import createSection from '../src/createSection';
+import createSection from '../src/section/createSection';
 import fs from 'fs/promises';
-import loadModule from '../src/loadModule';
+import loadModule from '../src/util/loadModule';
 
-jest.mock('../src/loadModule');
+jest.mock('../src/util/loadModule');
 jest.mock('fs/promises');
 
 

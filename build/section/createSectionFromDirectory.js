@@ -13,13 +13,13 @@ var _createSection = _interopRequireDefault(require("./createSection"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const createSectionFromDirectory = (directory, sectionName, test = false) => {
+const createSectionFromDirectory = (directory, sectionName, testContextName = false) => {
   return new Promise((resolve, reject) => {
     let directoryPath = _path.default.join(directory, sectionName);
 
     _promises.default.readdir(directoryPath).then(names => {
       Promise.all(names.map(name => {
-        return (0, _createSection.default)(directoryPath, name, test);
+        return (0, _createSection.default)(directoryPath, name, testContextName);
       })).then(sections => {
         let directorySection = {};
 
