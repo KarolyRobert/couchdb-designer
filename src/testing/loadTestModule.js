@@ -1,16 +1,17 @@
-
+import path from 'path';
 
 
 export default function loadTestModule(fileStats){
 
-    return new Promise(async (resolve,reject) => {
-        let jsModule = false;
+    return new Promise((resolve,reject) => {
         try{
-            jsModule = require(fileStats.modulePath);
+            //console.log(fileStats);
+            let modulePath = path.resolve(__dirname,fileStats.testModule);
+            const jsModule = require(path.resolve(__dirname,fileStats.testModule));
             if(Object.keys(jsModule).length > 0){
                 resolve(jsModule);
             }else{
-                reject(new Error(`The module ${fileStats.filePath} doesn't export anything! You must export function/s with module.exports = {...}`));
+                reject(new Error(`The module ${modulePath} does not exist't export anything! You must export function/s with module.exports = {...}`));
             }
         }catch(err){
             reject(err);

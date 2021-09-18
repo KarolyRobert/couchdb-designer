@@ -1,5 +1,10 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
 var _promises = _interopRequireDefault(require("fs/promises"));
 
 var _crypto = _interopRequireDefault(require("crypto"));
@@ -7,10 +12,6 @@ var _crypto = _interopRequireDefault(require("crypto"));
 var _path = _interopRequireDefault(require("path"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-const refreshTestStats = fileStats => {
-  return _promises.default.writeFile(fileStats.testStatFile, fileStats.filePath);
-};
 
 const testStatSupplement = (oldStats, fileStat) => {
   return new Promise((resolve, reject) => {
@@ -39,7 +40,5 @@ const testStatSupplement = (oldStats, fileStat) => {
   });
 };
 
-module.exports = {
-  testStatSupplement,
-  refreshTestStats
-};
+var _default = testStatSupplement;
+exports.default = _default;

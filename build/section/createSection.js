@@ -17,26 +17,30 @@ var _createSectionFromDirectory = _interopRequireDefault(require("./createSectio
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const createSection = (directory, name, testContextName) => {
-  return new Promise((resolve, reject) => {
-    let sectionPath = _path.default.join(directory, name);
+const createSection = (directory, name, testContextName, signal = {
+  aborted: false
+}) => {
+  if (!signal.aborted) {
+    return new Promise((resolve, reject) => {
+      let sectionPath = _path.default.join(directory, name);
 
-    _promises.default.stat(sectionPath).then(fileStat => {
-      if (fileStat.isFile() || fileStat.isDirectory()) {
-        if (fileStat.isFile()) {
-          if (testContextName) {
-            (0, _createTestSectionFromFile.default)(directory, name, fileStat, testContextName).then(resolve, reject);
+      _promises.default.stat(sectionPath).then(fileStat => {
+        if (fileStat.isFile() || fileStat.isDirectory()) {
+          if (fileStat.isFile()) {
+            if (testContextName) {
+              (0, _createTestSectionFromFile.default)(directory, name, fileStat, testContextName, signal).then(resolve, reject);
+            } else {
+              (0, _createDesignSectionFromFile.default)(directory, name).then(resolve, reject);
+            }
           } else {
-            (0, _createDesignSectionFromFile.default)(directory, name).then(resolve, reject);
+            (0, _createSectionFromDirectory.default)(directory, name, testContextName, signal).then(resolve, reject);
           }
         } else {
-          (0, _createSectionFromDirectory.default)(directory, name, testContextName).then(resolve, reject);
+          reject(`Bad structure! ${sectionPath} must be file or directory!`);
         }
-      } else {
-        reject(`Bad structure! ${sectionPath} must be file or directory!`);
-      }
-    }, err => reject(err));
-  });
+      }, err => reject(err));
+    });
+  }
 };
 
 var _default = createSection;

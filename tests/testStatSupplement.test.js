@@ -1,4 +1,4 @@
-import { testStatSupplement } from '../src/testing/testStatSupplement';
+import testStatSupplement  from '../src/testing/testStatSupplement';
 import fs from 'fs/promises';
 
 jest.mock('fs/promises');

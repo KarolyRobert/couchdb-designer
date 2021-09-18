@@ -7,6 +7,7 @@ Array [
     "language": "javascript",
     "lib": Object {
       "couchdb": "module.exports.libfunction = function (){
+   return 'libfunction call updated';
    // https://docs.couchdb.org/en/stable/query-server/javascript.html?highlight=commonJS%20modules#commonjs-modules
 }",
     },
@@ -48,22 +49,10 @@ Array [
   doc['edited_by'] = req['userCtx']['name'];
   return [doc, 'Edited World!'];
 }",
-      "updateFomDir": "function (doc, req) {
-  if (!doc) {
-    if ('id' in req && req['id']) {
-      // create new document
-      return [{
-        '_id': req['id']
-      }, 'New World'];
-    } // change nothing in database
+      "updateFromDir": "function (doc, req) {
+  var probalib = require('lib/couchdb').libfunction;
 
-
-    return [null, 'Empty World'];
-  }
-
-  doc['fromdir'] = 'szia';
-  doc['edited_by'] = req['userCtx']['name'];
-  return [doc, 'Edited World from dir'];
+  return [doc, probalib()];
 }",
     },
     "validate_doc_update": "function (newDoc, oldDoc, userCtx, secObj) {
@@ -106,7 +95,7 @@ Array [
       "byParent": Object {
         "map": "function (doc) {
   const myfuncts = function () {
-    emit(doc._id, 1);
+    emit(doc.parent, 1);
   };
 
   if (doc.parent) {

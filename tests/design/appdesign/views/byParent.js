@@ -2,7 +2,7 @@
 
     function map (doc){
         const myfuncts = function(){
-            emit(doc._id,1);
+            emit(doc.parent,1);
         }
         if(doc.parent){
             myfuncts();

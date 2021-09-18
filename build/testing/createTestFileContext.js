@@ -5,20 +5,28 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _testStatSupplement = require("./testStatSupplement");
+var _testStatSupplement = _interopRequireDefault(require("./testStatSupplement"));
+
+var _createTestContextModule = _interopRequireDefault(require("./createTestContextModule"));
 
 var _createTestSectionFromModule = _interopRequireDefault(require("./createTestSectionFromModule"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const createTestFileContext = (oldStats, fileStat, testContextName) => {
-  return new Promise((resolve, reject) => {
-    (0, _testStatSupplement.testStatSupplement)(oldStats, fileStat).then(fileStats => {
-      if (fileStats.isModified) {} else {
-        (0, _createTestSectionFromModule.default)(fileStats).then(resolve, reject);
-      }
-    }, err => reject(err));
-  });
+const createTestFileContext = (oldStats, fileStat, testContextName, signal) => {
+  if (!signal.aborted) {
+    return new Promise((resolve, reject) => {
+      (0, _testStatSupplement.default)(oldStats, fileStat).then(fileStats => {
+        if (fileStats.isModified) {
+          (0, _createTestContextModule.default)(fileStats, testContextName, signal).then(() => {
+            (0, _createTestSectionFromModule.default)(fileStats).then(resolve, reject);
+          }, reject);
+        } else {
+          (0, _createTestSectionFromModule.default)(fileStats).then(resolve, reject);
+        }
+      }, err => reject(err));
+    });
+  }
 };
 
 var _default = createTestFileContext;

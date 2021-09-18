@@ -10,7 +10,7 @@ var _path = _interopRequireDefault(require("path"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function loadModule(directory, name) {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let jsModule = false;
 
     try {

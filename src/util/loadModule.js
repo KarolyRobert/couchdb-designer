@@ -2,7 +2,7 @@ import path from 'path';
 
 export default function loadModule(directory,name){
 
-    return new Promise(async (resolve,reject) => {
+    return new Promise((resolve,reject) => {
         let jsModule = false;
         try{
             jsModule = require(path.resolve(process.env.PWD,directory,name));

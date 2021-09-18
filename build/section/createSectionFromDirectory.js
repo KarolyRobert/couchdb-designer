@@ -13,31 +13,35 @@ var _createSection = _interopRequireDefault(require("./createSection"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const createSectionFromDirectory = (directory, sectionName, testContextName = false) => {
-  return new Promise((resolve, reject) => {
-    let directoryPath = _path.default.join(directory, sectionName);
+const createSectionFromDirectory = (directory, sectionName, testContextName = false, signal = {
+  aborted: false
+}) => {
+  if (!signal.aborted) {
+    return new Promise((resolve, reject) => {
+      let directoryPath = _path.default.join(directory, sectionName);
 
-    _promises.default.readdir(directoryPath).then(names => {
-      Promise.all(names.map(name => {
-        return (0, _createSection.default)(directoryPath, name, testContextName);
-      })).then(sections => {
-        let directorySection = {};
+      _promises.default.readdir(directoryPath).then(names => {
+        Promise.all(names.map(name => {
+          return (0, _createSection.default)(directoryPath, name, testContextName, signal);
+        })).then(sections => {
+          let directorySection = {};
 
-        for (let section of sections) {
-          if (directorySection.hasOwnProperty(Object.keys(section)[0])) {
-            let sectionKey = Object.keys(section)[0];
-            directorySection[sectionKey] = Object.assign(directorySection[sectionKey], section[sectionKey]);
-          } else {
-            directorySection = Object.assign(directorySection, section);
+          for (let section of sections) {
+            if (directorySection.hasOwnProperty(Object.keys(section)[0])) {
+              let sectionKey = Object.keys(section)[0];
+              directorySection[sectionKey] = Object.assign(directorySection[sectionKey], section[sectionKey]);
+            } else {
+              directorySection = Object.assign(directorySection, section);
+            }
           }
-        }
 
-        resolve({
-          [sectionName]: directorySection
-        });
-      }, err => reject(err));
-    }, err => reject(`Bad structure! ${directoryPath} must be a directory! ${err.message}`));
-  });
+          resolve({
+            [sectionName]: directorySection
+          });
+        }, err => reject(err));
+      }, err => reject(`Bad structure! ${directoryPath} must be a directory! ${err.message}`));
+    });
+  }
 };
 
 var _default = createSectionFromDirectory;

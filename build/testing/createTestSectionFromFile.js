@@ -13,38 +13,25 @@ var _createTestFileContext = _interopRequireDefault(require("./createTestFileCon
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const creteTestSectionFromFile = (directory, fileName, fileStat, testContextName) => {
-  return new Promise((resolve, reject) => {
-    let fileStats = (0, _extractFileStats.default)(directory, fileName);
+const creteTestSectionFromFile = (directory, fileName, fileStat, testContextName, signal) => {
+  if (!signal.aborted) {
+    return new Promise((resolve, reject) => {
+      let fileStats = (0, _extractFileStats.default)(directory, fileName);
 
-    if (fileStats.isJSON) {
-      _promises.default.readFile(fileStats.filePath, {
-        encoding: 'utf8'
-      }).then(content => {
-        let jsonObject = JSON.parse(content.trim());
-        resolve({
-          [fileStats.name]: jsonObject
-        });
-      }, err => reject(`Bad structure! ${fileStats.filePath} must be regular file! ${err.message}`));
-    } else {
-      (0, _createTestFileContext.default)(fileStats, fileStat, testContextName).then(resolve, reject);
-    }
-    /*  
-    fs.readFile(fileStats.filePath,{encoding:'utf8'}).then(content => {
-        if(fileStats.isJSON){
-            try{
-                let jsonObject = JSON.parse(content.trim());
-                resolve({[fileStats.name]:jsonObject});
-            }catch(err){
-                reject(`Bad content in ${fileStats.filePath}. It must be valid json! ${err.message}`);
-            }
-        }else{
-            createTestFileContext(fileStats,content).then(resolve,reject);
-        }
-    },err => reject(`Bad structure! ${fileStats.filePath} must be regular file! ${err.message}`));
-    */
-
-  });
+      if (fileStats.isJSON) {
+        _promises.default.readFile(fileStats.filePath, {
+          encoding: 'utf8'
+        }).then(content => {
+          let jsonObject = JSON.parse(content.trim());
+          resolve({
+            [fileStats.name]: jsonObject
+          });
+        }, err => reject(`Bad structure! ${fileStats.filePath} must be regular file! ${err.message}`));
+      } else {
+        (0, _createTestFileContext.default)(fileStats, fileStat, testContextName, signal).then(context => resolve(context), err => reject(err));
+      }
+    });
+  }
 };
 
 var _default = creteTestSectionFromFile;

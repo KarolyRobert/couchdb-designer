@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createTestContext require 1`] = `
+Object {
+  "offset": 0,
+  "rows": Array [
+    Object {
+      "id": "jhawgqwj",
+      "key": "roger",
+      "value": 1,
+    },
+    Object {
+      "id": "parent",
+      "key": "torpedó",
+      "value": 1,
+    },
+  ],
+  "total_rows": 2,
+}
+`;

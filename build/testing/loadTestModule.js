@@ -5,17 +5,22 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = loadTestModule;
 
-function loadTestModule(fileStats) {
-  return new Promise(async (resolve, reject) => {
-    let jsModule = false;
+var _path = _interopRequireDefault(require("path"));
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function loadTestModule(fileStats) {
+  return new Promise((resolve, reject) => {
     try {
-      jsModule = require(fileStats.modulePath);
+      //console.log(fileStats);
+      let modulePath = _path.default.resolve(__dirname, fileStats.testModule);
+
+      const jsModule = require(_path.default.resolve(__dirname, fileStats.testModule));
 
       if (Object.keys(jsModule).length > 0) {
         resolve(jsModule);
       } else {
-        reject(new Error(`The module ${fileStats.filePath} doesn't export anything! You must export function/s with module.exports = {...}`));
+        reject(new Error(`The module ${modulePath} does not exist't export anything! You must export function/s with module.exports = {...}`));
       }
     } catch (err) {
       reject(err);
