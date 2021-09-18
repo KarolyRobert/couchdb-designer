@@ -17,7 +17,9 @@
   },
   "keywords": [
     "couchdb",
-    "design"
+    "DesignDocumets",
+    "jest",
+    "testing"
   ],
   "author": "RoGeR",
   "license": "ISC",
