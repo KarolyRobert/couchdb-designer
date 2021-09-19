@@ -16,7 +16,7 @@ const createTestContextModule = (fileStats,testContextName, signal) => {
                 if(fileStats.isLib){
                     moduleContent += 'const exports = module.exports;\n';
                 }
-                    moduleContent +=`//Original content \n${content}`;
+                    moduleContent +=`//Original content \n${content}\n`;
                 
                 fs.writeFile(path.resolve(__dirname,fileStats.testPath),moduleContent,{signal}).then(resolve, reject);
             

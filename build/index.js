@@ -14,5 +14,6 @@ module.exports = {
   designer: _designer.default,
   createDesignDocument: _createDeisgnDocument.default,
   createTestContext: _createTestContext.default,
-  viewResult: _testEnvironment.viewResult
+  viewResult: _testEnvironment.viewResult,
+  logResult: _testEnvironment.logResult
 };

@@ -23,7 +23,7 @@ const createTestContextModule = (fileStats, testContextName, signal) => {
           moduleContent += 'const exports = module.exports;\n';
         }
 
-        moduleContent += `//Original content \n${content}`;
+        moduleContent += `//Original content \n${content}\n`;
 
         _promises.default.writeFile(_path.default.resolve(__dirname, fileStats.testPath), moduleContent, {
           signal

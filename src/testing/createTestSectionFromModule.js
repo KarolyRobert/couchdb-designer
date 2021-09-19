@@ -8,20 +8,6 @@ const creteTestSectionFromModule = fileStats => {
         loadTestModule(fileStats).then(testModule => {
             let testModuleKeys = Object.keys(testModule);
             if(!fileStats.isLib && testModuleKeys.length === 1 && testModuleKeys[0] === fileStats.name){
-                //resolve({[fileStats.name]:testModule[testModuleKeys[0]]});
-              /*  let Inplement = (...args) => {
-                    if(testModuleKeys[0] === 'map'){
-                        emitMock.mockImplementation((...emitargs) => {
-                            mockEmit(args[0],...emitargs);
-                        });
-                    }else{
-                        emitMock.mockImplementation(() => {
-                            throw new Error('Calling emit allows only views map function!');
-                        });
-                    }
-                    return testModule[testModuleKeys[0]](...args);
-                }
-                Inplement.__sourceProperties__ = {isRoot:true,fileStats:fileStats};*/
                 
                 resolve({[fileStats.name]:jest.fn((...args) => {
                     if(testModuleKeys[0] === 'map'){
@@ -38,10 +24,10 @@ const creteTestSectionFromModule = fileStats => {
             }else{
                 let testElementsObject = {__sourceProperties__:fileStats};
                 testModuleKeys.forEach(moduleElementName => {
-                   // testElementsObject[moduleElementName] = testModule[moduleElementName];
+                   
                     
                     if(typeof testModule[moduleElementName] === 'function'){
-                        let a;
+                
                         testElementsObject[moduleElementName] = jest.fn((...args) => {
                             if(moduleElementName === 'map'){
                                 emitMock.mockImplementation((...emitargs) => {
