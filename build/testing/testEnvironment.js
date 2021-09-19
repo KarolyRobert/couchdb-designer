@@ -12,6 +12,8 @@ const emitMock = _globals.jest.fn();
 
 const mockEmit = _globals.jest.fn();
 
+const logMock = _globals.jest.fn();
+
 const viewResult = () => {
   return {
     total_rows: mockEmit.mock.calls.length,
@@ -22,6 +24,14 @@ const viewResult = () => {
       value: params[2]
     }))
   };
+};
+
+const logResult = () => {
+  let log = '';
+  logMock.mock.calls.forEach(params => {
+    log += `Log :: ${params[0]}\n`;
+  });
+  return log;
 };
 
 const testEnvironment = contextName => ({
@@ -37,9 +47,32 @@ const testEnvironment = contextName => ({
       }
     }
 
-    return required;
+    if (required.__sourceProperties__ && required.__sourceProperties__.isLib) {
+      return required;
+    }
+
+    throw new Error(`Invalid require ${requirePath}. You can only import which declared by "name.lib.js" rule as a library.`);
   },
-  emit: emitMock
+  sum: arr => {
+    if (Array.isArray(arr)) {
+      let result = 0;
+
+      for (let value of arr) {
+        if (typeof value === 'number') {
+          result += value;
+        } else {
+          throw new Error('The parameter of "sum()" must be an array of numbers!');
+        }
+      }
+
+      return result;
+    }
+
+    throw new Error('The parameter of "sum()" must be an array of numbers!');
+  },
+  toJSON: p => JSON.stringify(p),
+  emit: emitMock,
+  log: logMock
 });
 
 module.exports = {
@@ -47,5 +80,6 @@ module.exports = {
   testEnvironment,
   emitMock,
   mockEmit,
-  viewResult
+  viewResult,
+  logResult
 };

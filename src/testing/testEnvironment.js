@@ -8,6 +8,8 @@ const registerContext = (testContext,testContextName) => {
 
 const emitMock = jest.fn();
 const mockEmit = jest.fn();
+const logMock = jest.fn();
+
 
 const viewResult = () => {
     return {
@@ -15,6 +17,13 @@ const viewResult = () => {
         offset:0,
         rows:mockEmit.mock.calls.map(params => ({id:params[0]._id,key:params[1],value:params[2]}))
     }
+}
+const logResult = () => {
+    let log = '';
+    logMock.mock.calls.forEach(params => {
+        log += `Log :: ${params[0]}\n`;
+    });
+    return log;
 }
 
 const testEnvironment = contextName => ({
@@ -29,10 +38,29 @@ const testEnvironment = contextName => ({
                 throw new Error(`Invalid require ${requirePath} is not in the environment ${contexts[contextName].id}`);
             }
         }
-        return required;
+        if(required.__sourceProperties__ && required.__sourceProperties__.isLib){
+            return required;
+        }
+        throw new Error(`Invalid require ${requirePath}. You can only import which declared by "name.lib.js" rule as a library.`);
     },
-    emit:emitMock
+    sum: arr => {
+        if(Array.isArray(arr)){
+            let result = 0;
+            for(let value of arr){
+                if(typeof value === 'number'){
+                    result += value;
+                }else{
+                    throw new Error('The parameter of "sum()" must be an array of numbers!');
+                }
+            }
+            return result;
+        }
+        throw new Error('The parameter of "sum()" must be an array of numbers!');
+    },
+    toJSON: p => JSON.stringify(p),
+    emit:emitMock,
+    log:logMock,
 })
 
 
-module.exports = { registerContext, testEnvironment, emitMock ,mockEmit, viewResult };
+module.exports = { registerContext, testEnvironment, emitMock ,mockEmit, viewResult, logResult };

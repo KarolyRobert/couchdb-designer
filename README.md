@@ -76,9 +76,9 @@ createDesignDocument('./design/appdesign').then(document => {
 
 ### Testing:
 
-With "createTestContext" you can create a context represented by directory by the same way like at "createDesignDocument". This context object has the same structure as design ducument has but with invokeable functions which is Jest mockFunctions. You can testing the original functionality of them and the interact among them. Additionally available the "viewResult" function which return the result of the view represented by map function.
+With "createTestContext" you can create a context represented by directory by the same way like at "createDesignDocument". This context object has the same structure as design ducument has but with invokeable functions which is Jest mockFunctions. You can testing the original functionality of them and the interact among them. Additionally available the "viewResult" function which return the result of the view represented by map function and "logResult" which return the logged rows by invoked functions.
 
->I know the testing capabilities has a lot of deficiency. The built in support of show/list functions of couchdb (provides,registerType,send,start,getRow) will be probably never supported as the show/list functions and some other feature is deprecated since couchdb 3.0. But who knows. From this point of view supported the require and the emit builtin functions. I will make up for the rest as need.
+>I know the testing capabilities has a lot of deficiency. The built in support of show/list functions of couchdb (provides,registerType,send,start,getRow) will be probably never supported as the show/list functions and some other feature is deprecated since couchdb 3.0. But who knows. From this point of view supported the require,emit,sum,toJSON,log,isArray builtin functions.
 
 
 
