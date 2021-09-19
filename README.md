@@ -76,7 +76,7 @@ createDesignDocument('./design/appdesign').then(document => {
 
 ### Testing:
 
-With "createTestContext" you can create a context represented by directory by the same way like at "createDesignDocument". This context object has the same structure as design ducument has but with invokeable functions which is Jest mockFunctions. You can testing the original functionality of them and the interact among them. Additionally available the "viewResult" function which return the result of the view represented by map function and "logResult" which return the logged rows by invoked functions.
+With "createTestContext" you can create a context represented by directory by the same way like at "createDesignDocument". This context object has the same structure as design ducument has but with invokeable functions which is Jest mockFunctions. You can testing the original functionality of them and the interact among them. Additionally available the **viewResult** function which return the result of the view represented by map function and **logResult** which return the logged rows by invoked functions.
 
 >I know the testing capabilities has a lot of deficiency. The built in support of show/list functions of couchdb (provides,registerType,send,start,getRow) will be probably never supported as the show/list functions and some other feature is deprecated since couchdb 3.0. But who knows. From this point of view supported the require,emit,sum,toJSON,log,isArray builtin functions.
 
@@ -84,7 +84,7 @@ With "createTestContext" you can create a context represented by directory by th
 
 ```javascript
 
-import { createTestContext, viewResult } from '@zargu/couchdb-designer';
+import { createTestContext, viewResult, logResult } from '@zargu/couchdb-designer';
 
 describe('couchdb',() => {
 
@@ -98,8 +98,9 @@ describe('couchdb',() => {
             context.views.byMail.map(somedocument);
             expect(context.views.byMail.map.mock.calls.length).toBe(1) // sure! byMail.map itself a mockFunction as well.
             expect(context.views.lib.someLibfunction.mock.calls.length).toBe(1); // byMail.map invoke someLibfunction
-            expect(viewResult().rows.length).toBe(1) // not sure! byMail.map maybe invoke builtin emit function more than once.
-
+            expect(viewResult().rows.length).toBe(1); // not sure! byMail.map maybe invoke builtin emit function more than once.
+            expect(logResult()).toMatchSnapshot(); // logResult return multiline String of expected couchdb log.
+            
         }).catch(err => expect(err).toBe('something wrong in directory structure'));
     });
 });
