@@ -12,8 +12,11 @@ const createTestContextModule = (fileStats,testContextName, signal) => {
                     'const log = environment.log;\n'+
                     'const isArray = Array.isArray;\n'+
                     'const sum = environment.sum;\n'+
-                    'const toJSON = environment.toJSON;\n'+
-                    `//original\n${content}`;
+                    'const toJSON = environment.toJSON;\n';
+                if(fileStats.isLib){
+                    moduleContent += 'const exports = module.exports;\n';
+                }
+                    moduleContent +=`//Original content \n${content}`;
                 
                 fs.writeFile(path.resolve(__dirname,fileStats.testPath),moduleContent,{signal}).then(resolve, reject);
             

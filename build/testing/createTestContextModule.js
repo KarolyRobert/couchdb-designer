@@ -17,7 +17,13 @@ const createTestContextModule = (fileStats, testContextName, signal) => {
       _promises.default.readFile(fileStats.filePath, {
         encoding: 'utf8'
       }).then(content => {
-        let moduleContent = `const environment = require('../build/testing/testEnvironment').testEnvironment("${testContextName}");\n` + 'require = environment.require;\n' + 'const emit = environment.emit;\n' + 'const log = environment.log;\n' + 'const isArray = Array.isArray;\n' + 'const sum = environment.sum;\n' + 'const toJSON = environment.toJSON;\n' + `//original\n${content}`;
+        let moduleContent = `const environment = require('../build/testing/testEnvironment').testEnvironment("${testContextName}");\n` + 'require = environment.require;\n' + 'const emit = environment.emit;\n' + 'const log = environment.log;\n' + 'const isArray = Array.isArray;\n' + 'const sum = environment.sum;\n' + 'const toJSON = environment.toJSON;\n';
+
+        if (fileStats.isLib) {
+          moduleContent += 'const exports = module.exports;\n';
+        }
+
+        moduleContent += `//Original content \n${content}`;
 
         _promises.default.writeFile(_path.default.resolve(__dirname, fileStats.testPath), moduleContent, {
           signal
