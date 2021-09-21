@@ -50,6 +50,8 @@ Array [
   return [doc, 'Edited World!'];
 }",
       "updateFromDir": "function (doc, req) {
+  log('log from updateFromDir');
+
   var probalib = require('lib/couchdb').libfunction;
 
   return [doc, probalib()];
@@ -87,6 +89,8 @@ Array [
       },
       "byName": Object {
         "map": "function (doc) {
+  log('log from views/byName/map');
+
   if (doc.name) {
     emit(doc.name, 1);
   }
@@ -94,6 +98,8 @@ Array [
       },
       "byParent": Object {
         "map": "function (doc) {
+  log('log from views/byParent/map');
+
   const myfuncts = function () {
     emit(doc.parent, 1);
   };

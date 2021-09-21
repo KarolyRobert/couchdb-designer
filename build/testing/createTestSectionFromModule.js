@@ -5,8 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _globals = require("@jest/globals");
-
 var _loadTestModule = _interopRequireDefault(require("./loadTestModule"));
 
 var _testEnvironment = require("../../build/testing/testEnvironment");
@@ -20,7 +18,7 @@ const creteTestSectionFromModule = fileStats => {
 
       if (!fileStats.isLib && testModuleKeys.length === 1 && testModuleKeys[0] === fileStats.name) {
         resolve({
-          [fileStats.name]: _globals.jest.fn((...args) => {
+          [fileStats.name]: jest.fn((...args) => {
             if (testModuleKeys[0] === 'map') {
               _testEnvironment.emitMock.mockImplementation((...emitargs) => {
                 (0, _testEnvironment.mockEmit)(args[0], ...emitargs);
@@ -40,7 +38,7 @@ const creteTestSectionFromModule = fileStats => {
         };
         testModuleKeys.forEach(moduleElementName => {
           if (typeof testModule[moduleElementName] === 'function') {
-            testElementsObject[moduleElementName] = _globals.jest.fn((...args) => {
+            testElementsObject[moduleElementName] = jest.fn((...args) => {
               if (moduleElementName === 'map') {
                 _testEnvironment.emitMock.mockImplementation((...emitargs) => {
                   (0, _testEnvironment.mockEmit)(args[0], ...emitargs);

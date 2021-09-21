@@ -1,4 +1,4 @@
-import {jest} from '@jest/globals';
+//import {jest} from '@jest/globals';
 
 const contexts = {}
 
@@ -6,12 +6,18 @@ const registerContext = (testContext,testContextName) => {
     contexts[testContextName] = testContext;
 }
 
-const emitMock = jest.fn();
-const mockEmit = jest.fn();
-const logMock = jest.fn();
+let emitMock, mockEmit,logMock;
 
+if(process.env.JEST_WORKER_ID !== undefined){
+    emitMock = jest.fn();
+    mockEmit = jest.fn();
+    logMock = jest.fn();
+}
 
 const viewResult = () => {
+    if(process.env.JEST_WORKER_ID === undefined){
+        throw new Error('viewResult can only be used inside Jest Framework!');
+    }
     return {
         total_rows:mockEmit.mock.calls.length,
         offset:0,
@@ -19,6 +25,9 @@ const viewResult = () => {
     }
 }
 const logResult = () => {
+    if(process.env.JEST_WORKER_ID === undefined){
+        throw new Error('logResult can only be used inside Jest Framework!');
+    }
     let log = '';
     logMock.mock.calls.forEach(params => {
         log += `Log :: ${params[0]}\n`;

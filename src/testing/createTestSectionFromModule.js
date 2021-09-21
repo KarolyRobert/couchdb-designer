@@ -1,9 +1,8 @@
-import {jest} from '@jest/globals';
 import loadTestModule from './loadTestModule';
 import { emitMock, mockEmit } from '../../build/testing/testEnvironment';
 
-
 const creteTestSectionFromModule = fileStats => {
+
     return new Promise((resolve, reject) => {
         loadTestModule(fileStats).then(testModule => {
             let testModuleKeys = Object.keys(testModule);

@@ -16,6 +16,10 @@ var _path = _interopRequireDefault(require("path"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function createTestContext(directoryName) {
+  if (process.env.JEST_WORKER_ID === undefined) {
+    throw new Error('createTestContext can only be used inside Jest Framework!');
+  }
+
   return new Promise((resolve, reject) => {
     let contextName = _crypto.default.createHash('md5').update(directoryName).digest('hex');
 

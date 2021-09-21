@@ -1,5 +1,5 @@
 import createTestContext from "../src/createTestContext";
-import {mockEmit,viewResult} from "../build/testing/testEnvironment";
+import {mockEmit,viewResult,logResult} from "../build/testing/testEnvironment";
 
 
 
@@ -13,6 +13,7 @@ import {mockEmit,viewResult} from "../build/testing/testEnvironment";
                 context.views.byName.map({_id:'jhawgqwj',name:'roger'});
                 context.views.byParent.map({_id:'parent',parent:'torpedó'});
                 expect(viewResult()).toMatchSnapshot();
+                expect(logResult()).toMatchSnapshot();
                 expect(mockEmit.mock.calls.length).toBe(2);
                 expect(mockEmit.mock.calls[0][0]).toStrictEqual({_id:'jhawgqwj',name:'roger'});
                 expect(mockEmit.mock.calls[1][1]).toBe('torpedó');

@@ -18,3 +18,10 @@ Object {
   "total_rows": 2,
 }
 `;
+
+exports[`createTestContext require 2`] = `
+"Log :: log from updateFromDir
+Log :: log from views/byName/map
+Log :: log from views/byParent/map
+"
+`;

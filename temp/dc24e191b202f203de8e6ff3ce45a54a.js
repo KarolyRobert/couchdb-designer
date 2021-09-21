@@ -9,6 +9,7 @@ const toJSON = environment.toJSON;
 
 
     function map (doc){
+        log('log from views/byParent/map');
         const myfuncts = function(){
             emit(doc.parent,1);
         }
