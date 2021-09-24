@@ -13,16 +13,16 @@ var _createTestSectionFromModule = _interopRequireDefault(require("./createTestS
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const createTestFileContext = (oldStats, fileStat, testContextName, signal) => {
+const createTestFileContext = (oldStats, fileStat, contextName, signal) => {
   if (!signal.aborted) {
     return new Promise((resolve, reject) => {
       (0, _testStatSupplement.default)(oldStats, fileStat).then(fileStats => {
         if (fileStats.isModified) {
-          (0, _createTestContextModule.default)(fileStats, testContextName, signal).then(() => {
-            (0, _createTestSectionFromModule.default)(fileStats).then(resolve, reject);
+          (0, _createTestContextModule.default)(fileStats, contextName, signal).then(() => {
+            (0, _createTestSectionFromModule.default)(fileStats, contextName).then(resolve, reject);
           }, reject);
         } else {
-          (0, _createTestSectionFromModule.default)(fileStats).then(resolve, reject);
+          (0, _createTestSectionFromModule.default)(fileStats, contextName).then(resolve, reject);
         }
       }, err => reject(err));
     });

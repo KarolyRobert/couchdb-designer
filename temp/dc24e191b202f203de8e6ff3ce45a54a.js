@@ -1,4 +1,4 @@
-const environment = require('../build/testing/testEnvironment').testEnvironment("e8a285790e3eb51fc6a7e198b57fd5ea");
+const environment = require('../build/testing/testEnvironment').testEnvironment("ad56076cdd3fb5c9b83d976fecfcb1b4");
 require = environment.require;
 const emit = environment.emit;
 const log = environment.log;
@@ -21,9 +21,7 @@ const toJSON = environment.toJSON;
     }
 
     function reduce(keys,values,rereduce){
-        if(doc.parent){
-            
-        }
+        
     }
 
 module.exports = { map, reduce }

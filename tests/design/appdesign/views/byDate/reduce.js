@@ -1,4 +1,5 @@
 function reduce(keys, values, rereduce) {
+    var lib = require('lib/couchdb')
     if (rereduce) {
         return sum(values);
     } else {

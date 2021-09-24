@@ -1,7 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-
 const createTestContextModule = (fileStats,testContextName, signal) => {
     if(!signal.aborted) {
         return new Promise((resolve, reject) => {

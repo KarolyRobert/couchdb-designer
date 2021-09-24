@@ -13,9 +13,7 @@
     }
 
     function reduce(keys,values,rereduce){
-        if(doc.parent){
-            
-        }
+        
     }
 
 module.exports = { map, reduce }

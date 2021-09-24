@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import createSection from './createSection';
 
 
-const createSectionFromDirectory = (directory, sectionName, testContextName = false, signal = {aborted: false}) => {
+const createSectionFromDirectory = (directory, sectionName, contextName = false, signal = {aborted: false}) => {
     if(!signal.aborted){
         return new Promise((resolve, reject) => {
             let directoryPath = path.join(directory,sectionName);
@@ -11,7 +11,7 @@ const createSectionFromDirectory = (directory, sectionName, testContextName = fa
             
                 Promise.all(names.map(name => {
 
-                        return createSection(directoryPath, name, testContextName, signal );
+                        return createSection(directoryPath, name, contextName, signal );
                     
                     })).then(sections => {
                         let directorySection = {};
