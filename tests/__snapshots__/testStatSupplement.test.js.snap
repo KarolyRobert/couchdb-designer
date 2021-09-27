@@ -9,7 +9,7 @@ Object {
   "isModified": true,
   "name": "map",
   "testModule": "../../temp/24ff7500092412df698fc70591ebaabc",
-  "testPath": "../../temp/24ff7500092412df698fc70591ebaabc.js",
+  "testPath": "/mnt/Project/couchdb-designer/temp/24ff7500092412df698fc70591ebaabc.js",
 }
 `;
 
@@ -22,7 +22,7 @@ Object {
   "isModified": true,
   "name": "map",
   "testModule": "../../temp/24ff7500092412df698fc70591ebaabc",
-  "testPath": "../../temp/24ff7500092412df698fc70591ebaabc.js",
+  "testPath": "/mnt/Project/couchdb-designer/temp/24ff7500092412df698fc70591ebaabc.js",
 }
 `;
 
@@ -35,6 +35,6 @@ Object {
   "isModified": false,
   "name": "map",
   "testModule": "../../temp/24ff7500092412df698fc70591ebaabc",
-  "testPath": "../../temp/24ff7500092412df698fc70591ebaabc.js",
+  "testPath": "/mnt/Project/couchdb-designer/temp/24ff7500092412df698fc70591ebaabc.js",
 }
 `;

@@ -19,13 +19,13 @@ const testStatSupplement = (oldStats, fileStat) => {
 
     let tempDirectory = '../../temp';
     let fileStats = { ...oldStats,
-      testPath: _path.default.join(tempDirectory, `${fileHash}.js`),
+      testPath: _path.default.resolve(__dirname, '../../temp', `${fileHash}.js`),
       testModule: _path.default.join(tempDirectory, fileHash),
       isModified: true
     };
 
-    _promises.default.stat(fileStats.testPath).then(currentStat => {
-      if (fileStat.mtimeMs < currentStat.mtimeMs) {
+    _promises.default.stat(fileStats.testPath).then(moduleStat => {
+      if (fileStat.mtimeMs < moduleStat.mtimeMs) {
         fileStats.isModified = false;
       }
 

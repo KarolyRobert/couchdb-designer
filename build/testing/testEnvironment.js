@@ -6,25 +6,30 @@ const environmentSum = arr => {
   if (Array.isArray(arr)) {
     let result = 0;
 
-    for (let value of arr) {
-      if (typeof value === 'number') {
-        result += value;
-      } else {
-        throw new Error('The parameter of "sum()" must be an array of numbers!');
-      }
+    for (let index in arr) {
+      //  if(typeof value === 'number'){
+      result += arr[index];
+      /*  }else{
+            throw new Error('The parameter of "sum()" must be an array of numbers!');
+        }*/
     }
 
     return result;
   }
 
-  throw new Error('The parameter of "sum()" must be an array of numbers!');
+  throw new Error('The parameter of "sum()" must be an array!');
 };
 
 const environmentToJSON = p => JSON.stringify(p);
 
-const registerContext = (testContext, testContextName) => {
+const registerContext = (testContext, testDatabase, testContextName) => {
+  if (testDatabase !== undefined && !Array.isArray(testDatabase)) {
+    throw new Error('createTestContext second parameter must be an array of document object to represent the data of testing database or an array of arrays of document object for represent the nodes of the test database!');
+  }
+
   contexts[testContextName] = Object.assign(contexts[testContextName], {
-    context: testContext
+    context: testContext,
+    database: testDatabase
   });
 };
 

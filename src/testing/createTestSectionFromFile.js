@@ -6,13 +6,17 @@ const creteTestSectionFromFile = (directory, fileName, fileStat, contextName, si
     if(!signal.aborted){
         return new Promise((resolve,reject) => {
             let fileStats = extractFileStats(directory, fileName);
-            if(fileStats.isJSON){
+            if(!fileStats.isJavaScript){
                 fs.readFile(fileStats.filePath,{encoding:'utf8'}).then(content => {
-                    try{
-                        let jsonObject = JSON.parse(content.trim());
-                        resolve({[fileStats.name]:jsonObject});
-                    }catch (err) {
-                        reject(`Bad JSON format in ${fileStats.filePath}! ${err.message}`);
+                    if(fileStats.isJSON){
+                        try{
+                            let jsonObject = JSON.parse(content.trim());
+                            resolve({[fileStats.name]:jsonObject});
+                        }catch (err) {
+                            reject(`Bad JSON format in ${fileStats.filePath}! ${err.message}`);
+                        }
+                    }else{
+                        resolve({[fileStats.name]:content.trim()});
                     }
                 },err => reject(`Bad structure! ${fileStats.filePath} must be regular file! ${err.message}`));
             }else{

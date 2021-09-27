@@ -12,7 +12,7 @@ Array [
 }",
     },
     "options": Object {
-      "partitioned": true,
+      "partitioned": false,
     },
     "updates": Object {
       "otherUpdate": "function (doc, req) {
@@ -113,6 +113,26 @@ Array [
   }
 }",
         "reduce": "function (keys, values, rereduce) {}",
+      },
+      "byReducer": Object {
+        "map": "function (doc) {
+  var date = new Date(doc.date);
+  emit([date.getFullYear(), date.getMonth(), date.getDay(), date.getHours()], doc.value);
+}",
+        "reduce": "function (keys, values, rereduce) {
+  if (rereduce) {
+    return sum(values);
+  } else {
+    return values.length;
+  }
+}",
+      },
+      "byTest": Object {
+        "map": "function (doc) {
+  var date = new Date(doc.date);
+  emit([date.getFullYear(), date.getMonth(), date.getDay(), date.getHours()], doc.value);
+}",
+        "reduce": "_approx_count_distinct",
       },
     },
   },

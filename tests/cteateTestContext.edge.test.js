@@ -1,14 +1,13 @@
 import createTestContext from "../src/createTestContext";
-//import {mockEmit,viewResult,logResult} from "../build/testing/testEnvironment";
-/*
-const testDatabase = [
-    {_id:'doc1',name:[[10,10],9,1]},
-    {_id:'doc2',name:[[10,10],9,10]}
-]*/
 
 const testDatabase = [
-    {_id:'doc1',name:[[10,10],9,1],parent:'roger'},
+    {_id:'doc1',name:[[10,10],9,13],parent:'roger'},
     {_id:'doc2',name:[[10,10],9,10],parent:'zargu'}
+]
+
+const testDatabase2 = [
+    {_id:'doc1',name:'zargu',parent:'roger'},
+    {_id:'doc2',name:'roger',parent:'zargu'}
 ]
 
     describe("createTestContext",() => {
@@ -18,22 +17,23 @@ const testDatabase = [
         test("all case",() => {
             return createTestContext('./tests/design/appdesign',testDatabase).then(context => {
                 let update = context.updates.updateFromDir('doc','req');
-                context.views.byName.map({_id:'jhawgqwj',name:'roger'});
-                context.views.byName.map({_id:'jhawgqwj',name:'roger'});
-                context.views.byName.map({_id:'jhawgqwj',name:'roger'});
-                context.views.byParent.map({_id:'parent',parent:'torpedó'});
-                context.views.byParent.map({_id:'parent',parent:'torpedó'});
-                context.views.byParent.map({_id:'parent',parent:'torpedó'});
-                context.views.byParent.map({_id:'parent',parent:'torpedó'});
-                // expect(viewResult()).toMatchSnapshot();
-                // expect(logResult()).toMatchSnapshot();
-               // expect(mockEmit.mock.calls.length).toBe(2);
-              //  expect(mockEmit.mock.calls[0][0]).toStrictEqual({_id:'jhawgqwj',name:'roger'});
-              //  expect(mockEmit.mock.calls[1][1]).toBe('torpedó');
                 expect(update).toEqual(['doc','libfunction call updated']);
                 expect(context.lib.couchdb.libfunction.mock.calls.length).toBe(1);
                 expect(() => context.views.byDate.reduce(['keys'],['values'],false)).toThrow('Calling require from reduce function in is not allowed! You can fix it in tests/design/appdesign/views/byDate/reduce.js');
-                expect(context('_all_docs')).toEqual({helo:'szia'});
+                context.views.byName.map(testDatabase[1]);
+                expect(context('emitted')).toEqual({offset:0,total_rows:1,rows:[{id:'doc2',key:[[10,10],9,10],value:1}]});
+                expect(context('logged')).toBe('[info] Log :: log from updateFromDir\n[info] Log :: log from views/byName/map\n');
+              //  expect(context.views.byName()).toEqual({"offset": 0, "rows": [{"id": "doc2", "key": [[10, 10], 9, 10], "value": 1}, {"id": "doc1", "key": [[10, 10], 9, 13], "value": 1}], "total_rows": 2});
             })//.catch(err => expect(err).toBe('nincs'));
+        });
+        
+        test("concurent",() => {
+            return createTestContext('./tests/design/appdesign',testDatabase2).then(context => {
+                let update = context.updates.updateFromDir('doc','req');
+                expect(update).toEqual(['doc','libfunction call updated']);
+                expect(context.lib.couchdb.libfunction.mock.calls.length).toBe(1);
+                expect(() => context.views.byDate.reduce(['keys'],['values'],false)).toThrow('Calling require from reduce function in is not allowed! You can fix it in tests/design/appdesign/views/byDate/reduce.js');
+             //   expect(() => context.views.byName({group:true})).toThrow();
+            })
         });
     });

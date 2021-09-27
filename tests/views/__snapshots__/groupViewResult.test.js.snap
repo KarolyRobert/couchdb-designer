@@ -1,0 +1,753 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`groupViewResult all case 1`] = `
+Array [
+  Array [
+    Object {
+      "id": 18,
+      "key": null,
+      "value": 18,
+    },
+  ],
+  Array [
+    Object {
+      "id": 16,
+      "key": false,
+      "value": 16,
+    },
+  ],
+  Array [
+    Object {
+      "id": 8,
+      "key": 10,
+      "value": 8,
+    },
+    Object {
+      "id": 10,
+      "key": 10,
+      "value": 10,
+    },
+  ],
+  Array [
+    Object {
+      "id": 9,
+      "key": 12,
+      "value": 9,
+    },
+  ],
+  Array [
+    Object {
+      "id": 6,
+      "key": "a",
+      "value": 6,
+    },
+    Object {
+      "id": 7,
+      "key": "a",
+      "value": 7,
+    },
+  ],
+  Array [
+    Object {
+      "id": 17,
+      "key": Array [
+        1,
+        2,
+        false,
+      ],
+      "value": 17,
+    },
+    Object {
+      "id": 1,
+      "key": Array [
+        1,
+        2,
+        5,
+      ],
+      "value": 1,
+    },
+    Object {
+      "id": 15,
+      "key": Array [
+        1,
+        2,
+        5,
+      ],
+      "value": 15,
+    },
+    Object {
+      "id": 2,
+      "key": Array [
+        1,
+        2,
+        6,
+      ],
+      "value": 2,
+    },
+    Object {
+      "id": 3,
+      "key": Array [
+        1,
+        2,
+        7,
+      ],
+      "value": 3,
+    },
+  ],
+  Array [
+    Object {
+      "id": 4,
+      "key": Array [
+        "a",
+        1,
+        2,
+      ],
+      "value": 4,
+    },
+    Object {
+      "id": 5,
+      "key": Array [
+        "a",
+        1,
+        3,
+      ],
+      "value": 5,
+    },
+    Object {
+      "id": 20,
+      "key": Array [
+        "a",
+        1,
+        3,
+      ],
+      "value": 20,
+    },
+    Object {
+      "id": 19,
+      "key": Array [
+        "a",
+        2,
+        false,
+      ],
+      "value": 19,
+    },
+  ],
+  Array [
+    Object {
+      "id": 14,
+      "key": Array [
+        Array [
+          10,
+        ],
+        5,
+      ],
+      "value": 14,
+    },
+    Object {
+      "id": 13,
+      "key": Array [
+        Array [
+          10,
+        ],
+        9,
+      ],
+      "value": 13,
+    },
+    Object {
+      "id": 12,
+      "key": Array [
+        Array [
+          10,
+        ],
+        9,
+        7,
+      ],
+      "value": 12,
+    },
+    Object {
+      "id": 11,
+      "key": Array [
+        Array [
+          10,
+        ],
+        9,
+        8,
+      ],
+      "value": 11,
+    },
+  ],
+]
+`;
+
+exports[`groupViewResult all case 2`] = `
+Array [
+  Array [
+    Object {
+      "id": 18,
+      "key": null,
+      "value": 18,
+    },
+  ],
+  Array [
+    Object {
+      "id": 16,
+      "key": false,
+      "value": 16,
+    },
+  ],
+  Array [
+    Object {
+      "id": 8,
+      "key": 10,
+      "value": 8,
+    },
+    Object {
+      "id": 10,
+      "key": 10,
+      "value": 10,
+    },
+  ],
+  Array [
+    Object {
+      "id": 9,
+      "key": 12,
+      "value": 9,
+    },
+  ],
+  Array [
+    Object {
+      "id": 6,
+      "key": "a",
+      "value": 6,
+    },
+    Object {
+      "id": 7,
+      "key": "a",
+      "value": 7,
+    },
+  ],
+  Array [
+    Object {
+      "id": 17,
+      "key": Array [
+        1,
+        2,
+        false,
+      ],
+      "value": 17,
+    },
+    Object {
+      "id": 1,
+      "key": Array [
+        1,
+        2,
+        5,
+      ],
+      "value": 1,
+    },
+    Object {
+      "id": 15,
+      "key": Array [
+        1,
+        2,
+        5,
+      ],
+      "value": 15,
+    },
+    Object {
+      "id": 2,
+      "key": Array [
+        1,
+        2,
+        6,
+      ],
+      "value": 2,
+    },
+    Object {
+      "id": 3,
+      "key": Array [
+        1,
+        2,
+        7,
+      ],
+      "value": 3,
+    },
+  ],
+  Array [
+    Object {
+      "id": 4,
+      "key": Array [
+        "a",
+        1,
+        2,
+      ],
+      "value": 4,
+    },
+    Object {
+      "id": 5,
+      "key": Array [
+        "a",
+        1,
+        3,
+      ],
+      "value": 5,
+    },
+    Object {
+      "id": 20,
+      "key": Array [
+        "a",
+        1,
+        3,
+      ],
+      "value": 20,
+    },
+  ],
+  Array [
+    Object {
+      "id": 19,
+      "key": Array [
+        "a",
+        2,
+        false,
+      ],
+      "value": 19,
+    },
+  ],
+  Array [
+    Object {
+      "id": 14,
+      "key": Array [
+        Array [
+          10,
+        ],
+        5,
+      ],
+      "value": 14,
+    },
+  ],
+  Array [
+    Object {
+      "id": 13,
+      "key": Array [
+        Array [
+          10,
+        ],
+        9,
+      ],
+      "value": 13,
+    },
+    Object {
+      "id": 12,
+      "key": Array [
+        Array [
+          10,
+        ],
+        9,
+        7,
+      ],
+      "value": 12,
+    },
+    Object {
+      "id": 11,
+      "key": Array [
+        Array [
+          10,
+        ],
+        9,
+        8,
+      ],
+      "value": 11,
+    },
+  ],
+]
+`;
+
+exports[`groupViewResult all case 3`] = `
+Array [
+  Array [
+    Object {
+      "id": 18,
+      "key": null,
+      "value": 18,
+    },
+  ],
+  Array [
+    Object {
+      "id": 16,
+      "key": false,
+      "value": 16,
+    },
+  ],
+  Array [
+    Object {
+      "id": 8,
+      "key": 10,
+      "value": 8,
+    },
+    Object {
+      "id": 10,
+      "key": 10,
+      "value": 10,
+    },
+  ],
+  Array [
+    Object {
+      "id": 9,
+      "key": 12,
+      "value": 9,
+    },
+  ],
+  Array [
+    Object {
+      "id": 6,
+      "key": "a",
+      "value": 6,
+    },
+    Object {
+      "id": 7,
+      "key": "a",
+      "value": 7,
+    },
+  ],
+  Array [
+    Object {
+      "id": 17,
+      "key": Array [
+        1,
+        2,
+        false,
+      ],
+      "value": 17,
+    },
+  ],
+  Array [
+    Object {
+      "id": 1,
+      "key": Array [
+        1,
+        2,
+        5,
+      ],
+      "value": 1,
+    },
+    Object {
+      "id": 15,
+      "key": Array [
+        1,
+        2,
+        5,
+      ],
+      "value": 15,
+    },
+  ],
+  Array [
+    Object {
+      "id": 2,
+      "key": Array [
+        1,
+        2,
+        6,
+      ],
+      "value": 2,
+    },
+  ],
+  Array [
+    Object {
+      "id": 3,
+      "key": Array [
+        1,
+        2,
+        7,
+      ],
+      "value": 3,
+    },
+  ],
+  Array [
+    Object {
+      "id": 4,
+      "key": Array [
+        "a",
+        1,
+        2,
+      ],
+      "value": 4,
+    },
+  ],
+  Array [
+    Object {
+      "id": 5,
+      "key": Array [
+        "a",
+        1,
+        3,
+      ],
+      "value": 5,
+    },
+    Object {
+      "id": 20,
+      "key": Array [
+        "a",
+        1,
+        3,
+      ],
+      "value": 20,
+    },
+  ],
+  Array [
+    Object {
+      "id": 19,
+      "key": Array [
+        "a",
+        2,
+        false,
+      ],
+      "value": 19,
+    },
+  ],
+  Array [
+    Object {
+      "id": 14,
+      "key": Array [
+        Array [
+          10,
+        ],
+        5,
+      ],
+      "value": 14,
+    },
+  ],
+  Array [
+    Object {
+      "id": 13,
+      "key": Array [
+        Array [
+          10,
+        ],
+        9,
+      ],
+      "value": 13,
+    },
+  ],
+  Array [
+    Object {
+      "id": 12,
+      "key": Array [
+        Array [
+          10,
+        ],
+        9,
+        7,
+      ],
+      "value": 12,
+    },
+  ],
+  Array [
+    Object {
+      "id": 11,
+      "key": Array [
+        Array [
+          10,
+        ],
+        9,
+        8,
+      ],
+      "value": 11,
+    },
+  ],
+]
+`;
+
+exports[`groupViewResult all case 4`] = `
+Array [
+  Array [
+    Object {
+      "id": 18,
+      "key": null,
+      "value": 18,
+    },
+  ],
+  Array [
+    Object {
+      "id": 16,
+      "key": false,
+      "value": 16,
+    },
+  ],
+  Array [
+    Object {
+      "id": 8,
+      "key": 10,
+      "value": 8,
+    },
+    Object {
+      "id": 10,
+      "key": 10,
+      "value": 10,
+    },
+  ],
+  Array [
+    Object {
+      "id": 9,
+      "key": 12,
+      "value": 9,
+    },
+  ],
+  Array [
+    Object {
+      "id": 6,
+      "key": "a",
+      "value": 6,
+    },
+    Object {
+      "id": 7,
+      "key": "a",
+      "value": 7,
+    },
+  ],
+  Array [
+    Object {
+      "id": 17,
+      "key": Array [
+        1,
+        2,
+        false,
+      ],
+      "value": 17,
+    },
+  ],
+  Array [
+    Object {
+      "id": 1,
+      "key": Array [
+        1,
+        2,
+        5,
+      ],
+      "value": 1,
+    },
+    Object {
+      "id": 15,
+      "key": Array [
+        1,
+        2,
+        5,
+      ],
+      "value": 15,
+    },
+  ],
+  Array [
+    Object {
+      "id": 2,
+      "key": Array [
+        1,
+        2,
+        6,
+      ],
+      "value": 2,
+    },
+  ],
+  Array [
+    Object {
+      "id": 3,
+      "key": Array [
+        1,
+        2,
+        7,
+      ],
+      "value": 3,
+    },
+  ],
+  Array [
+    Object {
+      "id": 4,
+      "key": Array [
+        "a",
+        1,
+        2,
+      ],
+      "value": 4,
+    },
+  ],
+  Array [
+    Object {
+      "id": 5,
+      "key": Array [
+        "a",
+        1,
+        3,
+      ],
+      "value": 5,
+    },
+    Object {
+      "id": 20,
+      "key": Array [
+        "a",
+        1,
+        3,
+      ],
+      "value": 20,
+    },
+  ],
+  Array [
+    Object {
+      "id": 19,
+      "key": Array [
+        "a",
+        2,
+        false,
+      ],
+      "value": 19,
+    },
+  ],
+  Array [
+    Object {
+      "id": 14,
+      "key": Array [
+        Array [
+          10,
+        ],
+        5,
+      ],
+      "value": 14,
+    },
+  ],
+  Array [
+    Object {
+      "id": 13,
+      "key": Array [
+        Array [
+          10,
+        ],
+        9,
+      ],
+      "value": 13,
+    },
+  ],
+  Array [
+    Object {
+      "id": 12,
+      "key": Array [
+        Array [
+          10,
+        ],
+        9,
+        7,
+      ],
+      "value": 12,
+    },
+  ],
+  Array [
+    Object {
+      "id": 11,
+      "key": Array [
+        Array [
+          10,
+        ],
+        9,
+        8,
+      ],
+      "value": 11,
+    },
+  ],
+]
+`;

@@ -1,0 +1,94 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`viewSort sort 1`] = `
+Array [
+  Object {
+    "key": null,
+  },
+  Object {
+    "key": false,
+  },
+  Object {
+    "key": true,
+  },
+  Object {
+    "key": 0,
+  },
+  Object {
+    "key": 10,
+  },
+  Object {
+    "key": "alma",
+  },
+  Object {
+    "key": "zebra",
+  },
+  Object {
+    "key": Array [
+      null,
+      0,
+      "zebra",
+    ],
+  },
+  Object {
+    "key": Array [
+      0,
+      20,
+      10,
+    ],
+  },
+  Object {
+    "key": Array [
+      0,
+      20,
+      30,
+    ],
+  },
+  Object {
+    "key": Array [
+      1,
+      null,
+      23,
+    ],
+  },
+  Object {
+    "key": Array [
+      1,
+      false,
+      true,
+    ],
+  },
+  Object {
+    "key": Object {
+      "a": null,
+    },
+  },
+  Object {
+    "key": Object {
+      "a": false,
+      "b": true,
+    },
+  },
+  Object {
+    "key": Object {
+      "a": 10,
+    },
+  },
+  Object {
+    "key": Object {
+      "b": 10,
+    },
+  },
+  Object {
+    "key": Object {
+      "b": 10,
+    },
+  },
+  Object {
+    "key": Object {
+      "a": 1,
+      "b": 10,
+    },
+  },
+]
+`;

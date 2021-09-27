@@ -9,7 +9,7 @@ var _createSectionFromDirectory = _interopRequireDefault(require("./section/crea
 
 var _testEnvironment = require("../build/testing/testEnvironment");
 
-var _testByPath = _interopRequireDefault(require("./testing/url/testByPath"));
+var _testResults = _interopRequireDefault(require("./testing/testResults"));
 
 var _crypto = _interopRequireDefault(require("crypto"));
 
@@ -23,7 +23,7 @@ function createTestContext(directoryName, testDatabase) {
   }
 
   return new Promise((resolve, reject) => {
-    let fullPath = _path.default.join(process.env.PWD, directoryName);
+    let fullPath = _path.default.resolve(process.env.PWD, directoryName);
 
     let contextName = _crypto.default.createHash('md5').update(fullPath).digest('hex');
 
@@ -31,8 +31,12 @@ function createTestContext(directoryName, testDatabase) {
 
     let root = _path.default.join(directoryName, '..');
 
-    let testContext = testURL => {
-      return (0, _testByPath.default)(contextName, testDatabase, testURL);
+    let testContext = need => {
+      if (need in _testResults.default) {
+        return _testResults.default[need](contextName);
+      } else {
+        throw `${need} is not supported! Try "emitted" or "logged" whitch you need.`;
+      }
     };
 
     testContext.id = `_design/${name}`;
@@ -42,7 +46,7 @@ function createTestContext(directoryName, testDatabase) {
     } = controller;
     (0, _createSectionFromDirectory.default)(root, name, contextName, signal).then(section => {
       testContext = Object.assign(testContext, section[name]);
-      (0, _testEnvironment.registerContext)(testContext, contextName);
+      (0, _testEnvironment.registerContext)(testContext, testDatabase, contextName);
       resolve(testContext);
     }, err => {
       controller.abort();

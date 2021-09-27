@@ -1,6 +1,6 @@
 "use strict";
 
-var _viewSort = _interopRequireDefault(require("../util/viewSort"));
+var _viewSort = _interopRequireDefault(require("./views/viewSort"));
 
 var _testEnvironment = require("../../build/testing/testEnvironment");
 
@@ -16,8 +16,7 @@ const emitted = contextName => {
   let count = buildIns.contextedEmit.mock.calls.length;
 
   if (rows.length) {
-    let keyType = Array.isArray(rows[0].key) ? 'array' : typeof rows[0].key;
-    rows.sort(_viewSort.default[keyType]);
+    rows.sort(_viewSort.default);
   }
 
   buildIns.contextedEmit.mockClear();

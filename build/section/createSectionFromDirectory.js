@@ -11,6 +11,8 @@ var _promises = _interopRequireDefault(require("fs/promises"));
 
 var _createSection = _interopRequireDefault(require("./createSection"));
 
+var _createTestViewFunction = _interopRequireDefault(require("../testing/views/createTestViewFunction"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const createSectionFromDirectory = (directory, sectionName, contextName = false, signal = {
@@ -31,7 +33,16 @@ const createSectionFromDirectory = (directory, sectionName, contextName = false,
               let sectionKey = Object.keys(section)[0];
               directorySection[sectionKey] = Object.assign(directorySection[sectionKey], section[sectionKey]);
             } else {
-              directorySection = Object.assign(directorySection, section);
+              if (contextName && sectionName === 'views') {
+                let viewName = Object.keys(section)[0];
+                let viewSection = {
+                  [viewName]: (0, _createTestViewFunction.default)(contextName, viewName)
+                };
+                viewSection[viewName] = Object.assign(viewSection[viewName], section[viewName]);
+                directorySection = Object.assign(directorySection, viewSection);
+              } else {
+                directorySection = Object.assign(directorySection, section);
+              }
             }
           }
 

@@ -18,17 +18,23 @@ const creteTestSectionFromFile = (directory, fileName, fileStat, contextName, si
     return new Promise((resolve, reject) => {
       let fileStats = (0, _extractFileStats.default)(directory, fileName);
 
-      if (fileStats.isJSON) {
+      if (!fileStats.isJavaScript) {
         _promises.default.readFile(fileStats.filePath, {
           encoding: 'utf8'
         }).then(content => {
-          try {
-            let jsonObject = JSON.parse(content.trim());
+          if (fileStats.isJSON) {
+            try {
+              let jsonObject = JSON.parse(content.trim());
+              resolve({
+                [fileStats.name]: jsonObject
+              });
+            } catch (err) {
+              reject(`Bad JSON format in ${fileStats.filePath}! ${err.message}`);
+            }
+          } else {
             resolve({
-              [fileStats.name]: jsonObject
+              [fileStats.name]: content.trim()
             });
-          } catch (err) {
-            reject(`Bad JSON format in ${fileStats.filePath}! ${err.message}`);
           }
         }, err => reject(`Bad structure! ${fileStats.filePath} must be regular file! ${err.message}`));
       } else {
