@@ -1,9 +1,9 @@
 # couchdb-designer
 
-With this package you can easily manage your couchdb design documents by storing them in directory structure and create javascript object from them. Chouchdb-designer provide two functions for that purpose: The first "designer" wait for a path of root directory of multiple design documents and gives back the array of design document objects. The second "createDesignDocument" do the same but only with one design document. Another experimental feature is the "createTestContext" which allows you to testing your design document with jest testing framework. 
+With this package you can easily manage your couchdb design documents by storing them in directory structure and create javascript object from them. Chouchdb-designer provide two functions for that purpose: The first "designer" wait for a path of root directory of multiple design documents and gives back the array of design document objects. The second "createDesignDocument" do the same but only with one design document. Another feature is the "createTestContext" which allows you to testing your design document with jest testing framework.
 
 >### Warnings
->This package doesn't check if the directory structure matching to the rules of couchdb design document syntax, although able to generate any of type of them. For proper use you need to know this rules.
+>The design document generation doesn't check if the directory structure matching to the rules of couchdb design document syntax, although able to generate almost any of type of them. For proper use you need to know this rules. 
 
 It is work the way. if a directory then becomes to object type field and a file becomes to string or object field depend on rules belove:
 1. If the file is json file then becomes field contain the json file content.
@@ -47,7 +47,7 @@ design
 
 ```
 
-### Examples:
+### Create design documents:
 
 Create multiple design documents from root directory of them.
 
@@ -76,15 +76,15 @@ createDesignDocument('./design/appdesign').then(document => {
 
 ### Testing:
 
-With "createTestContext" you can create a context represented by directory by the same way like at "createDesignDocument". This context object has the same structure as design ducument has but with invokeable functions which is Jest mockFunctions. You can testing the original functionality of them and the interact among them. Additionally available the **viewResult** function which return the result of the view represented by map function and **logResult** which return the logged rows by invoked functions.
+With **createTestContext** you can create a **context** represented by directory by the same way like at **createDesignDocument**. This context object has the same structure as design ducument has but with invokeable functions. These functions in the context object have the near same environment as in a real couchdb. Some of these functions by them nature return result which you can use testing with jest easily. But what if you want to test something like a view's map function which doesn't return the result directly, only call the couchdb built-in **emit** and maybe **log** functions. In these cases you can call the context as a function with the **"emitted"** or **"logged"** string parameter for get the indirect result of previously called functions. After calling the previously gathered data will be deleted but among two calling of them gathering every indirect data.
 
->I know the testing capabilities has a lot of deficiency. The built in support of show/list functions of couchdb (provides,registerType,send,start,getRow) will be probably never supported as the show/list functions and some other feature is deprecated since couchdb 3.0. But who knows. From this point of view supported the require,emit,sum,toJSON,log,isArray builtin functions.
+#### map/reduce testing.
 
-
+An other but much better way of view testing instead of **emitted** is the calling the given named view function directly under the context.views. For example **context.views.viewname()** insted of **context.views.viewname.map()**. Let's call this as **viewNameFunction**! For this opportunity you have to set the **testDatabase** wich is an array of object with the createTestContext second parameter. With viewNameFunctions you can testing the given view in context of **map/reduce,grouping** and the previously setted testDatabase. The viewNameFunction result the same as if you get by the given viewFunction's result from a couchdb and waiting for an optional object parameter with **reduce** (boolean), **group** (boolean), **group_level** (integer) field with same meaning like the couchdb's viewFunction query parameters.
 
 ```javascript
 
-import { createTestContext, viewResult, logResult } from '@zargu/couchdb-designer';
+import { createTestContext } from '@zargu/couchdb-designer';
 
 describe('couchdb',() => {
 

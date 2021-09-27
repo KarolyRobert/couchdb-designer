@@ -81,5 +81,13 @@ const testEnvironment = contextName => {
     }
 }
 
+const viewResult = () => {
+    throw('viewResult was a bad idea and will be removed! See the documentation for more information.')
+};
 
-module.exports = { registerContext, testEnvironment, getTestContext };
+const logResult = () => {
+    throw('logResult was a bad idea and will be removed! See the documentation for more information.')
+};
+
+
+module.exports = { registerContext, testEnvironment, getTestContext, viewResult, logResult };
