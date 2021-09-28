@@ -18,7 +18,7 @@ export default function createTestContext(directoryName,testDatabase){
             if(need in testResults){
                 return testResults[need](contextName);
             }else{
-                throw(`${need} is not supported! Try "emitted" or "logged" whitch you need.`);
+                throw(`${need} is not supported! Try "emitted" or "logged" or the needed built-in function name!`);
             }
         }
         

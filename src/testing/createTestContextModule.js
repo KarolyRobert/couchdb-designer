@@ -11,7 +11,12 @@ const createTestContextModule = (fileStats,testContextName, signal) => {
                     'const log = environment.log;\n'+
                     'const isArray = Array.isArray;\n'+
                     'const sum = environment.sum;\n'+
-                    'const toJSON = environment.toJSON;\n';
+                    'const toJSON = environment.toJSON;\n'+
+                    'const getRow = environment.getRow;\n'+
+                    'const provides = environment.provides;\n'+
+                    'const registerType = environment.registerType;\n'+
+                    'const start = environment.start;\n'+
+                    'const send = environment.send;\n';
                 if(fileStats.isLib){
                     moduleContent += 'const exports = module.exports;\n';
                 }

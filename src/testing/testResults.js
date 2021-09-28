@@ -27,5 +27,25 @@ const logged = (contextName) => {
     return log;
 }
 
+const getRow = (contextName) => {
+    return getTestContext(contextName).buildIns.environmentGetRow;
+}
 
-module.exports = { emitted, logged }
+const provides = (contextName) => {
+    return getTestContext(contextName).buildIns.environmentProvides;
+}
+
+const registerType = (contextName) => {
+    return getTestContext(contextName).buildIns.environmentRegisterType;
+}
+
+const start = (contextName) => {
+    return getTestContext(contextName).buildIns.environmentStart;
+}
+
+const send = (contextName) => {
+    return getTestContext(contextName).buildIns.environmentSend;
+}
+
+
+module.exports = { emitted, logged, getRow, provides, registerType, start, send }
