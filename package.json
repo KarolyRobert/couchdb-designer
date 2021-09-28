@@ -17,7 +17,8 @@
   },
   "keywords": [
     "couchdb",
-    "DesignDocumets",
+    "DesignDocumet",
+    "map/reduce",
     "jest",
     "testing"
   ],
