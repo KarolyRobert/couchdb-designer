@@ -5,6 +5,11 @@ const log = environment.log;
 const isArray = Array.isArray;
 const sum = environment.sum;
 const toJSON = environment.toJSON;
+const getRow = environment.getRow;
+const provides = environment.provides;
+const registerType = environment.registerType;
+const start = environment.start;
+const send = environment.send;
 //Original content 
 
 function map (doc){

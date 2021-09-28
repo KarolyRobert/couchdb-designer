@@ -2,10 +2,10 @@
 
 With this package you can easily manage your couchdb design documents by storing them in directory structure and create javascript object from them. Chouchdb-designer provide two functions for that purpose: The first **"designer"** wait for a path of root directory of multiple design documents and gives back the array of design document objects. The second **"createDesignDocument"** do the same but only with one design document. Another feature is the **"createTestContext"** which allows you to [testing](#Testing) your design document with jest testing framework.
 
->### Warnings
+>#### Warnings
 >The design document generation doesn't check if the directory structure matching to the rules of couchdb design document syntax, although able to generate any type of them without attachmented. For proper use you need to know this rules. By testing you can discover many case of different missable usage.
 
-## generating design documents
+### generating design documents
 
 It is work the way. if a directory then becomes to object type field and a file becomes to string or object field depend on rules belove:
 1. If the file is json file then becomes field contain the json file content.
@@ -82,6 +82,8 @@ With **createTestContext** you can create a **context** represented by directory
 
 An other but much better way of view testing instead of **emitted** is the calling the given named view function directly under the context.views. For example **context.views.viewname()** insted of **context.views.viewname.map()**. Let's call this as **viewNameFunction**! For this opportunity you have to set the **testDatabase** which is an array of objects with the createTestContext second parameter. With viewNameFunctions you can testing the given view in context of **map/reduce,grouping** and the previously setted testDatabase. The viewNameFunction result the same as if you get by the given viewFunction's result from a real couchdb and waiting for an optional object parameter with **reduce** (boolean), **group** (boolean), **group_level** (integer) field with same meaning like the couchdb's viewFunction query parameters. The viewNameFunction return the correct result even if you set one of built-in couchdb reducers instead of self implemented.
 
+
+
 ```javascript
 
 import { createTestContext } from '@zargu/couchdb-designer';
@@ -119,4 +121,7 @@ describe('couchdb',() => {
 
 ```
 
-I hope i don't causing too much torment with my english.
+>#### Release notes
+>Until current version the conceptions of testing was incomplete, therefore from 0.0.5 and the previous releases will be deprecated.
+
+I hope i don't causing too much torment with my english. 

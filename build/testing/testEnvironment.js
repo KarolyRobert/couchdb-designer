@@ -44,6 +44,11 @@ const testEnvironment = contextName => {
     const environmentRequire = jest.fn();
     const environmentEmit = jest.fn();
     const environmentLog = jest.fn();
+    const environmentGetRow = jest.fn();
+    const environmentProvides = jest.fn();
+    const environmentRegisterType = jest.fn();
+    const environmentStart = jest.fn();
+    const environmentSend = jest.fn();
     const contextedEmit = jest.fn();
 
     const contextedRequire = requirePath => {
@@ -71,22 +76,42 @@ const testEnvironment = contextName => {
         environmentEmit,
         environmentLog,
         contextedEmit,
-        contextedRequire
+        contextedRequire,
+        environmentGetRow,
+        environmentProvides,
+        environmentRegisterType,
+        environmentStart,
+        environmentSend
       },
       environment: {
         require: environmentRequire,
         emit: environmentEmit,
         log: environmentLog,
         sum: environmentSum,
-        toJSON: environmentToJSON
+        toJSON: environmentToJSON,
+        getRow: environmentGetRow,
+        provides: environmentProvides,
+        registerType: environmentRegisterType,
+        start: environmentStart,
+        send: environmentSend
       }
     };
     return contexts[contextName].environment;
   }
 };
 
+const viewResult = () => {
+  throw 'viewResult was a bad idea and will be removed! See the documentation for more information.';
+};
+
+const logResult = () => {
+  throw 'logResult was a bad idea and will be removed! See the documentation for more information.';
+};
+
 module.exports = {
   registerContext,
   testEnvironment,
-  getTestContext
+  getTestContext,
+  viewResult,
+  logResult
 };

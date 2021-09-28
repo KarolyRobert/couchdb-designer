@@ -37,7 +37,32 @@ const logged = contextName => {
   return log;
 };
 
+const getRow = contextName => {
+  return (0, _testEnvironment.getTestContext)(contextName).buildIns.environmentGetRow;
+};
+
+const provides = contextName => {
+  return (0, _testEnvironment.getTestContext)(contextName).buildIns.environmentProvides;
+};
+
+const registerType = contextName => {
+  return (0, _testEnvironment.getTestContext)(contextName).buildIns.environmentRegisterType;
+};
+
+const start = contextName => {
+  return (0, _testEnvironment.getTestContext)(contextName).buildIns.environmentStart;
+};
+
+const send = contextName => {
+  return (0, _testEnvironment.getTestContext)(contextName).buildIns.environmentSend;
+};
+
 module.exports = {
   emitted,
-  logged
+  logged,
+  getRow,
+  provides,
+  registerType,
+  start,
+  send
 };

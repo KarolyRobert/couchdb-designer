@@ -35,7 +35,7 @@ function createTestContext(directoryName, testDatabase) {
       if (need in _testResults.default) {
         return _testResults.default[need](contextName);
       } else {
-        throw `${need} is not supported! Try "emitted" or "logged" whitch you need.`;
+        throw `${need} is not supported! Try "emitted" or "logged" or the needed built-in function name!`;
       }
     };
 
