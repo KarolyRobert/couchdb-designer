@@ -17,7 +17,6 @@ const environmentSum = arr => {
     throw new Error('The parameter of "sum()" must be an array!');
 }
 
-const environmentToJSON = p => JSON.stringify(p);
 
 const registerContext = (testContext,testDatabase,testContextName) => {
     if(testDatabase !== undefined && !Array.isArray(testDatabase)){
@@ -47,6 +46,14 @@ const testEnvironment = contextName => {
         const environmentRegisterType = jest.fn();
         const environmentStart = jest.fn();
         const environmentSend = jest.fn();
+        const environmentIndex = jest.fn();
+
+        const contextedGetRow = jest.fn();
+        const contextedProvides = jest.fn();
+        const contextedRegisterType = jest.fn();
+        const contextedStart = jest.fn();
+        const contextedSend = jest.fn();
+        const contextedIndex = jest.fn();
 
         const contextedEmit = jest.fn();
 
@@ -72,39 +79,39 @@ const testEnvironment = contextName => {
                 environmentRequire,
                 environmentEmit,
                 environmentLog,
-                contextedEmit,
-                contextedRequire,
                 environmentGetRow,
                 environmentProvides,
                 environmentRegisterType,
                 environmentStart,
-                environmentSend
+                environmentSend,
+                environmentIndex,
+                contextedEmit,
+                contextedRequire,
+                contextedGetRow,
+                contextedProvides,
+                contextedRegisterType,
+                contextedStart,
+                contextedSend,
+                contextedIndex
             },
             environment:{
                 require:environmentRequire,
                 emit:environmentEmit,
                 log:environmentLog,
                 sum:environmentSum,
-                toJSON:environmentToJSON,
                 getRow:environmentGetRow,
                 provides:environmentProvides,
                 registerType:environmentRegisterType,
                 start:environmentStart,
-                send:environmentSend
-            }
+                send:environmentSend,
+                index:environmentIndex
+            },
+            server:{}
         }
 
         return contexts[contextName].environment;
     }
 }
 
-const viewResult = () => {
-    throw('viewResult was a bad idea and will be removed! See the documentation for more information.')
-};
 
-const logResult = () => {
-    throw('logResult was a bad idea and will be removed! See the documentation for more information.')
-};
-
-
-module.exports = { registerContext, testEnvironment, getTestContext, viewResult, logResult };
+module.exports = { registerContext, testEnvironment, getTestContext};

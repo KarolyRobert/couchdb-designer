@@ -48,12 +48,12 @@ describe('map/reduce',() => {
 
     test('reducer test',() => {
         return createTestContext('./tests/design/appdesign',reduceDatabase).then(context => {
-            expect(context.views.byTest()).toEqual({rows:[{key:null,value:40}]});
+            expect(context('server').view.byTest()).toEqual({rows:[{key:null,value:40}]});
         });
     });
     test('reducer test',() => {
         return createTestContext('./tests/design/appdesign',reduceDatabase).then(context => {
-            expect(context.views.byReducer({group_level:1})).toEqual({rows:[{key:[2021],value:40}]});
+            expect(context('server').view.byReducer({group_level:1})).toEqual({rows:[{key:[2021],value:40}]});
         });
     });
 })

@@ -19,7 +19,7 @@ const testDatabase2 = [
                 let update = context.updates.updateFromDir('doc','req');
                 expect(update).toEqual(['doc','libfunction call updated']);
                 expect(context.lib.couchdb.libfunction.mock.calls.length).toBe(1);
-                expect(() => context.views.byDate.reduce(['keys'],['values'],false)).toThrow('Calling require from reduce function in is not allowed! You can fix it in tests/design/appdesign/views/byDate/reduce.js');
+                expect(() => context.views.byDate.reduce(['keys'],['values'],false)).toThrow("Calling 'require' from reduce function in is not allowed and useless from library! You can fix it in tests/design/appdesign/views/byDate/reduce.js");
                 context.views.byName.map(testDatabase[1]);
                 expect(context('emitted')).toEqual({offset:0,total_rows:1,rows:[{id:'doc2',key:[[10,10],9,10],value:1}]});
                 expect(context('logged')).toBe('[info] Log :: log from updateFromDir\n[info] Log :: log from views/byName/map\n');
@@ -32,8 +32,8 @@ const testDatabase2 = [
                 let update = context.updates.updateFromDir('doc','req');
                 expect(update).toEqual(['doc','libfunction call updated']);
                 expect(context.lib.couchdb.libfunction.mock.calls.length).toBe(1);
-                expect(() => context.views.byDate.reduce(['keys'],['values'],false)).toThrow('Calling require from reduce function in is not allowed! You can fix it in tests/design/appdesign/views/byDate/reduce.js');
-             //   expect(() => context.views.byName({group:true})).toThrow();
+                expect(() => context.views.byDate.reduce(['keys'],['values'],false)).toThrow("Calling 'require' from reduce function in is not allowed and useless from library! You can fix it in tests/design/appdesign/views/byDate/reduce.js");
+                expect(() => context('server').view.byName({group_level:1})).toThrow();
             })
         });
     });

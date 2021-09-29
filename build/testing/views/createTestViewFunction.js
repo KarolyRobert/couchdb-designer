@@ -7,7 +7,7 @@ exports.default = void 0;
 
 var _testEnvironment = require("../../../build/testing/testEnvironment");
 
-var _testResults = require("../testResults");
+var _testBuiltIns = require("../testBuiltIns");
 
 var _viewUtils = require("./viewUtils");
 
@@ -28,7 +28,7 @@ const createTestViewFunction = (contextName, viewName) => {
 
       if (database) {
         database.forEach(doc => context.views[viewName].map(doc));
-        viewResult = (0, _testResults.emitted)(contextName);
+        viewResult = (0, _testBuiltIns.emitted)(contextName);
       } else {
         throw 'For map/reduce testing you need to provide a testDatabase in createTestContext second parameter.';
       }

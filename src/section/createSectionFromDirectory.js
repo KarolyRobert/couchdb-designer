@@ -1,10 +1,9 @@
 import path from 'path';
 import fs from 'fs/promises';
 import createSection from './createSection';
-import createTestViewFunction from '../testing/views/createTestViewFunction';
 
 
-const createSectionFromDirectory = (directory, sectionName, contextName = false, signal = {aborted: false}) => {
+const createSectionFromDirectory = (directory, sectionName, contextProps = false, signal = {aborted: false}) => {
     if(!signal.aborted){
         return new Promise((resolve, reject) => {
             let directoryPath = path.join(directory,sectionName);
@@ -12,7 +11,7 @@ const createSectionFromDirectory = (directory, sectionName, contextName = false,
             
                 Promise.all(names.map(name => {
 
-                        return createSection(directoryPath, name, contextName, signal );
+                        return createSection(directoryPath, name, contextProps, signal );
                     
                     })).then(sections => {
                         let directorySection = {};
@@ -21,14 +20,7 @@ const createSectionFromDirectory = (directory, sectionName, contextName = false,
                                 let sectionKey = Object.keys(section)[0];
                                 directorySection[sectionKey] = Object.assign(directorySection[sectionKey],section[sectionKey]);
                             }else{
-                                if(contextName && sectionName === 'views'){
-                                    let viewName = Object.keys(section)[0];
-                                    let viewSection = {[viewName]:createTestViewFunction(contextName,viewName)};
-                                    viewSection[viewName] = Object.assign(viewSection[viewName],section[viewName]);
-                                    directorySection = Object.assign(directorySection,viewSection);
-                                }else{
-                                    directorySection = Object.assign(directorySection,section);
-                                }
+                                directorySection = Object.assign(directorySection,section);
                             }
                         }
                         resolve({[sectionName]:directorySection});

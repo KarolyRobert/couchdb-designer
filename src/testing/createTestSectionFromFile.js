@@ -2,10 +2,10 @@ import fs from 'fs/promises';
 import extractFileStats from '../util/extractFileStats';
 import createTestFileContext from './createTestFileContext';
 
-const creteTestSectionFromFile = (directory, fileName, fileStat, contextName, signal) => {
+const creteTestSectionFromFile = (directory, fileName, fileStat, contextProps, signal) => {
     if(!signal.aborted){
         return new Promise((resolve,reject) => {
-            let fileStats = extractFileStats(directory, fileName);
+            let fileStats = extractFileStats(directory, fileName, contextProps.root);
             if(!fileStats.isJavaScript){
                 fs.readFile(fileStats.filePath,{encoding:'utf8'}).then(content => {
                     if(fileStats.isJSON){
@@ -20,7 +20,7 @@ const creteTestSectionFromFile = (directory, fileName, fileStat, contextName, si
                     }
                 },err => reject(`Bad structure! ${fileStats.filePath} must be regular file! ${err.message}`));
             }else{
-                createTestFileContext(fileStats, fileStat, contextName, signal).then(resolve,reject);//testFileContext =>  resolve(testFileContext),err => reject(err));
+                createTestFileContext(fileStats, fileStat, contextProps.contextName, signal).then(resolve,reject);//testFileContext =>  resolve(testFileContext),err => reject(err));
             }
         });
     }

@@ -9,7 +9,9 @@ var _createSectionFromDirectory = _interopRequireDefault(require("./section/crea
 
 var _testEnvironment = require("../build/testing/testEnvironment");
 
-var _testResults = _interopRequireDefault(require("./testing/testResults"));
+var _createCouchDBFunctions = _interopRequireDefault(require("./testing/createCouchDBFunctions"));
+
+var _testBuiltIns = _interopRequireDefault(require("./testing/testBuiltIns"));
 
 var _crypto = _interopRequireDefault(require("crypto"));
 
@@ -23,19 +25,21 @@ function createTestContext(directoryName, testDatabase) {
   }
 
   return new Promise((resolve, reject) => {
-    let fullPath = _path.default.resolve(process.env.PWD, directoryName);
+    let root = _path.default.join(directoryName);
+
+    let fullPath = _path.default.resolve(process.env.PWD, root);
 
     let contextName = _crypto.default.createHash('md5').update(fullPath).digest('hex');
 
-    let name = directoryName.split(_path.default.sep).pop();
+    let name = root.split(_path.default.sep).pop();
 
-    let root = _path.default.join(directoryName, '..');
+    let directory = _path.default.join(root, '..');
 
     let testContext = need => {
-      if (need in _testResults.default) {
-        return _testResults.default[need](contextName);
+      if (need in _testBuiltIns.default) {
+        return _testBuiltIns.default[need](contextName);
       } else {
-        throw `${need} is not supported! Try "emitted" or "logged" or the needed built-in function name!`;
+        throw `${need} is not supported! Try "server","emitted","logged" or the needed built-in mockFunction!`;
       }
     };
 
@@ -44,8 +48,12 @@ function createTestContext(directoryName, testDatabase) {
     const {
       signal
     } = controller;
-    (0, _createSectionFromDirectory.default)(root, name, contextName, signal).then(section => {
+    (0, _createSectionFromDirectory.default)(directory, name, {
+      root,
+      contextName
+    }, signal).then(section => {
       testContext = Object.assign(testContext, section[name]);
+      (0, _createCouchDBFunctions.default)(contextName, testContext);
       (0, _testEnvironment.registerContext)(testContext, testDatabase, contextName);
       resolve(testContext);
     }, err => {

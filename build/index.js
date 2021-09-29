@@ -6,14 +6,10 @@ var _createDeisgnDocument = _interopRequireDefault(require("./createDeisgnDocume
 
 var _createTestContext = _interopRequireDefault(require("./createTestContext"));
 
-var _testEnvironment = require("./testing/testEnvironment");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = {
   designer: _designer.default,
   createDesignDocument: _createDeisgnDocument.default,
-  createTestContext: _createTestContext.default,
-  viewResult: _testEnvironment.viewResult,
-  logResult: _testEnvironment.logResult
+  createTestContext: _createTestContext.default
 };

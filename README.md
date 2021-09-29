@@ -76,12 +76,11 @@ createDesignDocument('./design/appdesign').then(document => {
 
 ### Testing ###
 
-With **createTestContext** you can create a **context** represented by directory by the same way like at **createDesignDocument** but you can here declare a testDatabase in the second parameter. This context object has the same structure as design ducument has but with invokeable functions. These functions in the context object have the near same environment as in a real couchdb. Some of these functions by them nature return result which you can use testing with jest easily. But what if you want to test something like a view's map function which doesn't return the result directly, only call the couchdb built-in **emit** and maybe **log** functions. In these cases you can call the context as a function with the **"emitted"** or **"logged"** string parameter for get the indirect result of previously called functions. After calling the previously gathered data will be deleted but among two calling of them gathering every indirect data. The rest built-in couchdb functions is mocking functions and available in the same way by calling the context as a function and give their name as a string parameter.
+With **createTestContext** you can create a **context** represented by directory by the same way like at **createDesignDocument** but you can here declare a testDatabase in the second parameter. This context object has the same structure as design ducument has but with invokeable functions. These functions in the context object have the near same environment as in a real couchdb. Some of these functions by them nature return result which you can use testing with jest easily. But what if you want to test something like a view's map function which doesn't return the result directly, only call the couchdb built-in **emit** and maybe **log** functions. In these cases you can call the context as a function with the **"emitted"** or **"logged"** string parameter for get the indirect result of previously called functions. After calling the previously gathered data will be deleted but among two calling of them gathering every indirect data. The rest built-in couchdb functions is mockFunctions and available in the same way by calling the context as a function and give their name as a string parameter, for example **context("registerType")** will give you the given built-in mockFunction. When calling the available functions under the context object, they will verify their own implementation then throws error if something wrong happen, for example when calling irrelevant built in function.
 
 #### Map/reduce testing.
 
-An other but much better way of view testing instead of **emitted** is the calling the given named view function directly under the context.views. For example **context.views.viewname()** insted of **context.views.viewname.map()**. Let's call this as **viewNameFunction**! For this opportunity you have to set the **testDatabase** which is an array of objects with the createTestContext second parameter. With viewNameFunctions you can testing the given view in context of **map/reduce,grouping** and the previously setted testDatabase. The viewNameFunction result the same as if you get by the given viewFunction's result from a real couchdb and waiting for an optional object parameter with **reduce** (boolean), **group** (boolean), **group_level** (integer) field with same meaning like the couchdb's viewFunction query parameters. The viewNameFunction return the correct result even if you set one of built-in couchdb reducers instead of self implemented.
-
+An other but much better way of view testing instead of **emitted** is the calling the context with **server** parameter which give back an object what you can use as simulator of couchdb. For example **context("server").view.viewname()** insted of **context.views.viewname.map()**. For this opportunity you have to set the **testDatabase** with the createTestContext second parameter.The testDatabase is an array of objects. With server object you can testing the given view in context of **map/reduce,grouping** and the previously setted testDatabase. The server object's functions result the same as if you get by the given function's result from a real couchdb. Only the view functions supported yet and these waiting for an optional object parameter with **reduce** (boolean), **group** (boolean), **group_level** (integer) field with same meaning like the couchdb's viewFunction query parameters. These functions return the correct result even if you set one of built-in couchdb reducers instead of self implemented.
 
 
 ```javascript
@@ -113,7 +112,7 @@ describe('couchdb',() => {
             expect(context('registerType')).not.toHaveBeenCalled(); // built-in mockFunction
 
             // Map/reduce view testing
-            expect(context.views.byPeriod({group_level:1})).toEqual({rows:[{key:[2021],value:234}]}) // the result depend on map,reduce,testDatabase
+            expect(context('server').views.byPeriod({group_level:1})).toEqual({rows:[{key:[2021],value:234}]}) // the result depend on map,reduce,testDatabase
 
         }).catch(err => expect(err).toBe('something wrong in directory structure'));
     });
@@ -121,7 +120,7 @@ describe('couchdb',() => {
 
 ```
 
->#### Release notes
->Until current version the conceptions of testing was incomplete, therefore from 0.0.5 and the previous releases will be deprecated.
+>#### Release note:
+>I hope this form will be the last. I always try to make an uniform resolv. 
 
 I hope i don't causing too much torment with my english. 

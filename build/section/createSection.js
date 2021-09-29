@@ -17,7 +17,7 @@ var _createSectionFromDirectory = _interopRequireDefault(require("./createSectio
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const createSection = (directory, name, contextName, signal = {
+const createSection = (directory, name, contextProps, signal = {
   aborted: false
 }) => {
   if (!signal.aborted) {
@@ -27,13 +27,13 @@ const createSection = (directory, name, contextName, signal = {
       _promises.default.stat(sectionPath).then(fileStat => {
         if (fileStat.isFile() || fileStat.isDirectory()) {
           if (fileStat.isFile()) {
-            if (contextName) {
-              (0, _createTestSectionFromFile.default)(directory, name, fileStat, contextName, signal).then(resolve, reject);
+            if (contextProps) {
+              (0, _createTestSectionFromFile.default)(directory, name, fileStat, contextProps, signal).then(resolve, reject);
             } else {
               (0, _createDesignSectionFromFile.default)(directory, name).then(resolve, reject);
             }
           } else {
-            (0, _createSectionFromDirectory.default)(directory, name, contextName, signal).then(resolve, reject);
+            (0, _createSectionFromDirectory.default)(directory, name, contextProps, signal).then(resolve, reject);
           }
         } else {
           reject(`Bad structure! ${sectionPath} must be file or directory!`);

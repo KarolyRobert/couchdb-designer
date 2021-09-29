@@ -61,6 +61,10 @@ const index = contextName => {
   return (0, _testEnvironment.getTestContext)(contextName).buildIns.contextedIndex;
 };
 
+const server = contextName => {
+  return (0, _testEnvironment.getTestContext)(contextName).server;
+};
+
 module.exports = {
   emitted,
   logged,
@@ -69,5 +73,6 @@ module.exports = {
   registerType,
   start,
   send,
-  index
+  index,
+  server
 };

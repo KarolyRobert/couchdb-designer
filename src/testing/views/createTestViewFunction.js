@@ -1,5 +1,5 @@
 import {getTestContext} from '../../../build/testing/testEnvironment';
-import { emitted } from '../testResults';
+import { emitted } from '../testBuiltIns';
 import { validateViewOptions } from './viewUtils';
 import reduceView from './reducers/reduceView';
 

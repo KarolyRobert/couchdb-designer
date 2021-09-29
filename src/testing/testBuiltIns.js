@@ -28,24 +28,32 @@ const logged = (contextName) => {
 }
 
 const getRow = (contextName) => {
-    return getTestContext(contextName).buildIns.environmentGetRow;
+    return getTestContext(contextName).buildIns.contextedGetRow;
 }
 
 const provides = (contextName) => {
-    return getTestContext(contextName).buildIns.environmentProvides;
+    return getTestContext(contextName).buildIns.contextedProvides;
 }
 
 const registerType = (contextName) => {
-    return getTestContext(contextName).buildIns.environmentRegisterType;
+    return getTestContext(contextName).buildIns.contextedRegisterType;
 }
 
 const start = (contextName) => {
-    return getTestContext(contextName).buildIns.environmentStart;
+    return getTestContext(contextName).buildIns.contextedStart;
 }
 
 const send = (contextName) => {
-    return getTestContext(contextName).buildIns.environmentSend;
+    return getTestContext(contextName).buildIns.contextedSend;
+}
+
+const index = (contextName) => {
+    return getTestContext(contextName).buildIns.contextedIndex;
+}
+
+const server = (contextName) => {
+    return getTestContext(contextName).server;
 }
 
 
-module.exports = { emitted, logged, getRow, provides, registerType, start, send }
+module.exports = { emitted, logged, getRow, provides, registerType, start, send, index, server }
