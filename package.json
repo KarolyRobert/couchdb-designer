@@ -1,6 +1,6 @@
 {
   "name": "@zargu/couchdb-designer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Create couchdb design document form directory structure.",
   "main": "build/index.js",
   "directories": {
