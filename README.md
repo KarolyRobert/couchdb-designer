@@ -99,13 +99,13 @@ Common js library:
 designName/path/tolib.lib.js (view map function can only require library under path views/libname )
 ```javascript
 
-function linfunc1 (){
+function libfunc1 (){
     ...
 }
-function linfunc2 (){
+function libfunc2 (){
     ...
 }
-module.exports = { libfunc1, linfunc2 }
+module.exports = { libfunc1, libfunc2 }
 
 ```
 
@@ -138,38 +138,49 @@ createDesignDocument('./design/appdesign').then(document => {
 
 With **createTestContext** you can create a **context** represented by directory by the same way like at **createDesignDocument** but you can here declare a testDatabase, userCtx, secObj in parameters. This context object has the same structure as design ducument has but with invokeable functions. These functions in the context object have the near same environment as in a real couchdb. Some of these functions by them nature return result which you can use testing with jest easily. But what if you want to test something like a view's map function which doesn't return the result directly, only call the couchdb built-in **emit** and maybe **log** functions. In these cases you can call the context as a function with the **"emitted"** or **"logged"** string parameter for get the indirect result of previously called functions. After calling the previously gathered data will be deleted but among two calling of them gathering every indirect data. The rest built-in couchdb functions is mockFunctions and available in the same way by calling the context as a function and give their name as a string parameter, for example **context("registerType")** will give you the given built-in mockFunction. When calling the available functions under the context object, they will verify their own implementation then throws error if something wrong happen, for example when calling irrelevant built in function inside your ddoc function.
 
-**createTestContext**(directory,testDatabase\[,userCtx, secObj\])
-
+```javascript
+    createTestContext(directory,testDatabase\[,userCtx, secObj\])
+```
  - **directory**    : The root directory of the design document directory structure.
  - **testDatabase** : An array of objects representing the test database.
- - **userCtx**      : Default userCtx object if not declared the userCtx will be 
- - - - - {db:'testdatabase',name:null,roles:\["_admin"\]}
+ - **userCtx**      : Default userCtx object if not declared the userCtx will be:
+                        {db:'testdatabase',name:null,roles:\["_admin"\]}
+
  - **secObj**       : Default security object if not declared will be:
- - - - - {members:{roles:\["_admin"\]},admins:{roles:\["_admin"\]}}
+                        {members:{roles:\["_admin"\]},admins:{roles:\["_admin"\]}}
 
 
 
 A new feature of current version is **createTestServer** which you can use to test multiple ddocs by create a context acting like a real couchdb. It is work the same way like createTestContext but you have to call with path the given ddoc name your functions. The benifit of use this capability is that when you test updateFunctions then the result is depend on all ddocs validate_doc_update.
 
-**createTestServer**(ddoc_root_directory,testDatabase\[,userCtx, secObj\])
+```javascript
+    createTestServer(directory,testDatabase\[,userCtx, secObj\])
+```
+ - **directory**    : The directory which containing the design document directory structures.
 
 
 #### Map/reduce testing.
 
-An other but much better way of view testing instead of **emitted** is the calling the context with **server** or **_design** parameter which give back an object what you can use as simulator of couchdb. For example **context("server").view.viewname()** insted of **context.views.viewname.map()**. For this opportunity you have to set the **testDatabase** with the createTestContext second parameter.The testDatabase is an array of objects. With server object you can testing the given view in context of **map/reduce,grouping** and the previously setted testDatabase. The server object's functions result the same as if you get by the given function's result from a real couchdb. Only the view functions supported yet and these waiting for an optional object parameter with **reduce** (boolean), **group** (boolean), **group_level** (integer) field with same meaning like the couchdb's viewFunction query parameters. These functions return the correct result even if you set one of built-in couchdb reducers instead of self implemented.
+An other but much better way of view testing instead of **emitted** is the calling the context with **server** or **_design** parameter which give back an object what you can use as emulator of couchdb. For example **context("server").view.viewname()** insted of **context.views.viewname.map()**. For this opportunity you have to set the **testDatabase** with the createTestContext second parameter.The testDatabase is an array of objects. With server object you can testing the given view in context of **map/reduce,grouping** and the previously setted testDatabase. The server object's functions result the same as if you get by the given function's result from a real couchdb. Only the view functions supported yet and these waiting for an optional object parameter with **reduce** (boolean), **group** (boolean), **group_level** (integer) field with same meaning like the couchdb's viewFunction query parameters. These functions return the correct result even if you set one of built-in couchdb reducers instead of self implemented.
+
 
 #### Update testing.
 
 Similar to map/reduce testing you can test updateFunctions for example:
+```javascript
+    context("_design").update.updateName(request[,doc_id]);
+    // or 
+    server("_design").ddocname.update.updateName(request[,doc_id]);
+```
+ - **request**      : The request object. whitch will be supplement by previously given or default userCtx, secObj an other fields. if you specify userCtx in this then that won't be overwritten with the default.
+ - **doc_id**       : Optional document id. If it is an existed id in testDatabase then the invocation will get the given doc.
 
-**context("_design").update.updateName({body:{foo:'bar'}},'bas')** 
-
-The first paramerter is request object which will be supplement with secObj, userCtx, and other fields related by testDatabase. 
+The result will be the original updateFunction result's second element depending on the updated testDatabase or an error message from validate_doc_update or another error if your functions do something dirty. You can verify the updated testDatabase by calling context as function with **database** string.
 
 
 ```javascript
 
-import { createTestContext } from '@zargu/couchdb-designer';
+import { createTestContext,createTestServer } from '@zargu/couchdb-designer';
 
 const testDatabase = [
     {_id:'doc1'...},
@@ -184,7 +195,7 @@ describe('couchdb',() => {
     });
 
     test('appdesign',() => {
-        return createTestContext('design/adddesign',testDatabase).then(context => {
+        return createTestContext('./design/adddesign',testDatabase).then(context => {
 
             // simple testing
             let somedocument = {_id:'some',mail:'foo@bar.com'};
@@ -200,11 +211,24 @@ describe('couchdb',() => {
 
         }).catch(err => expect(err).toBe('something wrong in directory structure'));
     });
+
+    test('all_ddoc',() => {
+        return createTestServer('./design').then(server => {
+            let validCtx = {...};
+            let invalidCtx = {...};
+            //update testing
+            expect(server('_design').appdesign.update.updateName({userCtx:validCtx},'doc1')).toBe("doc1 updated succesfully");
+            expect(server('_design').appdesign.update.updateName({userCtx:validCtx},'doc1')).toEqual({error:'forbidden',reason:"Guru meditation error!"});
+            //verify update
+            expect(server('database')[0]).toEqual({_id:'doc1',... });
+
+        })
+    });
 });
 
 ```
 
 >#### Release note:
->I hope this form will be the last. I always try to make an uniform resolv. 
+>Sadly i have no too much time to write tests for this and nowadays not will as well. I hope all work properly.
 
 I hope i don't causing too much torment with my english. 

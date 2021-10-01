@@ -113,7 +113,7 @@ const createTestUpdateFunction = (contextName, updateName, context) => {
                     error: resultErrors
                   };
                 } else if (resultErrors.length) {
-                  return resultErrors;
+                  throw resultErrors;
                 }
               }
             }
