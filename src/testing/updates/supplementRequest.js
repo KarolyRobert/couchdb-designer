@@ -6,6 +6,11 @@ import crypto from 'crypto';
 const supplementRequest = (request,id,contextName,uri) => {
     let {database,secObj,userCtx} = getTestContext(contextName);
     let req = Object.assign(request,{secObj});
+    let headers = {
+      Accept: "*/*",
+      Host: "localhost:5984",
+      "User-Agent": "couchdb-designer"
+    };
     let info = {
         db_name: "testdatabase",
         doc_count: database.database.length,

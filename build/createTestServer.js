@@ -31,9 +31,9 @@ const createTestServer = (directoryName, testDatabase, userCtx, secObj) => {
 
     _promises.default.readdir(root).then(names => {
       Promise.all(names.map(name => (0, _createTestContext.default)(_path.default.join(directoryName, name), null, null, null, contextId))).then(designContexts => {
-        let serverContext = need => {
+        let serverContext = (need, params) => {
           if (need in _testBuiltIns.default) {
-            return _testBuiltIns.default[need](contextId);
+            return _testBuiltIns.default[need](contextId, params);
           } else {
             throw `${need} is not supported! Try "server","emitted","logged" or the needed built-in mockFunction!`;
           }

@@ -48,7 +48,9 @@ const testDatabase2 = [
         test('server', () => {
             return createTestServer('./tests/design',testDatabase).then(server => {
                 expect(server('server').appdesign.update.updateFromDir({uuid:'uid1'},'doc2').uuid).toBe("uid1");
-                expect(server('database')).toEqual([]);
+                expect(server('database')[1].updateByUpdateFromDir).toBe("libfunction call updated");
+                expect(server('database','doc2').updateByUpdateFromDir).toBe("libfunction call updated");
+                expect(server('database','doc3')).toEqual({error:"not_found",reason:"missing"});
             });
         });
     });

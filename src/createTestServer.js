@@ -15,9 +15,9 @@ const createTestServer = (directoryName,testDatabase,userCtx,secObj) => {
             Promise.all(names.map(name => createTestContext(path.join(directoryName,name),null,null,null,contextId)))
                 .then(designContexts => {
 
-                    let serverContext = need => {
+                    let serverContext = (need,params) => {
                         if(need in testBuiltIns){
-                            return testBuiltIns[need](contextId);
+                            return testBuiltIns[need](contextId,params);
                         }else{
                             throw(`${need} is not supported! Try "server","emitted","logged" or the needed built-in mockFunction!`);
                         }

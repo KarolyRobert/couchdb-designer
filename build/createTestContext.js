@@ -51,9 +51,9 @@ function createTestContext(directoryName, testDatabase, userCtx, secObj, parentC
         contextId
       };
 
-      testContext = need => {
+      testContext = (need, params) => {
         if (need in _testBuiltIns.default) {
-          return _testBuiltIns.default[need](contextId);
+          return _testBuiltIns.default[need](contextId, params);
         } else {
           throw `${need} is not supported! Try "server","emitted","logged" or the needed built-in mockFunction!`;
         }

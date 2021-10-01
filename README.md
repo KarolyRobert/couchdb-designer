@@ -175,7 +175,7 @@ Similar to map/reduce testing you can test updateFunctions for example:
  - **request**      : The request object. whitch will be supplement by previously given or default userCtx, secObj an other fields. if you specify userCtx in this then that won't be overwritten with the default.
  - **doc_id**       : Optional document id. If it is an existed id in testDatabase then the invocation will get the given doc.
 
-The result will be the original updateFunction result's second element depending on the updated testDatabase or an error message from validate_doc_update or another error if your functions do something dirty. You can verify the updated testDatabase by calling context as function with **database** string.
+The result will be the original updateFunction result's second element depending on the updated testDatabase or an error message from validate_doc_update or another error if your functions do something dirty. You can verify the updated testDatabase by calling context as function with **database** string or can get a particular document by specify them id in second parameter.
 
 
 ```javascript
@@ -218,10 +218,11 @@ describe('couchdb',() => {
             let invalidCtx = {...};
             //update testing
             expect(server('_design').appdesign.update.updateName({userCtx:validCtx},'doc1')).toBe("doc1 updated succesfully");
-            expect(server('_design').appdesign.update.updateName({userCtx:validCtx},'doc1')).toEqual({error:'forbidden',reason:"Guru meditation error!"});
-            //verify update
-            expect(server('database')[0]).toEqual({_id:'doc1',... });
 
+            expect(server('_design').appdesign.update.updateName({userCtx:invalidCtx},'doc1')).toEqual({error:'forbidden',reason:"Guru meditation error!"});
+            //verify database
+            expect(server('database')[0]).toEqual({_id:'doc1',... });
+            expect(server('database','doc1')).toEqual({_id:'doc1',... });
         })
     });
 });
@@ -229,6 +230,6 @@ describe('couchdb',() => {
 ```
 
 >#### Release note:
->Sadly i have no too much time to write tests for this and nowadays not will as well. I hope all work properly, if you need something or have an idea please tell me.
+>I hope all work properly, if you need something or have an idea please tell me.
 
 I hope i don't causing too much torment with my english. 

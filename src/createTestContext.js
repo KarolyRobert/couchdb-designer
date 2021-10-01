@@ -22,9 +22,9 @@ export default function createTestContext(directoryName,testDatabase,userCtx,sec
             let fullPath = path.resolve(process.env.PWD,root);
             let contextId = crypto.createHash('md5').update(fullPath).digest('hex');
             contextProps = {root,contextId}
-            testContext = need => {
+            testContext = (need,params) => {
                 if(need in testBuiltIns){
-                    return testBuiltIns[need](contextId);
+                    return testBuiltIns[need](contextId,params);
                 }else{
                     throw(`${need} is not supported! Try "server","emitted","logged" or the needed built-in mockFunction!`);
                 }

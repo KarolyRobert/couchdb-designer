@@ -58,8 +58,19 @@ const _design = (contextName) => {
     return getTestContext(contextName).server;
 }
 
-const database = (contextName) => {
-    return [...getTestContext(contextName).database.database];
+const database = (contextName,id) => {
+    if(id){
+        let database = getTestContext(contextName).database.database;
+        let result = {error:"not_found",reason:"missing"}
+        for(let doc of database){
+            if(doc._id === id){
+                result = {...doc};
+            }
+        }
+        return result;
+    }else{
+        return [...getTestContext(contextName).database.database];
+    }
 }
 
 

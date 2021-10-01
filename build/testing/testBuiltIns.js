@@ -69,8 +69,25 @@ const _design = contextName => {
   return (0, _testEnvironment.getTestContext)(contextName).server;
 };
 
-const database = contextName => {
-  return [...(0, _testEnvironment.getTestContext)(contextName).database.database];
+const database = (contextName, id) => {
+  if (id) {
+    let database = (0, _testEnvironment.getTestContext)(contextName).database.database;
+    let result = {
+      error: "not_found",
+      reason: "missing"
+    };
+
+    for (let doc of database) {
+      if (doc._id === id) {
+        result = { ...doc
+        };
+      }
+    }
+
+    return result;
+  } else {
+    return [...(0, _testEnvironment.getTestContext)(contextName).database.database];
+  }
 };
 
 module.exports = {
