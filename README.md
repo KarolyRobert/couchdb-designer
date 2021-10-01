@@ -229,6 +229,6 @@ describe('couchdb',() => {
 ```
 
 >#### Release note:
->Sadly i have no too much time to write tests for this and nowadays not will as well. I hope all work properly.
+>Sadly i have no too much time to write tests for this and nowadays not will as well. I hope all work properly, if you need something or have an idea please tell me.
 
 I hope i don't causing too much torment with my english. 

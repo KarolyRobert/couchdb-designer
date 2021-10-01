@@ -62,11 +62,7 @@ function createTestContext(directoryName, testDatabase, userCtx, secObj, parentC
 
     testContext.id = `_design/${name}`;
     testContext.language = 'javascript';
-    const controller = new AbortController();
-    const {
-      signal
-    } = controller;
-    (0, _createSectionFromDirectory.default)(directory, name, contextProps, signal).then(section => {
+    (0, _createSectionFromDirectory.default)(directory, name, contextProps).then(section => {
       testContext = Object.assign(testContext, section[name]);
 
       if (testContext.language.toLowerCase() === 'javascript') {
@@ -94,7 +90,6 @@ function createTestContext(directoryName, testDatabase, userCtx, secObj, parentC
         resolve(testContext);
       }
     }, err => {
-      controller.abort();
       reject(err);
     });
   });

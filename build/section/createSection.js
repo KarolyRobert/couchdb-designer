@@ -17,30 +17,26 @@ var _createSectionFromDirectory = _interopRequireDefault(require("./createSectio
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const createSection = (directory, name, contextProps, signal = {
-  aborted: false
-}) => {
-  if (!signal.aborted) {
-    return new Promise((resolve, reject) => {
-      let sectionPath = _path.default.join(directory, name);
+const createSection = (directory, name, contextProps) => {
+  return new Promise((resolve, reject) => {
+    let sectionPath = _path.default.join(directory, name);
 
-      _promises.default.stat(sectionPath).then(fileStat => {
-        if (fileStat.isFile() || fileStat.isDirectory()) {
-          if (fileStat.isFile()) {
-            if (contextProps) {
-              (0, _createTestSectionFromFile.default)(directory, name, fileStat, contextProps, signal).then(resolve, reject);
-            } else {
-              (0, _createDesignSectionFromFile.default)(directory, name).then(resolve, reject);
-            }
+    _promises.default.stat(sectionPath).then(fileStat => {
+      if (fileStat.isFile() || fileStat.isDirectory()) {
+        if (fileStat.isFile()) {
+          if (contextProps) {
+            (0, _createTestSectionFromFile.default)(directory, name, fileStat, contextProps).then(resolve, reject);
           } else {
-            (0, _createSectionFromDirectory.default)(directory, name, contextProps, signal).then(resolve, reject);
+            (0, _createDesignSectionFromFile.default)(directory, name).then(resolve, reject);
           }
         } else {
-          reject(`Bad structure! ${sectionPath} must be file or directory!`);
+          (0, _createSectionFromDirectory.default)(directory, name, contextProps).then(resolve, reject);
         }
-      }, err => reject(err));
-    });
-  }
+      } else {
+        reject(`Bad structure! ${sectionPath} must be file or directory!`);
+      }
+    }, err => reject(err));
+  });
 };
 
 var _default = createSection;

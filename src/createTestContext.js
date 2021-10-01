@@ -33,10 +33,8 @@ export default function createTestContext(directoryName,testDatabase,userCtx,sec
         testContext.id = `_design/${name}`;
         testContext.language = 'javascript';
         
-        const controller = new AbortController();
-        const { signal } = controller;
 
-        createSectionFromDirectory(directory, name, contextProps , signal).then(section => {
+        createSectionFromDirectory(directory, name, contextProps).then(section => {
             
             testContext = Object.assign(testContext, section[name]);
          
@@ -57,7 +55,6 @@ export default function createTestContext(directoryName,testDatabase,userCtx,sec
                 resolve(testContext);
             }
         },err => {
-            controller.abort();
             reject(err)
         });
     });

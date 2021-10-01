@@ -5,27 +5,27 @@ import createTestSectionFromFile from '../testing/createTestSectionFromFile';
 import createSectionFromDirectory from './createSectionFromDirectory';
 
 
-const createSection = (directory, name, contextProps, signal = {aborted: false}) => {
-    if(!signal.aborted){
-        return new Promise((resolve, reject) => {
-            let sectionPath = path.join(directory,name);
-            fs.stat(sectionPath).then(fileStat => {
-                if(fileStat.isFile() || fileStat.isDirectory()){
-                    if(fileStat.isFile()){
-                        if(contextProps){
-                            createTestSectionFromFile(directory, name, fileStat, contextProps, signal).then(resolve,reject);
-                        }else{
-                            createDesignSectionFromFile(directory, name).then(resolve,reject);
-                        }
+const createSection = (directory, name, contextProps) => {
+   
+    return new Promise((resolve, reject) => {
+        let sectionPath = path.join(directory,name);
+        fs.stat(sectionPath).then(fileStat => {
+            if(fileStat.isFile() || fileStat.isDirectory()){
+                if(fileStat.isFile()){
+                    if(contextProps){
+                        createTestSectionFromFile(directory, name, fileStat, contextProps).then(resolve,reject);
                     }else{
-                        createSectionFromDirectory( directory, name, contextProps, signal ).then(resolve,reject);
+                        createDesignSectionFromFile(directory, name).then(resolve,reject);
                     }
                 }else{
-                    reject(`Bad structure! ${sectionPath} must be file or directory!`);
+                    createSectionFromDirectory( directory, name, contextProps).then(resolve,reject);
                 }
-            },err => reject(err));
-        });
-    }
+            }else{
+                reject(`Bad structure! ${sectionPath} must be file or directory!`);
+            }
+        },err => reject(err));
+    });
+    
 }
 
 export default createSection;

@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs/promises';
 
 
 export default function loadTestModule(fileStats){
@@ -10,8 +11,10 @@ export default function loadTestModule(fileStats){
             const jsModule = require(path.resolve(__dirname,fileStats.testModule));
             if(Object.keys(jsModule).length > 0){
                 resolve(jsModule);
-            }else{
-                reject(new Error(`The module ${modulePath} does not exist't export anything! You must export function/s with module.exports = {...}`));
+            }else{                
+                fs.rm(fileStats.testPath,{force:true,maxRetries:10}).then(() => {
+                    reject(new Error(`The module ${fileStats.filePath} does not exist't export anything! You must export function/s with module.exports = {...}`));
+                },err => reject(err));
             }
         }catch(err){
             reject(err);
