@@ -8,7 +8,8 @@ const fileStats = {
      isLib : true, 
      name : "map", 
      filePath: "./appdesign/views/cloud/map.js", 
-     isJavaScript: true
+     isJavaScript: true,
+     contextId:'contextId'
     }
 const fileStat = { 
     mtimeMs : 1000

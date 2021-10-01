@@ -5,37 +5,57 @@ import testBuiltIns from './testing/testBuiltIns';
 import crypto from 'crypto';
 import path from 'path';
 
-export default function createTestContext(directoryName,testDatabase){
+export default function createTestContext(directoryName,testDatabase,userCtx,secObj,parentContext = false){
     if(process.env.JEST_WORKER_ID === undefined){
         throw new Error('createTestContext can only be used inside Jest Framework!');
     }
     return new Promise((resolve,reject) => {
+        let testContext;
+        let contextProps;
         let root = path.join(directoryName);
-        let fullPath = path.resolve(process.env.PWD,root);
-        let contextName = crypto.createHash('md5').update(fullPath).digest('hex');
         let name = root.split(path.sep).pop();
         let directory = path.join(root, '..');
-
-        let testContext = need => {
-            if(need in testBuiltIns){
-                return testBuiltIns[need](contextName);
-            }else{
-                throw(`${need} is not supported! Try "server","emitted","logged" or the needed built-in mockFunction!`);
+        if(parentContext){
+            contextProps = {root,name,contextId:parentContext};  
+            testContext = {};
+        }else{
+            let fullPath = path.resolve(process.env.PWD,root);
+            let contextId = crypto.createHash('md5').update(fullPath).digest('hex');
+            contextProps = {root,contextId}
+            testContext = need => {
+                if(need in testBuiltIns){
+                    return testBuiltIns[need](contextId);
+                }else{
+                    throw(`${need} is not supported! Try "server","emitted","logged" or the needed built-in mockFunction!`);
+                }
             }
         }
-        
         testContext.id = `_design/${name}`;
+        testContext.language = 'javascript';
         
         const controller = new AbortController();
         const { signal } = controller;
 
-        createSectionFromDirectory(directory, name, {root,contextName}, signal).then(section => {
-
+        createSectionFromDirectory(directory, name, contextProps , signal).then(section => {
+            
             testContext = Object.assign(testContext, section[name]);
-            createCouchDBFunctions(contextName, testContext);
-            registerContext(testContext, testDatabase, contextName);
-            resolve(testContext);
-
+         
+            if(testContext.language.toLowerCase() === 'javascript'){
+               
+                if(!parentContext){
+                    createCouchDBFunctions(contextProps.contextId, testContext);
+                    let database = {_validators: [],database: testDatabase};
+                    if(testContext.validate_doc_update){
+                        database._validators.push({parentName:testContext.id,validator:testContext.validate_doc_update});
+                    }
+                    registerContext(contextProps.contextId, testContext, database, userCtx, secObj);
+                }
+                resolve(testContext);
+            }else if(!parentContext){
+                reject(`Only "javascript" type design document testing is supported yet. This directory structure defining one "${testContext.language}" type design document!`);
+            }else{
+                resolve(testContext);
+            }
         },err => {
             controller.abort();
             reject(err)

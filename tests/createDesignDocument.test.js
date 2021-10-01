@@ -10,7 +10,7 @@ describe('createDeisgnDocument',() => {
 
     test('success',() => {
         createSectionFromDirectory.mockResolvedValue({ddoc:{views:{map:'fn'}}});
-        return createDeisgnDocument('root','ddoc').then(result => {
+        return createDeisgnDocument('ddoc').then(result => {
             expect(result).toEqual({_id:'_design/ddoc',language:'javascript',views:{map:'fn'}});
         });
     });

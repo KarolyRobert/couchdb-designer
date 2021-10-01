@@ -19,43 +19,80 @@ var _path = _interopRequireDefault(require("path"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function createTestContext(directoryName, testDatabase) {
+function createTestContext(directoryName, testDatabase, userCtx, secObj, parentContext = false) {
   if (process.env.JEST_WORKER_ID === undefined) {
     throw new Error('createTestContext can only be used inside Jest Framework!');
   }
 
   return new Promise((resolve, reject) => {
+    let testContext;
+    let contextProps;
+
     let root = _path.default.join(directoryName);
-
-    let fullPath = _path.default.resolve(process.env.PWD, root);
-
-    let contextName = _crypto.default.createHash('md5').update(fullPath).digest('hex');
 
     let name = root.split(_path.default.sep).pop();
 
     let directory = _path.default.join(root, '..');
 
-    let testContext = need => {
-      if (need in _testBuiltIns.default) {
-        return _testBuiltIns.default[need](contextName);
-      } else {
-        throw `${need} is not supported! Try "server","emitted","logged" or the needed built-in mockFunction!`;
-      }
-    };
+    if (parentContext) {
+      contextProps = {
+        root,
+        name,
+        contextId: parentContext
+      };
+      testContext = {};
+    } else {
+      let fullPath = _path.default.resolve(process.env.PWD, root);
+
+      let contextId = _crypto.default.createHash('md5').update(fullPath).digest('hex');
+
+      contextProps = {
+        root,
+        contextId
+      };
+
+      testContext = need => {
+        if (need in _testBuiltIns.default) {
+          return _testBuiltIns.default[need](contextId);
+        } else {
+          throw `${need} is not supported! Try "server","emitted","logged" or the needed built-in mockFunction!`;
+        }
+      };
+    }
 
     testContext.id = `_design/${name}`;
+    testContext.language = 'javascript';
     const controller = new AbortController();
     const {
       signal
     } = controller;
-    (0, _createSectionFromDirectory.default)(directory, name, {
-      root,
-      contextName
-    }, signal).then(section => {
+    (0, _createSectionFromDirectory.default)(directory, name, contextProps, signal).then(section => {
       testContext = Object.assign(testContext, section[name]);
-      (0, _createCouchDBFunctions.default)(contextName, testContext);
-      (0, _testEnvironment.registerContext)(testContext, testDatabase, contextName);
-      resolve(testContext);
+
+      if (testContext.language.toLowerCase() === 'javascript') {
+        if (!parentContext) {
+          (0, _createCouchDBFunctions.default)(contextProps.contextId, testContext);
+          let database = {
+            _validators: [],
+            database: testDatabase
+          };
+
+          if (testContext.validate_doc_update) {
+            database._validators.push({
+              parentName: testContext.id,
+              validator: testContext.validate_doc_update
+            });
+          }
+
+          (0, _testEnvironment.registerContext)(contextProps.contextId, testContext, database, userCtx, secObj);
+        }
+
+        resolve(testContext);
+      } else if (!parentContext) {
+        reject(`Only "javascript" type design document testing is supported yet. This directory structure defining one "${testContext.language}" type design document!`);
+      } else {
+        resolve(testContext);
+      }
     }, err => {
       controller.abort();
       reject(err);

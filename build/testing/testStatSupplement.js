@@ -19,8 +19,8 @@ const testStatSupplement = (oldStats, fileStat) => {
 
     let tempDirectory = '../../temp';
     let fileStats = { ...oldStats,
-      testPath: _path.default.resolve(__dirname, '../../temp', `${fileHash}.js`),
-      testModule: _path.default.join(tempDirectory, fileHash),
+      testPath: _path.default.resolve(__dirname, '../../temp', `${oldStats.contextId}_${fileHash}.js`),
+      testModule: _path.default.join(tempDirectory, `${oldStats.contextId}_${fileHash}`),
       isModified: true
     };
 

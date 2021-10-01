@@ -65,6 +65,14 @@ const server = contextName => {
   return (0, _testEnvironment.getTestContext)(contextName).server;
 };
 
+const _design = contextName => {
+  return (0, _testEnvironment.getTestContext)(contextName).server;
+};
+
+const database = contextName => {
+  return [...(0, _testEnvironment.getTestContext)(contextName).database.database];
+};
+
 module.exports = {
   emitted,
   logged,
@@ -74,5 +82,7 @@ module.exports = {
   start,
   send,
   index,
-  server
+  server,
+  _design,
+  database
 };

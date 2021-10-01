@@ -1,11 +1,11 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-const createTestContextModule = (fileStats,contextName, signal) => {
+const createTestContextModule = (fileStats,contextProps, signal) => {
     if(!signal.aborted) {
         return new Promise((resolve, reject) => {
             fs.readFile(fileStats.filePath,{encoding:'utf8'}).then(content => {
-                let moduleContent = `const environment = require('../build/testing/testEnvironment').testEnvironment("${contextName}");\n`+
+                let moduleContent = `const environment = require('../build/testing/testEnvironment').testEnvironment("${contextProps.contextId}");\n`+
                     'require = environment.require;\n'+
                     'const emit = environment.emit;\n'+
                     'const log = environment.log;\n'+

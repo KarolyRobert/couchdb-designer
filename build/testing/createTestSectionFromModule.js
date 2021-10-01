@@ -11,13 +11,13 @@ var _createMockFunction = _interopRequireDefault(require("./createMockFunction")
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const creteTestSectionFromModule = (fileStats, contextName) => {
+const creteTestSectionFromModule = (fileStats, contextProps) => {
   return new Promise((resolve, reject) => {
     (0, _loadTestModule.default)(fileStats).then(testModule => {
       let testModuleKeys = Object.keys(testModule);
 
       if (!fileStats.isLib && testModuleKeys.length === 1 && testModuleKeys[0] === fileStats.name) {
-        const mockFunction = (0, _createMockFunction.default)(fileStats, contextName, testModuleKeys[0], testModule[testModuleKeys[0]]);
+        const mockFunction = (0, _createMockFunction.default)(fileStats, contextProps, testModuleKeys[0], testModule[testModuleKeys[0]]);
         resolve({
           [fileStats.name]: mockFunction
         });
@@ -28,7 +28,7 @@ const creteTestSectionFromModule = (fileStats, contextName) => {
 
         for (let moduleElementName of testModuleKeys) {
           if (typeof testModule[moduleElementName] === 'function') {
-            const mockFunction = (0, _createMockFunction.default)(fileStats, contextName, moduleElementName, testModule[moduleElementName]);
+            const mockFunction = (0, _createMockFunction.default)(fileStats, contextProps, moduleElementName, testModule[moduleElementName]);
             testElementsObject[moduleElementName] = mockFunction;
           } else {
             testElementsObject[moduleElementName] = testModule[moduleElementName];

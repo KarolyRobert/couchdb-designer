@@ -16,7 +16,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const creteTestSectionFromFile = (directory, fileName, fileStat, contextProps, signal) => {
   if (!signal.aborted) {
     return new Promise((resolve, reject) => {
-      let fileStats = (0, _extractFileStats.default)(directory, fileName, contextProps.root);
+      let fileStats = (0, _extractFileStats.default)(directory, fileName, contextProps);
 
       if (!fileStats.isJavaScript) {
         _promises.default.readFile(fileStats.filePath, {
@@ -38,7 +38,7 @@ const creteTestSectionFromFile = (directory, fileName, fileStat, contextProps, s
           }
         }, err => reject(`Bad structure! ${fileStats.filePath} must be regular file! ${err.message}`));
       } else {
-        (0, _createTestFileContext.default)(fileStats, fileStat, contextProps.contextName, signal).then(resolve, reject); //testFileContext =>  resolve(testFileContext),err => reject(err));
+        (0, _createTestFileContext.default)(fileStats, fileStat, contextProps, signal).then(resolve, reject); //testFileContext =>  resolve(testFileContext),err => reject(err));
       }
     });
   }

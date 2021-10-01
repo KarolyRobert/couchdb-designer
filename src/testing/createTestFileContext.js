@@ -4,17 +4,17 @@ import creteTestSectionFromModule from './createTestSectionFromModule';
 
 
 
-const createTestFileContext = (oldStats, fileStat, contextName, signal) => {
+const createTestFileContext = (oldStats, fileStat, contextProps, signal) => {
     if(!signal.aborted) {
         return new Promise((resolve, reject) => {
             testStatSupplement(oldStats,fileStat).then(fileStats => {
                 if(fileStats.isModified){
-                    createTestContextModule(fileStats, contextName, signal).then(() => {
+                    createTestContextModule(fileStats, contextProps, signal).then(() => {
                     
-                        creteTestSectionFromModule(fileStats, contextName).then(resolve, reject);
+                        creteTestSectionFromModule(fileStats, contextProps).then(resolve, reject);
                     },reject);
                 }else{
-                    creteTestSectionFromModule(fileStats, contextName).then(resolve, reject);
+                    creteTestSectionFromModule(fileStats, contextProps).then(resolve, reject);
                 }
             },err => reject(err));
         });

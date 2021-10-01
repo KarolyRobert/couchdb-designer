@@ -7,20 +7,30 @@ exports.default = void 0;
 
 var _createTestViewFunction = _interopRequireDefault(require("./views/createTestViewFunction"));
 
+var _createTestUpdateFunction = _interopRequireDefault(require("./updates/createTestUpdateFunction"));
+
 var _testBuiltIns = _interopRequireDefault(require("./testBuiltIns"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 let couchdbSections = {
-  views: 'view'
+  views: 'view',
+  updates: 'update'
 };
 
-const createCouchDBFunctions = (contextName, context) => {
+const createCouchDBFunctions = (contextName, context, parent = false) => {
   const relatedFunctions = {
-    views: _createTestViewFunction.default
+    views: _createTestViewFunction.default,
+    updates: _createTestUpdateFunction.default
   };
 
-  const server = _testBuiltIns.default.server(contextName);
+  let server = _testBuiltIns.default.server(contextName);
+
+  if (parent) {
+    if (!server[parent]) {
+      server[parent] = {};
+    }
+  }
 
   const sectionKeys = Object.keys(couchdbSections);
 
@@ -28,13 +38,21 @@ const createCouchDBFunctions = (contextName, context) => {
     let functionNames = Object.keys(context[section]);
 
     for (let functionName of functionNames) {
-      let functionSection = relatedFunctions[section](contextName, functionName);
+      let functionSection = relatedFunctions[section](contextName, functionName, context);
 
-      if (!server[couchdbSections[section]]) {
-        server[couchdbSections[section]] = {};
+      if (parent) {
+        if (!server[parent][couchdbSections[section]]) {
+          server[parent][couchdbSections[section]] = {};
+        }
+
+        server[parent][couchdbSections[section]][functionName] = functionSection;
+      } else {
+        if (!server[couchdbSections[section]]) {
+          server[couchdbSections[section]] = {};
+        }
+
+        server[couchdbSections[section]][functionName] = functionSection;
       }
-
-      server[couchdbSections[section]][functionName] = functionSection;
     }
   }
 };

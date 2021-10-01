@@ -54,6 +54,13 @@ const index = (contextName) => {
 const server = (contextName) => {
     return getTestContext(contextName).server;
 }
+const _design = (contextName) => {
+    return getTestContext(contextName).server;
+}
+
+const database = (contextName) => {
+    return [...getTestContext(contextName).database.database];
+}
 
 
-module.exports = { emitted, logged, getRow, provides, registerType, start, send, index, server }
+module.exports = { emitted, logged, getRow, provides, registerType, start, send, index, server, _design, database }

@@ -11,13 +11,13 @@ var _path = _interopRequireDefault(require("path"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const createTestContextModule = (fileStats, contextName, signal) => {
+const createTestContextModule = (fileStats, contextProps, signal) => {
   if (!signal.aborted) {
     return new Promise((resolve, reject) => {
       _promises.default.readFile(fileStats.filePath, {
         encoding: 'utf8'
       }).then(content => {
-        let moduleContent = `const environment = require('../build/testing/testEnvironment').testEnvironment("${contextName}");\n` + 'require = environment.require;\n' + 'const emit = environment.emit;\n' + 'const log = environment.log;\n' + 'const isArray = Array.isArray;\n' + 'const sum = environment.sum;\n' + 'const toJSON = JSON.stringify;\n' + 'const getRow = environment.getRow;\n' + 'const provides = environment.provides;\n' + 'const registerType = environment.registerType;\n' + 'const start = environment.start;\n' + 'const send = environment.send;\n' + 'const index = environment.index;\n';
+        let moduleContent = `const environment = require('../build/testing/testEnvironment').testEnvironment("${contextProps.contextId}");\n` + 'require = environment.require;\n' + 'const emit = environment.emit;\n' + 'const log = environment.log;\n' + 'const isArray = Array.isArray;\n' + 'const sum = environment.sum;\n' + 'const toJSON = JSON.stringify;\n' + 'const getRow = environment.getRow;\n' + 'const provides = environment.provides;\n' + 'const registerType = environment.registerType;\n' + 'const start = environment.start;\n' + 'const send = environment.send;\n' + 'const index = environment.index;\n';
 
         if (fileStats.isLib) {
           moduleContent += 'const exports = module.exports;\n';

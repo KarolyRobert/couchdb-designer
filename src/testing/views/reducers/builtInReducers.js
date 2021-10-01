@@ -8,20 +8,20 @@ const numberArrayReducer = (p,c) => {
     if(Array.isArray(p)){
       for(let i of p){
         if(typeof i !== 'number'){
-          throw new Error(typerError);
+          throw(typerError);
         }
       }
     }else if(typeof p !== 'number'){
-      throw new Error(typerError);
+      throw(typerError);
     }
     if(Array.isArray(c)){
       for(let i of c){
         if(typeof i !== 'number'){
-          throw new Error(typerError);
+          throw(typerError);
         }
       }
     }else if(typeof c !== 'number'){
-      throw new Error(typerError);
+      throw(typerError);
     }
     if(c.length){
       let result = [];
@@ -72,7 +72,7 @@ const sum = (values) => {
                 result[key] = sum(values.map(element => {
                   for(let currentKey in element){
                     if(!keys.includes(currentKey)){
-                      throw new Error(typerError);
+                      throw(typerError);
                     }
                   }
                   return element[key];

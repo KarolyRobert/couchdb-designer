@@ -9,8 +9,8 @@ const testStatSupplement = (oldStats,fileStat) => {
         let tempDirectory = '../../temp';
         let fileStats = {
             ...oldStats,
-            testPath: path.resolve(__dirname,'../../temp',`${fileHash}.js`),
-            testModule:path.join(tempDirectory,fileHash),
+            testPath: path.resolve(__dirname,'../../temp',`${oldStats.contextId}_${fileHash}.js`),
+            testModule:path.join(tempDirectory,`${oldStats.contextId}_${fileHash}`),
             isModified: true,
         }
         fs.stat(fileStats.testPath).then(moduleStat => {

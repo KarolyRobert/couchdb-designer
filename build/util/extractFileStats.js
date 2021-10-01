@@ -9,7 +9,7 @@ var _path = _interopRequireDefault(require("path"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function extractFileStats(directory, fileName, root) {
+function extractFileStats(directory, fileName, contextProps) {
   let fileParts = fileName.split('.');
   let isJSON = fileParts[fileParts.length - 1].toLowerCase() === 'json';
   let isJavaScript = fileParts[fileParts.length - 1].toLowerCase() === 'js';
@@ -17,8 +17,8 @@ function extractFileStats(directory, fileName, root) {
   let name = fileParts[0];
   let typePath = false;
 
-  if (root) {
-    typePath = _path.default.join(directory, name).split(root)[1].split(_path.default.sep);
+  if (contextProps) {
+    typePath = _path.default.join(directory, name).split(contextProps.root)[1].split(_path.default.sep);
     typePath.shift();
   }
 
@@ -31,6 +31,7 @@ function extractFileStats(directory, fileName, root) {
     name,
     typePath,
     filePath,
-    isJavaScript
+    isJavaScript,
+    contextId: contextProps ? contextProps.contextId : undefined
   };
 }

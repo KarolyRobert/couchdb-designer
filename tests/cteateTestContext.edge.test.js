@@ -1,4 +1,5 @@
 import createTestContext from "../src/createTestContext";
+import createTestServer from "../src/createTestServer";
 
 const testDatabase = [
     {_id:'doc1',name:[[10,10],9,13],parent:'roger'},
@@ -16,8 +17,8 @@ const testDatabase2 = [
         });
         test("all case",() => {
             return createTestContext('./tests/design/appdesign',testDatabase).then(context => {
-                let update = context.updates.updateFromDir('doc','req');
-                expect(update).toEqual(['doc','libfunction call updated']);
+                let update = context.updates.updateFromDir({},{});
+                expect(update).toEqual([{updateByUpdateFromDir:'libfunction call updated'},{}]);
                 expect(context.lib.couchdb.libfunction.mock.calls.length).toBe(1);
                 expect(() => context.views.byDate.reduce(['keys'],['values'],false)).toThrow("Calling 'require' from reduce function in is not allowed and useless from library! You can fix it in tests/design/appdesign/views/byDate/reduce.js");
                 context.views.byName.map(testDatabase[1]);
@@ -29,11 +30,25 @@ const testDatabase2 = [
         
         test("concurent",() => {
             return createTestContext('./tests/design/appdesign',testDatabase2).then(context => {
-                let update = context.updates.updateFromDir('doc','req');
-                expect(update).toEqual(['doc','libfunction call updated']);
+                let update = context.updates.updateFromDir({},{});
+                expect(update).toEqual([{updateByUpdateFromDir:'libfunction call updated'},{}]);
                 expect(context.lib.couchdb.libfunction.mock.calls.length).toBe(1);
                 expect(() => context.views.byDate.reduce(['keys'],['values'],false)).toThrow("Calling 'require' from reduce function in is not allowed and useless from library! You can fix it in tests/design/appdesign/views/byDate/reduce.js");
                 expect(() => context('server').view.byName({group_level:1})).toThrow();
+                expect(context('_design').update.updateFromDir({uuid:'uid1'},'doc1').uuid).toBe("uid1");
+                expect(context('database')[0].updateByUpdateFromDir).toBe("libfunction call updated");
             })
+        });
+
+        test('querys', () => {
+            return createTestContext('./tests/design/querys',testDatabase).catch(err => {
+                expect(err).toBe('Only "javascript" type design document testing is supported yet. This directory structure defining one "query" type design document!');
+            });
+        });
+        test('server', () => {
+            return createTestServer('./tests/design',testDatabase).then(server => {
+                expect(server('server').appdesign.update.updateFromDir({uuid:'uid1'},'doc2').uuid).toBe("uid1");
+                expect(server('database')).toEqual([]);
+            });
         });
     });

@@ -1,20 +1,20 @@
 import loadTestModule from './loadTestModule';
 import createMockFunction from './createMockFunction';
 
-const creteTestSectionFromModule = (fileStats,contextName) => {
+const creteTestSectionFromModule = (fileStats,contextProps) => {
 
     return new Promise((resolve, reject) => {
         loadTestModule(fileStats).then(testModule => {
             let testModuleKeys = Object.keys(testModule);
             if(!fileStats.isLib && testModuleKeys.length === 1 && testModuleKeys[0] === fileStats.name){
                 
-                const mockFunction = createMockFunction(fileStats, contextName, testModuleKeys[0], testModule[testModuleKeys[0]]);
+                const mockFunction = createMockFunction(fileStats, contextProps, testModuleKeys[0], testModule[testModuleKeys[0]]);
                 resolve({[fileStats.name]:mockFunction});
             }else{
                 let testElementsObject = {__sourceProperties__:fileStats};
                 for(let moduleElementName of testModuleKeys){
                     if(typeof testModule[moduleElementName] === 'function'){
-                        const mockFunction = createMockFunction(fileStats,contextName,moduleElementName,testModule[moduleElementName]);
+                        const mockFunction = createMockFunction(fileStats,contextProps,moduleElementName,testModule[moduleElementName]);
                         testElementsObject[moduleElementName] = mockFunction;
                     }else{
                         testElementsObject[moduleElementName] = testModule[moduleElementName];

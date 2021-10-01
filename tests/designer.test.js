@@ -14,7 +14,7 @@ describe('designer', () => {
 
     test('success', () => {
         fs.readdir.mockResolvedValue(['egy','kettő','három']);
-        createDeisgnDocument.mockImplementation((root,name) => Promise.resolve(`${root}/${name}`));
+        createDeisgnDocument.mockImplementation((root) => Promise.resolve(`${root}`));
         return designer('root').then(documents => {
             expect(documents).toEqual(["root/egy","root/kettő","root/három"]);
             expect(fs.readdir.mock.calls.length).toBe(1);

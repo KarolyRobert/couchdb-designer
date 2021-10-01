@@ -54,7 +54,8 @@ Array [
 
   var probalib = require('lib/couchdb').libfunction;
 
-  return [doc, probalib()];
+  doc.updateByUpdateFromDir = probalib();
+  return [doc, req];
 }",
     },
     "validate_doc_update": "function (newDoc, oldDoc, userCtx, secObj) {
@@ -133,6 +134,44 @@ Array [
   emit([date.getFullYear(), date.getMonth(), date.getDay(), date.getHours()], doc.value);
 }",
         "reduce": "_approx_count_distinct",
+      },
+    },
+  },
+  Object {
+    "_id": "_design/errors",
+    "language": "javascript",
+    "lib": Object {
+      "false": "function map(doc){
+    emit(doc._id,false);
+}
+
+module.exports = {map}",
+    },
+    "updates": Object {},
+    "views": Object {
+      "getrow": Object {
+        "map": "function (doc) {
+  var row = getRow();
+}",
+      },
+      "lib": "function view(){
+    provides('foo','bar');
+}
+
+module.exports = {view}",
+      "provides": Object {
+        "map": "function (doc) {
+  var lib = require('views/lib');
+
+  lib.view();
+}",
+      },
+      "require": Object {
+        "map": "function (doc) {
+  var lib = require('lib/false');
+
+  lib.map(doc);
+}",
       },
     },
   },
