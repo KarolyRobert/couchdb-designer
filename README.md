@@ -66,8 +66,10 @@ function reduce (keys,values,rereduce){
         return values.length;
     }
 }
+// or
+const reduce = "_count";
 
-module.exports = { map, reduce}
+module.exports = { map, reduce }
 
 ```
 view by directory:
@@ -177,7 +179,36 @@ Similar to map/reduce testing you can test updateFunctions for example:
 
 The result will be the original updateFunction result's second element depending on the updated testDatabase or an error message from validate_doc_update or another error if your functions do something dirty. You can verify the updated testDatabase by calling context as function with **database** string or can get a particular document by specify them id in second parameter.
 
+#### Changes and Filters.
 
+Both of in context function you can pass the **_changes** string parameter for get the changes of testdatabase. If you pass a second parameter then its must be an "object" with the field "**filter**" contain the path of your filterFunction and an optional field **request** which will be give to your filterFunction at its invocation. This request object will be supplemented similar as at updateFunction's.
+
+for example: /database/_changes?filter=ddocname/filtername
+```javascript
+    context('_changes',{filter:'ddocname/filtername'})
+```
+
+#### All context function's parameters:
+
+- **server**:                  It is Gives an object with you can test "**views**" and "**updates**" the context of environment
+    - **view.viewName**:       map/reduce testing.
+        - **{reduce:true,group:true,group_level:2}** Available map/reduce parameters.
+    - **update.updateName**:   "updates" with "validators" even multiple design documents by "createTestSetrver". Impact to                                testdatabase and _changes.
+- **_design**:                 Alias of "server".
+- **emitted**:                 Collection of Result of map functions when its was called directly on context object.
+- **logged** :                 Collection of built-in log invocations result.
+- **database**,**document_id**:The testDatabase current state, or the given document by document_id given.
+- **_changes**,**filter**:     The current changes or the filtered changes by filter given.
+- **send**:                    mockFunction of built-in send.
+- **getRow**:                  mockFunction of built-in getRow.
+- **provides**:                mockFunction of built-in provides.
+- **registerType**:            mockFunction of built-in registerType.
+- **start**:                   mockFunction of built-in start.
+- **index**:                   mockFunction of built-in index.
+
+
+
+### Examples:
 ```javascript
 
 import { createTestContext,createTestServer } from '@zargu/couchdb-designer';
@@ -195,7 +226,7 @@ describe('couchdb',() => {
     });
 
     test('appdesign',() => {
-        return createTestContext('./design/adddesign',testDatabase).then(context => {
+        return createTestContext('./design/appdesign',testDatabase).then(context => {
 
             // simple testing
             let somedocument = {_id:'some',mail:'foo@bar.com'};
@@ -208,6 +239,7 @@ describe('couchdb',() => {
 
             // Map/reduce view testing
             expect(context('server').view.byPeriod({group_level:1})).toEqual({rows:[{key:[2021],value:234}]}) // the result depend on map,reduce,testDatabase
+
 
         }).catch(err => expect(err).toBe('something wrong in directory structure'));
     });
@@ -223,6 +255,9 @@ describe('couchdb',() => {
             //verify database
             expect(server('database')[0]).toEqual({_id:'doc1',... });
             expect(server('database','doc1')).toEqual({_id:'doc1',... });
+            //changes and filter
+            expect(server("_changes")).toMatchSnapshot();
+            expect(server("_changes",{filter:'appdesign/mailbox',request:{query:{type:'spam'}}}).results.length).toBe(2);
         })
     });
 });
@@ -230,6 +265,6 @@ describe('couchdb',() => {
 ```
 
 >#### Release note:
->I hope all work properly, if you need something or have an idea please tell me.
+>I have a little missing feelness I hope all work properly, if you need something or have an idea please tell me.
 
 I hope i don't causing too much torment with my english. 

@@ -24,21 +24,25 @@ const createDesignSectionFromFile = (directory, fileName) => {
             },err => reject(`Bad structure! ${fileStats.filePath} must be regular file! ${err.message}`));
         }else{
             loadModule(directory,fileStats.name).then(designModule => {
-                let moduleFunctions = Object.keys(designModule).map(funcName => {
-                    let functionString = designModule[funcName].toString();
-                    let functionName = nameRegexp.exec(functionString)[1];
+                let moduleKeys = Object.keys(designModule);
+                if(moduleKeys.length === 1 && moduleKeys[0] === fileStats.name){
+                    let functionString = designModule[moduleKeys[0]].toString();
                     let designFunction = functionString.replace(nameRegexp,'function (');
-                    return {functionName,designFunction}
-                });
-                if(moduleFunctions.length === 1 && moduleFunctions[0].functionName === fileStats.name){
-                    resolve({[fileStats.name]:moduleFunctions[0].designFunction});
+                    resolve({[fileStats.name]:designFunction});
                 }else{
-                    let moduleFunctionsObject = {}
-                    moduleFunctions.forEach(moduleFunction => {
-                        moduleFunctionsObject = Object.assign(moduleFunctionsObject,{[moduleFunction.functionName]:moduleFunction.designFunction});
+                    let moduleElementsObject = {}
+                    moduleKeys.forEach(elementName => {
+                        if(typeof designModule[elementName] === 'function'){
+                            let functionString = designModule[elementName].toString();
+                            let designFunction = functionString.replace(nameRegexp,'function (');
+                            moduleElementsObject = Object.assign(moduleElementsObject,{[elementName]:designFunction});
+                        }else{
+                            moduleElementsObject = Object.assign(moduleElementsObject,{[elementName]:designModule[elementName]});
+                        }
                     });
-                    resolve({[fileStats.name]:moduleFunctionsObject});
+                    resolve({[fileStats.name]:moduleElementsObject});
                 }
+
             },err => reject(`Can't load module from ${fileStats.filePath}! ${err.message}`));
         }
     });

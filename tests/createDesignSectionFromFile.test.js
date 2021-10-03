@@ -15,7 +15,7 @@ describe('createSectionFromFile',() => {
 
     test('success on modul with different named function',() => {
         loadModule.mockResolvedValue({
-            validate_doc_update:function map(){}
+            map:function map(){}
         });
         //fs.readFile.mockResolvedValue('content of regular file');
         return createDesignSectionFromFile('./root','validate_doc_update.js').then(result => {

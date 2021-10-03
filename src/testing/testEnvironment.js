@@ -1,4 +1,5 @@
 
+
 const contexts = {}
 
 
@@ -15,19 +16,14 @@ const environmentSum = arr => {
     throw('The parameter of "sum()" must be an array!');
 }
 
-
-const registerContext = (contextId,testContext,testDatabase,secObj,userCtx) => {
-    if(testDatabase.database !== undefined && !Array.isArray(testDatabase.database)){
-        throw('createTestContext second parameter must be an array of document object to represent the data of testing database or an array of arrays of document object for represent the nodes of the test database!');
-    }
-    if(secObj === undefined){
-        secObj = {members:{roles:["_admin"]},admins:{roles:["_admin"]}}
-    }
-    if(userCtx === undefined){
-        userCtx = {db:'testdatabase',name:null,roles:["_admin"]}
-    }
-    contexts[contextId] = Object.assign(contexts[contextId],{context:testContext,database:testDatabase,secObj,userCtx});
+const addValidator = (contextId,parentName,validator) => {
+    contexts[contextId].validators.push({parentName,validator});
 }
+
+const registerContext = (contextId,testContext,type,secObj,userCtx) => {
+    contexts[contextId] = Object.assign(contexts[contextId],{context:testContext,secObj,userCtx,database:[],type});
+}
+
 
 const getTestContext = (contextId) => {
     return contexts[contextId];
@@ -110,7 +106,10 @@ const testEnvironment = (contextId) => {
                 send:environmentSend,
                 index:environmentIndex
             },
-            server:{}
+            server:{},
+            changes:[],
+            validators:[],
+            update_seq:0
         }
 
         return contexts[contextId].environment;
@@ -118,4 +117,4 @@ const testEnvironment = (contextId) => {
 }
 
 
-module.exports = { registerContext, testEnvironment, getTestContext};
+module.exports = { registerContext, testEnvironment, getTestContext, addValidator};

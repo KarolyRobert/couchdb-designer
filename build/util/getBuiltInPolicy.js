@@ -38,6 +38,9 @@ const getBuiltInPolicy = (fileStats, name) => {
     case 'validate_doc_update':
       if (typePath.length === 1) functionType = 'validate';
       break;
+
+    case 'rewrites':
+      if (typePath.length === 1) functionType = 'rewrite';
   }
 
   if (functionType === 'library' && fileStats.isLib) {
@@ -65,6 +68,7 @@ const getBuiltInPolicy = (fileStats, name) => {
     case 'update':
     case 'validate':
     case 'filter':
+    case 'rewrite':
       return {
         allowed: ['Require'],
         denied: ['Emit', 'GetRow', 'Provides', 'RegisterType', 'Start', 'Send', 'Index']

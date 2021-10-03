@@ -4,6 +4,14 @@ exports[`designer_edge success edge test 1`] = `
 Array [
   Object {
     "_id": "_design/appdesign",
+    "filters": Object {
+      "all": "function (doc, req) {
+  return true;
+}",
+      "nothing": "function (doc, req) {
+  return false;
+}",
+    },
     "language": "javascript",
     "lib": Object {
       "couchdb": "module.exports.libfunction = function (){
@@ -72,6 +80,13 @@ Array [
   }
 }",
     "views": Object {
+      "byBuiltin": Object {
+        "map": "function (doc) {
+  var date = new Date(doc.date);
+  emit([date.getFullYear(), date.getMonth(), date.getDay(), date.getHours()], doc.value);
+}",
+        "reduce": "_sum",
+      },
       "byDate": Object {
         "map": "function (doc) {
   if (doc.type === 'post' && doc.tags && Array.isArray(doc.tags)) {
@@ -113,7 +128,9 @@ Array [
     emit('helo', 1);
   }
 }",
-        "reduce": "function (keys, values, rereduce) {}",
+        "reduce": "function (keys, values, rereduce) {
+  return sum(values);
+}",
       },
       "byReducer": Object {
         "map": "function (doc) {

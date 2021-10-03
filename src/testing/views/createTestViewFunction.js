@@ -9,8 +9,8 @@ const createTestViewFunction = (contextName,viewName,context) => {
         if(context.views[viewName].map){
             let options = validateViewOptions(Boolean(context.views[viewName].reduce),opts);
             let viewResult;
-            if(database.database){
-                database.database.forEach(doc => context.views[viewName].map(doc));
+            if(database){
+                database.forEach(doc => context.views[viewName].map(doc));
                 viewResult = emitted(contextName);
             }else{
                 throw('For map/reduce testing you need to provide a testDatabase in createTestContext second parameter.');

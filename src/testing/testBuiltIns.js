@@ -1,9 +1,10 @@
 import viewSort from './views/viewSort';
 import { getTestContext } from '../../build/testing/testEnvironment';
+import filter from './changes/filter';
 
 
-const emitted = (contextName) => {
-    let buildIns = getTestContext(contextName).buildIns;
+const emitted = (contextId) => {
+    let buildIns = getTestContext(contextId).buildIns;
     let rows = buildIns.contextedEmit.mock.calls.map(params => ({id:params[0]._id,key:params[1],value:params[2]}))
     let count = buildIns.contextedEmit.mock.calls.length;
     if(rows.length){
@@ -17,8 +18,8 @@ const emitted = (contextName) => {
     }
 }
 
-const logged = (contextName) => {
-    let buildIns = getTestContext(contextName).buildIns;
+const logged = (contextId) => {
+    let buildIns = getTestContext(contextId).buildIns;
     let log = "";
     buildIns.environmentLog.mock.calls.forEach(params => {
         log += `[info] Log :: ${params[0]}\n`;
@@ -27,40 +28,40 @@ const logged = (contextName) => {
     return log;
 }
 
-const getRow = (contextName) => {
-    return getTestContext(contextName).buildIns.contextedGetRow;
+const getRow = (contextId) => {
+    return getTestContext(contextId).buildIns.contextedGetRow;
 }
 
-const provides = (contextName) => {
-    return getTestContext(contextName).buildIns.contextedProvides;
+const provides = (contextId) => {
+    return getTestContext(contextId).buildIns.contextedProvides;
 }
 
-const registerType = (contextName) => {
-    return getTestContext(contextName).buildIns.contextedRegisterType;
+const registerType = (contextId) => {
+    return getTestContext(contextId).buildIns.contextedRegisterType;
 }
 
-const start = (contextName) => {
-    return getTestContext(contextName).buildIns.contextedStart;
+const start = (contextId) => {
+    return getTestContext(contextId).buildIns.contextedStart;
 }
 
-const send = (contextName) => {
-    return getTestContext(contextName).buildIns.contextedSend;
+const send = (contextId) => {
+    return getTestContext(contextId).buildIns.contextedSend;
 }
 
-const index = (contextName) => {
-    return getTestContext(contextName).buildIns.contextedIndex;
+const index = (contextId) => {
+    return getTestContext(contextId).buildIns.contextedIndex;
 }
 
-const server = (contextName) => {
-    return getTestContext(contextName).server;
+const server = (contextId) => {
+    return getTestContext(contextId).server;
 }
-const _design = (contextName) => {
-    return getTestContext(contextName).server;
+const _design = (contextId) => {
+    return getTestContext(contextId).server;
 }
 
-const database = (contextName,id) => {
+const database = (contextId,id) => {
     if(id){
-        let database = getTestContext(contextName).database.database;
+        let {database} = getTestContext(contextId);
         let result = {error:"not_found",reason:"missing"}
         for(let doc of database){
             if(doc._id === id){
@@ -69,9 +70,23 @@ const database = (contextName,id) => {
         }
         return result;
     }else{
-        return [...getTestContext(contextName).database.database];
+        return [...getTestContext(contextId).database];
+    }
+}
+
+const _changes = (contextId,request) => {
+    if(request){
+        return filter(contextId,request);
+    }else{
+        let {changes} = getTestContext(contextId);
+        return {results:[...changes],
+            last_seq:changes[changes.length - 1].seq,
+            pending:0
+        }
     }
 }
 
 
-module.exports = { emitted, logged, getRow, provides, registerType, start, send, index, server, _design, database }
+
+
+module.exports = { emitted, logged, getRow, provides, registerType, start, send, index, server, _design, database, _changes }

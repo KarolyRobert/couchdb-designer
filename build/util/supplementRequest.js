@@ -5,26 +5,26 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _testEnvironment = require("../../../build/testing/testEnvironment");
+var _testEnvironment = require("../../build/testing/testEnvironment");
 
 var _crypto = _interopRequireDefault(require("crypto"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const supplementRequest = (request, id, contextName, uri) => {
+const supplementRequest = (request, id, contextId, uri) => {
   let {
     database,
     update_seq,
     secObj,
     userCtx
-  } = (0, _testEnvironment.getTestContext)(contextName);
+  } = (0, _testEnvironment.getTestContext)(contextId);
   let req = Object.assign(request, {
     secObj
   });
   let headers = {
     Accept: "*/*",
     Host: "localhost:5984",
-    "User-Agent": "couchdb-designer"
+    "User-Agent": "couchdb-designer/testing environment"
   };
   let info = {
     db_name: "testdatabase",

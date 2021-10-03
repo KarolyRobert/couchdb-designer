@@ -13,7 +13,7 @@
     }
 
     function reduce(keys,values,rereduce){
-        
+        return sum(values);
     }
 
 module.exports = { map, reduce }

@@ -1,21 +1,21 @@
-import {getTestContext} from '../../../build/testing/testEnvironment';
+import {getTestContext} from '../../build/testing/testEnvironment';
 import crypto from 'crypto';
 
 
 
-const supplementRequest = (request,id,contextName,uri) => {
-    let {database,secObj,userCtx} = getTestContext(contextName);
+const supplementRequest = (request,id,contextId,uri) => {
+    let {database,update_seq,secObj,userCtx} = getTestContext(contextId);
     let req = Object.assign(request,{secObj});
     let headers = {
       Accept: "*/*",
       Host: "localhost:5984",
-      "User-Agent": "couchdb-designer"
+      "User-Agent": "couchdb-designer/testing environment"
     };
     let info = {
         db_name: "testdatabase",
-        doc_count: database.database.length,
+        doc_count: database.length,
         doc_del_count: 0,
-        update_seq: 0,
+        update_seq: update_seq,
         purge_seq: 0,
         compact_running: false,
         sizes: {
@@ -25,10 +25,10 @@ const supplementRequest = (request,id,contextName,uri) => {
         },
         instance_start_time: Date.now().valueOf(),
         disk_format_version: 6,
-        committed_update_seq: 0
+        committed_update_seq: update_seq
     }
     req = req.userCtx ? req : Object.assign(req,{userCtx});
-  //  req.body = req.body ? req.body : "undefined";
+    req.headers = req.headers ? req.headers : headers;
     req.form = req.form ? req.form : {};
     req.query = req.query ? req.query : {};
     req.cookie = req.cookie ? req.cookie : {};

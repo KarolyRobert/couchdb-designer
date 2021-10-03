@@ -24,7 +24,6 @@ const testDatabase2 = [
                 context.views.byName.map(testDatabase[1]);
                 expect(context('emitted')).toEqual({offset:0,total_rows:1,rows:[{id:'doc2',key:[[10,10],9,10],value:1}]});
                 expect(context('logged')).toBe('[info] Log :: log from updateFromDir\n[info] Log :: log from views/byName/map\n');
-              //  expect(context.views.byName()).toEqual({"offset": 0, "rows": [{"id": "doc2", "key": [[10, 10], 9, 10], "value": 1}, {"id": "doc1", "key": [[10, 10], 9, 13], "value": 1}], "total_rows": 2});
             })//.catch(err => expect(err).toBe('nincs'));
         });
         
@@ -37,6 +36,7 @@ const testDatabase2 = [
                 expect(() => context('server').view.byName({group_level:1})).toThrow();
                 expect(context('_design').update.updateFromDir({uuid:'uid1'},'doc1').uuid).toBe("uid1");
                 expect(context('database')[0].updateByUpdateFromDir).toBe("libfunction call updated");
+                expect(context('_changes',{filter:'appdesign/all'}).results.length).toBe(2);
             })
         });
 
@@ -47,10 +47,12 @@ const testDatabase2 = [
         });
         test('server', () => {
             return createTestServer('./tests/design',testDatabase).then(server => {
-                expect(server('server').appdesign.update.updateFromDir({uuid:'uid1'},'doc2').uuid).toBe("uid1");
+                expect(server('server').appdesign.update.updateFromDir({uuid:'uid1'},'doc2').info.update_seq).toBe(2);
                 expect(server('database')[1].updateByUpdateFromDir).toBe("libfunction call updated");
                 expect(server('database','doc2').updateByUpdateFromDir).toBe("libfunction call updated");
-                expect(server('database','doc3')).toEqual({error:"not_found",reason:"missing"});
+                expect(server('database','doc1').parent).toBe("roger");
+                expect(server('_changes',{filter:'appdesign/nothing'}).last_seq).toBe("2-tb1aLXeSfOfr/beiNIEwCQ==");
+                expect(() => server('_changes',{filter:'appdesig/nothing'})).toThrow('It is not appdesig design document in testdatabase!');
             });
         });
     });

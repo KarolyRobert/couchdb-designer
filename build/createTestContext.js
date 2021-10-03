@@ -9,7 +9,11 @@ var _createSectionFromDirectory = _interopRequireDefault(require("./section/crea
 
 var _testEnvironment = require("../build/testing/testEnvironment");
 
+var _updateDocument = require("./testing/changes/updateDocument");
+
 var _createCouchDBFunctions = _interopRequireDefault(require("./testing/createCouchDBFunctions"));
+
+var _defaults = _interopRequireDefault(require("./testing/defaults"));
 
 var _testBuiltIns = _interopRequireDefault(require("./testing/testBuiltIns"));
 
@@ -19,7 +23,7 @@ var _path = _interopRequireDefault(require("path"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function createTestContext(directoryName, testDatabase, userCtx, secObj, parentContext = false) {
+function createTestContext(directoryName, testDatabase, userCtx = _defaults.default.userCtx, secObj = _defaults.default.secObj, parentContext = false) {
   if (process.env.JEST_WORKER_ID === undefined) {
     throw new Error('createTestContext can only be used inside Jest Framework!');
   }
@@ -66,21 +70,16 @@ function createTestContext(directoryName, testDatabase, userCtx, secObj, parentC
       testContext = Object.assign(testContext, section[name]);
 
       if (testContext.language.toLowerCase() === 'javascript') {
+        if (testContext.validate_doc_update) {
+          (0, _testEnvironment.addValidator)(contextProps.contextId, testContext.id, testContext.validate_doc_update);
+        }
+
         if (!parentContext) {
           (0, _createCouchDBFunctions.default)(contextProps.contextId, testContext);
-          let database = {
-            _validators: [],
-            database: testDatabase
-          };
-
-          if (testContext.validate_doc_update) {
-            database._validators.push({
-              parentName: testContext.id,
-              validator: testContext.validate_doc_update
-            });
-          }
-
-          (0, _testEnvironment.registerContext)(contextProps.contextId, testContext, database, userCtx, secObj);
+          (0, _testEnvironment.registerContext)(contextProps.contextId, testContext, 'context', userCtx, secObj);
+          (0, _updateDocument.registerDatabase)(contextProps.contextId, testDatabase, userCtx);
+        } else {
+          (0, _createCouchDBFunctions.default)(contextProps.contextId, testContext, name);
         }
 
         resolve(testContext);

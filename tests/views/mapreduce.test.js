@@ -44,6 +44,17 @@ const reduceDatabase = [
     {_id:'doc39',date:1626985214703,value:{object:[39,1],value:{field:39}}}
     ]
 
+
+const reduceDatabase2 = [
+    {_id:'doc40',date:1632601214703,value:{object:[0,1],value:{field:0}}},
+    {_id:'doc41',date:1632457214703,value:{object:[1,1],value:{field:1}}},
+    {_id:'doc42',date:1632313214703,value:{object:[2,1],value:{field:2}}},
+    {_id:'doc43',date:1632169214703,value:{object:[3,1],value:{field:3}}},
+    {_id:'doc44',date:1632025214703,value:{object:[4,1],value:{field:4}}},
+   
+    ]
+
+
 describe('map/reduce',() => {
 
     test('reducer test',() => {
@@ -52,8 +63,8 @@ describe('map/reduce',() => {
         });
     });
     test('reducer test',() => {
-        return createTestContext('./tests/design/appdesign',reduceDatabase).then(context => {
-            expect(context('server').view.byReducer({group_level:1})).toEqual({rows:[{key:[2021],value:40}]});
+        return createTestContext('./tests/design/appdesign',reduceDatabase2).then(context => {
+            expect(context('server').view.byReducer({group_level:1})).toEqual({rows:[{key:[2021],value:5}]});
         });
     });
 })

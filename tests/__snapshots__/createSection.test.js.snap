@@ -4,11 +4,9 @@ exports[`createSection success on directory 1`] = `
 Object {
   "shows": Object {
     "egy": "function () {}",
-    "kettő": Object {
-      "map": "function (doc) {
+    "kettő": "function (doc) {
         emit(doc._id, 1);
       }",
-    },
   },
 }
 `;

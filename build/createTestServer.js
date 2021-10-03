@@ -13,7 +13,9 @@ var _testEnvironment = require("../build/testing/testEnvironment");
 
 var _testBuiltIns = _interopRequireDefault(require("./testing/testBuiltIns"));
 
-var _createCouchDBFunctions = _interopRequireDefault(require("./testing/createCouchDBFunctions"));
+var _defaults = _interopRequireDefault(require("./testing/defaults"));
+
+var _updateDocument = require("./testing/changes/updateDocument");
 
 var _crypto = _interopRequireDefault(require("crypto"));
 
@@ -21,7 +23,7 @@ var _path = _interopRequireDefault(require("path"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const createTestServer = (directoryName, testDatabase, userCtx, secObj) => {
+const createTestServer = (directoryName, testDatabase, userCtx = _defaults.default.userCtx, secObj = _defaults.default.secObj) => {
   return new Promise((resolve, reject) => {
     let root = _path.default.join(directoryName);
 
@@ -39,31 +41,15 @@ const createTestServer = (directoryName, testDatabase, userCtx, secObj) => {
           }
         };
 
-        let database = {
-          _validators: [],
-          database: testDatabase
-        };
-
         for (let designContext of designContexts) {
           if (designContext) {
             let designName = designContext.id.split('/')[1];
-
-            if (designContext.language.toLowerCase() === 'javascript') {
-              (0, _createCouchDBFunctions.default)(contextId, designContext, designName);
-            }
-
             serverContext[designName] = designContext;
-
-            if (designContext.validate_doc_update) {
-              database._validators.push({
-                parentName: designContext.id,
-                validator: designContext.validate_doc_update
-              });
-            }
           }
         }
 
-        (0, _testEnvironment.registerContext)(contextId, serverContext, database, userCtx, secObj);
+        (0, _testEnvironment.registerContext)(contextId, serverContext, 'server', userCtx, secObj);
+        (0, _updateDocument.registerDatabase)(contextId, testDatabase, userCtx);
         resolve(serverContext);
       }).catch(err => reject(err));
     }, err => reject(err));

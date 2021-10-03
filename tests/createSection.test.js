@@ -29,7 +29,7 @@ jest.mock('fs/promises');
         fs.stat.mockResolvedValue({isFile:() => true,isDirectory:() => false});
         fs.readdir.mockResolvedValue(['egy.js','kettő.js']);
         loadModule.mockResolvedValueOnce({egy:function egy(){}});
-        loadModule.mockResolvedValueOnce({kettő:function map(doc){ emit(doc._id,1)}});
+        loadModule.mockResolvedValueOnce({kettő:function kettő(doc){ emit(doc._id,1)}});
         return createSection('design/root','shows').then(result => {
             expect(result).toMatchSnapshot();
         });

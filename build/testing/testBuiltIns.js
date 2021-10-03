@@ -4,10 +4,12 @@ var _viewSort = _interopRequireDefault(require("./views/viewSort"));
 
 var _testEnvironment = require("../../build/testing/testEnvironment");
 
+var _filter = _interopRequireDefault(require("./changes/filter"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const emitted = contextName => {
-  let buildIns = (0, _testEnvironment.getTestContext)(contextName).buildIns;
+const emitted = contextId => {
+  let buildIns = (0, _testEnvironment.getTestContext)(contextId).buildIns;
   let rows = buildIns.contextedEmit.mock.calls.map(params => ({
     id: params[0]._id,
     key: params[1],
@@ -27,8 +29,8 @@ const emitted = contextName => {
   };
 };
 
-const logged = contextName => {
-  let buildIns = (0, _testEnvironment.getTestContext)(contextName).buildIns;
+const logged = contextId => {
+  let buildIns = (0, _testEnvironment.getTestContext)(contextId).buildIns;
   let log = "";
   buildIns.environmentLog.mock.calls.forEach(params => {
     log += `[info] Log :: ${params[0]}\n`;
@@ -37,41 +39,43 @@ const logged = contextName => {
   return log;
 };
 
-const getRow = contextName => {
-  return (0, _testEnvironment.getTestContext)(contextName).buildIns.contextedGetRow;
+const getRow = contextId => {
+  return (0, _testEnvironment.getTestContext)(contextId).buildIns.contextedGetRow;
 };
 
-const provides = contextName => {
-  return (0, _testEnvironment.getTestContext)(contextName).buildIns.contextedProvides;
+const provides = contextId => {
+  return (0, _testEnvironment.getTestContext)(contextId).buildIns.contextedProvides;
 };
 
-const registerType = contextName => {
-  return (0, _testEnvironment.getTestContext)(contextName).buildIns.contextedRegisterType;
+const registerType = contextId => {
+  return (0, _testEnvironment.getTestContext)(contextId).buildIns.contextedRegisterType;
 };
 
-const start = contextName => {
-  return (0, _testEnvironment.getTestContext)(contextName).buildIns.contextedStart;
+const start = contextId => {
+  return (0, _testEnvironment.getTestContext)(contextId).buildIns.contextedStart;
 };
 
-const send = contextName => {
-  return (0, _testEnvironment.getTestContext)(contextName).buildIns.contextedSend;
+const send = contextId => {
+  return (0, _testEnvironment.getTestContext)(contextId).buildIns.contextedSend;
 };
 
-const index = contextName => {
-  return (0, _testEnvironment.getTestContext)(contextName).buildIns.contextedIndex;
+const index = contextId => {
+  return (0, _testEnvironment.getTestContext)(contextId).buildIns.contextedIndex;
 };
 
-const server = contextName => {
-  return (0, _testEnvironment.getTestContext)(contextName).server;
+const server = contextId => {
+  return (0, _testEnvironment.getTestContext)(contextId).server;
 };
 
-const _design = contextName => {
-  return (0, _testEnvironment.getTestContext)(contextName).server;
+const _design = contextId => {
+  return (0, _testEnvironment.getTestContext)(contextId).server;
 };
 
-const database = (contextName, id) => {
+const database = (contextId, id) => {
   if (id) {
-    let database = (0, _testEnvironment.getTestContext)(contextName).database.database;
+    let {
+      database
+    } = (0, _testEnvironment.getTestContext)(contextId);
     let result = {
       error: "not_found",
       reason: "missing"
@@ -86,7 +90,22 @@ const database = (contextName, id) => {
 
     return result;
   } else {
-    return [...(0, _testEnvironment.getTestContext)(contextName).database.database];
+    return [...(0, _testEnvironment.getTestContext)(contextId).database];
+  }
+};
+
+const _changes = (contextId, request) => {
+  if (request) {
+    return (0, _filter.default)(contextId, request);
+  } else {
+    let {
+      changes
+    } = (0, _testEnvironment.getTestContext)(contextId);
+    return {
+      results: [...changes],
+      last_seq: changes[changes.length - 1].seq,
+      pending: 0
+    };
   }
 };
 
@@ -101,5 +120,6 @@ module.exports = {
   index,
   server,
   _design,
-  database
+  database,
+  _changes
 };
