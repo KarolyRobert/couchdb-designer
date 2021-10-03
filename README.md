@@ -146,17 +146,21 @@ With **createTestContext** you can create a **context** represented by directory
  - **directory**    : The root directory of the design document directory structure.
  - **testDatabase** : An array of objects representing the test database.
  - **userCtx**      : Default userCtx object if not declared the userCtx will be:
-                        {db:'testdatabase',name:null,roles:\["_admin"\]}
+```javascript
+                        {db:'testdatabase',name:null,roles:["_admin"]}
+```
 
  - **secObj**       : Default security object if not declared will be:
-                        {members:{roles:\["_admin"\]},admins:{roles:\["_admin"\]}}
+ ```javascript
+                        {members:{roles:["_admin"]},admins:{roles:["_admin"]}}
+```
 
 
 
 A new feature of current version is **createTestServer** which you can use to test multiple ddocs by create a context acting like a real couchdb. It is work the same way like createTestContext but you have to call with path the given ddoc name your functions. The benifit of use this capability is that when you test updateFunctions then the result is depend on all ddocs validate_doc_update.
 
 ```javascript
-    createTestServer(directory,testDatabase\[,userCtx, secObj\])
+    createTestServer(directory,testDatabase[,userCtx, secObj])
 ```
  - **directory**    : The directory which containing the design document directory structures.
 
