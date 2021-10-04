@@ -5,7 +5,30 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-const getBuiltInPolicy = (fileStats, name) => {
+var _path = _interopRequireDefault(require("path"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const getURI = (contextProps, name, type) => {
+  let ddocName = contextProps.root.split(_path.default.sep).pop();
+  let designName = contextProps.name ? `_design/${contextProps.name}` : `_design/${ddocName}`;
+
+  switch (type) {
+    case 'show':
+      return `testdatabase/${designName}/_show/${name}`;
+
+    case 'list':
+      return `testdatabase/${designName}/_list/${name}`;
+
+    case 'update':
+      return `testdatabase/${designName}/_update/${name}`;
+
+    case 'filter':
+      return `testdatabase/_changes`;
+  }
+};
+
+const getBuiltInPolicy = (fileStats, contextProps, name) => {
   let typePath = fileStats.typePath[fileStats.typePath.length - 1] === name ? fileStats.typePath : [...fileStats.typePath, name];
   let functionType = 'library';
 
@@ -46,52 +69,68 @@ const getBuiltInPolicy = (fileStats, name) => {
   if (functionType === 'library' && fileStats.isLib) {
     return {
       allowed: [],
-      denied: ['Require']
+      denied: ['Require'],
+      type: functionType
     };
   } else if (functionType === 'library') {
-    throw `Your function ${name} doesn't match to rules of couchdb design document generation! If ${fileStats.filePath} is a common js library please follow the rule the filename in shape name.lib.js for proper ddoc generation.`;
+    throw `Your function ${name} doesn't match to rules of couchdb design document generation! If ${fileStats.filePath} is a common js library please follow the rule the filename in form name.lib.js for proper ddoc generation.`;
   }
+
+  let policy;
 
   switch (functionType) {
     case 'map':
-      return {
+      policy = {
         allowed: ['Emit', 'Require'],
         denied: ['GetRow', 'Provides', 'RegisterType', 'Start', 'Send', 'Index']
       };
+      break;
 
     case 'reduce':
-      return {
+      policy = {
         allowed: [],
         denied: ['Emit', 'Require', 'GetRow', 'Provides', 'RegisterType', 'Start', 'Send', 'Index']
       };
+      break;
 
     case 'update':
     case 'validate':
     case 'filter':
     case 'rewrite':
-      return {
+      policy = {
         allowed: ['Require'],
         denied: ['Emit', 'GetRow', 'Provides', 'RegisterType', 'Start', 'Send', 'Index']
       };
+      break;
 
     case 'show':
-      return {
+      policy = {
         allowed: ['Require', 'Provides', 'RegisterType'],
         denied: ['Emit', 'GetRow', 'Start', 'Send', 'Index']
       };
+      break;
 
     case 'list':
-      return {
+      policy = {
         allowed: ['Require', 'Provides', 'RegisterType', 'GetRow', 'Start', 'Send'],
         denied: ['Emit', 'Index']
       };
+      break;
 
     case 'index':
-      return {
+      policy = {
         allowed: ['Index'],
         denied: ['Emit', 'Require', 'Provides', 'RegisterType', 'GetRow', 'Start', 'Send']
       };
   }
+
+  if (['update', 'show', 'list', 'filter'].includes(functionType)) {
+    return { ...policy,
+      uri: getURI(contextProps, name, functionType)
+    };
+  }
+
+  return policy;
 };
 
 var _default = getBuiltInPolicy;

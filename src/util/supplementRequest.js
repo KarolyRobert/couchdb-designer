@@ -3,7 +3,11 @@ import crypto from 'crypto';
 
 
 
-const supplementRequest = (request,id,contextId,uri) => {
+const supplementRequest = (request = {},id,contextId,uri,preSupplement = false) => {
+  if(!preSupplement && request.__supplemented){
+    let {__supplemented,...req} = request;
+    return req;
+  }else{
     let {database,update_seq,secObj,userCtx} = getTestContext(contextId);
     let req = Object.assign(request,{secObj});
     let headers = {
@@ -27,7 +31,8 @@ const supplementRequest = (request,id,contextId,uri) => {
         disk_format_version: 6,
         committed_update_seq: update_seq
     }
-    req = req.userCtx ? req : Object.assign(req,{userCtx});
+    req.userCtx = req.userCtx ? req.userCtx : userCtx;
+    req.body = req.body ? req.body : "undefined";
     req.headers = req.headers ? req.headers : headers;
     req.form = req.form ? req.form : {};
     req.query = req.query ? req.query : {};
@@ -37,11 +42,15 @@ const supplementRequest = (request,id,contextId,uri) => {
     req.uuid = req.uuid ? req.uuid : crypto.createHash('md5').update(Date.now().valueOf().toString()).digest('hex');
     req.path = uri.split('/');
     req.id = id ? id : null; 
-    if(req.id)req.path.push(id);
+    if(req.id !== null)req.path.push(id);
     req.requested_path = req.path;
     req.raw_path = `/${req.path.join('/')}`;
     req.info = info;
+    if(preSupplement){
+      return {...req,__supplemented:true};
+    }
     return req;
+  }
 }
 
 export default supplementRequest;

@@ -35,7 +35,7 @@ const filter = (contextId, req) => {
       } = (0, _testEnvironment.getTestContext)(contextId);
       let filterError = false;
       let result = changes.filter(sequence => {
-        let filterRequest = request ? (0, _supplementRequest.default)(request, sequence.id, contextId, 'testdatabase/_changes') : (0, _supplementRequest.default)({}, sequence.id, contextId, 'testdatabase/_changes');
+        let filterRequest = (0, _supplementRequest.default)(request, sequence.id, contextId, 'testdatabase/_changes', true);
         let doc = getDocument(database, sequence.id);
         let ddocName = filter.split('/')[0];
         let filterName = filter.split('/')[1];

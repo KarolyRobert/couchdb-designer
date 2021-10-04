@@ -15,8 +15,10 @@ It is work the way. if a directory then becomes to object type field and a file 
      - These functions must be named. (This is a benefit because the syntax check doesn't indicated as wrong.)
      - The functions must be exported with **module.exports = { functionName, otherFunction }**
      - If the file contain only one function with the same name as file itself then becomes to String field containing the proper function implementation. Otherwise if it contain more then one function or different named function then becomes to object type field with the proper content.
+     - You can export constans as well for example a **reduce** constat for a "view" to use built-in coucdb reducer.
 
 >By the feature: js file contain only one function with the same name as file itself then becomes to String field. You can create more sophisticated structure. For example if you have several update functions writen in a single **updates.js** file you can even create an **updates** directory with additional files followed rules of same name function. This way the result will be an updates object containing the updates.js and the updates directory content.
+
 
 ##### Example directory structure for two design documents:
 
@@ -51,9 +53,8 @@ design
 ##### Exapmle files:
 
 view by file:
-
-```javascript
 //ddocName/views/viewname.js
+```javascript
 
 function map (doc){
     emit(doc.name,1);
@@ -141,23 +142,23 @@ createDesignDocument('./design/appdesign').then(document => {
 With **createTestContext** you can create a **context** represented by directory by the same way like at **createDesignDocument** but you can here declare a testDatabase, userCtx, secObj in parameters. This context object has the same structure as design ducument has but with invokeable functions. These functions in the context object have the near same environment as in a real couchdb. Some of these functions by them nature return result which you can use testing with jest easily. But what if you want to test something like a view's map function which doesn't return the result directly, only call the couchdb built-in **emit** and maybe **log** functions. In these cases you can call the context as a function with the **"emitted"** or **"logged"** string parameter for get the indirect result of previously called functions. After calling the previously gathered data will be deleted but among two calling of them gathering every indirect data. The rest built-in couchdb functions is mockFunctions and available in the same way by calling the context as a function and give their name as a string parameter, for example **context("registerType")** will give you the given built-in mockFunction. When calling the available functions under the context object, they will verify their own implementation then throws error if something wrong happen, for example when calling irrelevant built in function inside your ddoc function.
 
 ```javascript
-    createTestContext(directory,testDatabase\[,userCtx, secObj\])
+    createTestContext(directory,testDatabase[,userCtx, secObj])
 ```
  - **directory**    : The root directory of the design document directory structure.
  - **testDatabase** : An array of objects representing the test database.
  - **userCtx**      : Default userCtx object if not declared the userCtx will be:
 ```javascript
-                        {db:'testdatabase',name:null,roles:["_admin"]}
+    {db:'testdatabase',name:null,roles:["_admin"]}
 ```
 
  - **secObj**       : Default security object if not declared will be:
  ```javascript
-                        {members:{roles:["_admin"]},admins:{roles:["_admin"]}}
+    {members:{roles:["_admin"]},admins:{roles:["_admin"]}}
 ```
 
 
+Another available function is **createTestServer** which you can use to test multiple ddocs by create a context acting like a real couchdb. It is work the same way like createTestContext but you have to supplement of path the given ddoc name to call functions. The benifit of use this capability is that when you test updateFunctions then the result is depend on all ddocs validate_doc_update.
 
-A new feature of current version is **createTestServer** which you can use to test multiple ddocs by create a context acting like a real couchdb. It is work the same way like createTestContext but you have to call with path the given ddoc name your functions. The benifit of use this capability is that when you test updateFunctions then the result is depend on all ddocs validate_doc_update.
 
 ```javascript
     createTestServer(directory,testDatabase[,userCtx, secObj])
@@ -191,6 +192,51 @@ for example: /database/_changes?filter=ddocname/filtername
 ```javascript
     context('_changes',{filter:'ddocname/filtername'})
 ```
+
+#### Automatic "request" supplementing.
+
+The supplementing of request object not only even valid the case of particular context functions like "_changes -> filter" or "_design -> update" testing but in case of direct calling of "**update,show,list,filter**" functions. The content of supplemented request object depend on "testDatabase,userCtx,secObj" parameters. By specify the request's "**headers,body,form,query,cookie,method,peer,uuid,userCtx**" fields you can overwrite the default values.
+
+Deafult request object:
+```json
+{
+    "body": "undefined",
+    "cookie": {},
+    "form": {},
+    "headers": {
+        "Accept": "*/*",
+        "Host": "localhost:5984",
+        "User-Agent": "couchdb-designer/testing environment"
+    },
+    "id": null, //The case of direct calling of functions on context object is always null. Otherwise the processed doc_id.
+    "info": {
+        "db_name": "testdatabase",
+        "doc_count": 0,  // depend on testDatabase.
+        "doc_del_count": 0,
+        "update_seq": 0, // depend on testDatabase and updates.
+        "purge_seq": 0,
+        "compact_running": false,
+        "sizes": {
+          "active": 0,
+          "disk": 0,
+          "external": 0
+        },
+        "instance_start_time": "1347601025628957",
+        "disk_format_version": 6,
+        "committed_update_seq": 0, // same as update_seq
+    },
+    "method": "POST",
+    "path": [], // depend on called function
+    "peer": "127.0.0.1",
+    "query": {},
+    "raw_path": "",
+    "requested_path": [],
+    "secObj": {}, // default or given seCobj
+    "userCtx": {}, // default or given or overwrited userCtx
+    "uuid": "3184f9d1ea934e1f81a24c71bde5c168"  
+}
+```
+
 
 #### All context function's parameters:
 
@@ -239,6 +285,7 @@ describe('couchdb',() => {
             expect(context.views.lib.someLibfunction.mock.calls.length).toBe(1); // byMail.map may invoke someLibfunction by require built-in.
             expect(context('emitted').rows).toEqual([{id:'some',key:'foo@bar.com',value:1}]);
             expect(context('logged')).toMatchSnapshot(); // logResult return multiline String of expected couchdb log.
+            // The next assertion is useless here because calling map function will throw an exception if it's try to call registerType.
             expect(context('registerType')).not.toHaveBeenCalled(); // built-in mockFunction
 
             // Map/reduce view testing
@@ -269,6 +316,4 @@ describe('couchdb',() => {
 ```
 
 >#### Release note:
->I have a little missing feelness I hope all work properly, if you need something or have an idea please tell me.
-
-I hope i don't causing too much torment with my english. 
+>I hope I was successfull to make a usefull package to them who like couchdb. Although my purpose at the start was only to make a simple generator function. I was learn a lot of about "CouchDB" and "Jest" and it's was a good opportunity to practise the english as well, and by seeing it's popularity, for my part its was worth to continue. At the future I will try to polish on its, I don't to plan further supplement it, but if you have an idea to done it more usable and comfortable, or you find something error please tell me in an issue.

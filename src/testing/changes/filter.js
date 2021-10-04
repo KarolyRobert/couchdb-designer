@@ -19,7 +19,7 @@ const filter = (contextId,req) => {
             let {changes,database,context,type} = getTestContext(contextId);
             let filterError = false;
             let result = changes.filter(sequence => {
-                let filterRequest = request ? supplementRequest(request,sequence.id,contextId,'testdatabase/_changes') : supplementRequest({},sequence.id,contextId,'testdatabase/_changes');
+                let filterRequest = supplementRequest(request,sequence.id,contextId,'testdatabase/_changes',true);
                 let doc = getDocument(database,sequence.id);
                 let ddocName = filter.split('/')[0];
                 let filterName = filter.split('/')[1];

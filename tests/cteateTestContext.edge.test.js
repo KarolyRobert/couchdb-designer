@@ -18,7 +18,7 @@ const testDatabase2 = [
         test("all case",() => {
             return createTestContext('./tests/design/appdesign',testDatabase).then(context => {
                 let update = context.updates.updateFromDir({},{});
-                expect(update).toEqual([{updateByUpdateFromDir:'libfunction call updated'},{}]);
+                expect(update[0]).toEqual({updateByUpdateFromDir:'libfunction call updated'});
                 expect(context.lib.couchdb.libfunction.mock.calls.length).toBe(1);
                 expect(() => context.views.byDate.reduce(['keys'],['values'],false)).toThrow("Calling 'require' from reduce function in is not allowed and useless from library! You can fix it in tests/design/appdesign/views/byDate/reduce.js");
                 context.views.byName.map(testDatabase[1]);
@@ -30,11 +30,11 @@ const testDatabase2 = [
         test("concurent",() => {
             return createTestContext('./tests/design/appdesign',testDatabase2).then(context => {
                 let update = context.updates.updateFromDir({},{});
-                expect(update).toEqual([{updateByUpdateFromDir:'libfunction call updated'},{}]);
+                expect(update[0]).toEqual({updateByUpdateFromDir:'libfunction call updated'});
                 expect(context.lib.couchdb.libfunction.mock.calls.length).toBe(1);
                 expect(() => context.views.byDate.reduce(['keys'],['values'],false)).toThrow("Calling 'require' from reduce function in is not allowed and useless from library! You can fix it in tests/design/appdesign/views/byDate/reduce.js");
                 expect(() => context('server').view.byName({group_level:1})).toThrow();
-                expect(context('_design').update.updateFromDir({uuid:'uid1'},'doc1').uuid).toBe("uid1");
+                expect(context('_design').update.updateFromDir({uuid:'uid1'},'doc1').__supplemented).toBeUndefined();
                 expect(context('database')[0].updateByUpdateFromDir).toBe("libfunction call updated");
                 expect(context('_changes',{filter:'appdesign/all'}).results.length).toBe(2);
             })

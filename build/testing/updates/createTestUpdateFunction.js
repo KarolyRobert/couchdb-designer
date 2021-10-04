@@ -35,7 +35,7 @@ const createTestUpdateFunction = (contextId, updateName, context) => {
         let {
           database
         } = (0, _testEnvironment.getTestContext)(contextId);
-        let request = (0, _supplementRequest.default)(req, id, contextId, `testdatabase/${context.id}/_updates/${updateName}`);
+        let request = (0, _supplementRequest.default)(req, id, contextId, `testdatabase/${context.id}/_updates/${updateName}`, true);
         let oldDoc = getDocument(database, id);
         let result = context.updates[updateName](oldDoc ? { ...oldDoc
         } : undefined, request);

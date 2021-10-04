@@ -8,5 +8,10 @@ describe('designer_edge',() => {
             expect(result).toMatchSnapshot();
         });
     });
+    test('stringifyed',() => {
+        return designer('./tests/design').then(result => {
+            expect(JSON.stringify(result,null,3)).toMatchSnapshot();
+        })
+    })
    
 });

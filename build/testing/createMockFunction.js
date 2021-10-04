@@ -9,6 +9,8 @@ var _testEnvironment = require("../../build/testing/testEnvironment");
 
 var _getBuiltInPolicy = _interopRequireDefault(require("../util/getBuiltInPolicy"));
 
+var _supplementRequest = _interopRequireDefault(require("../util/supplementRequest"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const callingErrors = {
@@ -23,17 +25,17 @@ const callingErrors = {
 };
 
 const createMockFunction = (fileStats, contextProps, name, designFunction) => {
-  let builtInPolicy = (0, _getBuiltInPolicy.default)(fileStats, name);
+  let policy = (0, _getBuiltInPolicy.default)(fileStats, contextProps, name);
   const {
     buildIns
   } = (0, _testEnvironment.getTestContext)(contextProps.contextId);
   return jest.fn((...args) => {
-    for (let allowed of builtInPolicy.allowed) {
+    for (let allowed of policy.allowed) {
       if (allowed === 'Emit') {
         buildIns.environmentEmit.mockImplementation((...emitargs) => buildIns.contextedEmit(args[0], ...emitargs));
       } else if (allowed === 'Require') {
         buildIns.environmentRequire.mockImplementation(requirePath => {
-          if (builtInPolicy.allowed.includes('Emit') && requirePath.indexOf('views') !== 0) {
+          if (policy.allowed.includes('Emit') && requirePath.indexOf('views') !== 0) {
             throw `The map function can only require library from under views section! You can fix it in ${fileStats.filePath}`;
           }
 
@@ -48,10 +50,14 @@ const createMockFunction = (fileStats, contextProps, name, designFunction) => {
       }
     }
 
-    for (let denied of builtInPolicy.denied) {
+    for (let denied of policy.denied) {
       buildIns[`environment${denied}`].mockImplementation(() => {
         throw `${callingErrors[denied]} You can fix it in ${fileStats.filePath}`;
       });
+    }
+
+    if (policy.uri) {
+      args[1] = (0, _supplementRequest.default)(args[1], null, contextProps.contextId, policy.uri);
     }
 
     let result = designFunction(...args);

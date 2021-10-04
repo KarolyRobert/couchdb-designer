@@ -1,5 +1,6 @@
 import { getTestContext } from '../../build/testing/testEnvironment';
 import getBuiltInPolicy from '../util/getBuiltInPolicy';
+import supplementRequest from '../util/supplementRequest';
 
 
 const callingErrors = {
@@ -13,16 +14,17 @@ const callingErrors = {
     Index:"Calling 'index' allows only in index functions!"
 }
 
+
 const createMockFunction = (fileStats,contextProps,name,designFunction) => {
-    let builtInPolicy = getBuiltInPolicy(fileStats,name);
+    let policy = getBuiltInPolicy(fileStats,contextProps,name);
     const {buildIns} = getTestContext(contextProps.contextId);
     return jest.fn((...args) => {
-        for(let allowed of builtInPolicy.allowed){
+        for(let allowed of policy.allowed){
             if(allowed === 'Emit'){
                 buildIns.environmentEmit.mockImplementation((...emitargs) => buildIns.contextedEmit(args[0],...emitargs));
             }else if(allowed === 'Require'){
                 buildIns.environmentRequire.mockImplementation(requirePath => {
-                    if(builtInPolicy.allowed.includes('Emit') && requirePath.indexOf('views') !== 0){
+                    if(policy.allowed.includes('Emit') && requirePath.indexOf('views') !== 0){
                        throw(`The map function can only require library from under views section! You can fix it in ${fileStats.filePath}`);
                     }
                     if(contextProps.name){
@@ -37,13 +39,18 @@ const createMockFunction = (fileStats,contextProps,name,designFunction) => {
             }
         }
   
-        for(let denied of builtInPolicy.denied){
+        for(let denied of policy.denied){
 
             buildIns[`environment${denied}`].mockImplementation(() => {
                 throw(`${callingErrors[denied]} You can fix it in ${fileStats.filePath}`);
             });
 
         }
+       
+        if(policy.uri){
+            args[1] = supplementRequest(args[1],null,contextProps.contextId,policy.uri);
+        }
+        
         let result = designFunction(...args);
         if(fileStats.isLib){
             buildIns.environmentRequire.mockImplementation(requirePath => buildIns.contextedRequire(requirePath));

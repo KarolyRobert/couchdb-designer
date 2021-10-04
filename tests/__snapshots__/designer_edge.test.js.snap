@@ -1,5 +1,113 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`designer_edge stringifyed 1`] = `
+"[
+   {
+      \\"_id\\": \\"_design/appdesign\\",
+      \\"language\\": \\"javascript\\",
+      \\"filters\\": {
+         \\"all\\": \\"function (doc, req) {\\\\n  return true;\\\\n}\\",
+         \\"nothing\\": \\"function (doc, req) {\\\\n  return false;\\\\n}\\"
+      },
+      \\"lib\\": {
+         \\"couchdb\\": \\"module.exports.libfunction = function (){\\\\n   return 'libfunction call updated';\\\\n   // https://docs.couchdb.org/en/stable/query-server/javascript.html?highlight=commonJS%20modules#commonjs-modules\\\\n}\\"
+      },
+      \\"options\\": {
+         \\"partitioned\\": false
+      },
+      \\"updates\\": {
+         \\"updateFromDir\\": \\"function (doc, req) {\\\\n  log('log from updateFromDir');\\\\n\\\\n  var probalib = require('lib/couchdb').libfunction;\\\\n\\\\n  doc.updateByUpdateFromDir = probalib();\\\\n  return [doc, req];\\\\n}\\",
+         \\"testUpdate\\": \\"function (doc, req) {\\\\n  if (!doc) {\\\\n    if ('id' in req && req['id']) {\\\\n      // create new document\\\\n      return [{\\\\n        '_id': req['id']\\\\n      }, 'New World'];\\\\n    } // change nothing in database\\\\n\\\\n\\\\n    return [null, 'Empty World'];\\\\n  }\\\\n\\\\n  doc['world'] = 'hello';\\\\n  doc['edited_by'] = req['userCtx']['name'];\\\\n  return [doc, 'Edited World!'];\\\\n}\\",
+         \\"otherUpdate\\": \\"function (doc, req) {\\\\n  if (!doc) {\\\\n    if ('id' in req && req['id']) {\\\\n      // create new document\\\\n      return [{\\\\n        '_id': req['id']\\\\n      }, 'New World'];\\\\n    } // change nothing in database\\\\n\\\\n\\\\n    return [null, 'Empty World'];\\\\n  }\\\\n\\\\n  doc['otherhelo'] = 'szia';\\\\n  doc['edited_by'] = req['userCtx']['name'];\\\\n  return [doc, 'Edited other World!'];\\\\n}\\"
+      },
+      \\"validate_doc_update\\": \\"function (newDoc, oldDoc, userCtx, secObj) {\\\\n  if (newDoc._deleted === true) {\\\\n    // allow deletes by admins and matching users\\\\n    // without checking the other fields\\\\n    if (userCtx.roles.indexOf('_admin') !== -1 || userCtx.name == oldDoc.name) {\\\\n      return;\\\\n    } else {\\\\n      throw {\\\\n        forbidden: 'Only admins may delete other user docs.'\\\\n      };\\\\n    }\\\\n  }\\\\n}\\",
+      \\"views\\": {
+         \\"byBuiltin\\": {
+            \\"map\\": \\"function (doc) {\\\\n  var date = new Date(doc.date);\\\\n  emit([date.getFullYear(), date.getMonth(), date.getDay(), date.getHours()], doc.value);\\\\n}\\",
+            \\"reduce\\": \\"_sum\\"
+         },
+         \\"byDate\\": {
+            \\"map\\": \\"function (doc) {\\\\n  if (doc.type === 'post' && doc.tags && Array.isArray(doc.tags)) {\\\\n    doc.tags.forEach(function (tag) {\\\\n      emit(tag.toLowerCase(), 1);\\\\n    });\\\\n  }\\\\n}\\",
+            \\"reduce\\": \\"function (keys, values, rereduce) {\\\\n  var lib = require('lib/couchdb');\\\\n\\\\n  if (rereduce) {\\\\n    return sum(values);\\\\n  } else {\\\\n    return values.length;\\\\n  }\\\\n}\\"
+         },
+         \\"byName\\": {
+            \\"map\\": \\"function (doc) {\\\\n  log('log from views/byName/map');\\\\n\\\\n  if (doc.name) {\\\\n    emit(doc.name, 1);\\\\n  }\\\\n}\\"
+         },
+         \\"byParent\\": {
+            \\"map\\": \\"function (doc) {\\\\n  log('log from views/byParent/map');\\\\n\\\\n  const myfuncts = function () {\\\\n    emit(doc.parent, 1);\\\\n  };\\\\n\\\\n  if (doc.parent) {\\\\n    myfuncts();\\\\n  } else {\\\\n    emit('helo', 1);\\\\n  }\\\\n}\\",
+            \\"reduce\\": \\"function (keys, values, rereduce) {\\\\n  return sum(values);\\\\n}\\"
+         },
+         \\"byReducer\\": {
+            \\"map\\": \\"function (doc) {\\\\n  var date = new Date(doc.date);\\\\n  emit([date.getFullYear(), date.getMonth(), date.getDay(), date.getHours()], doc.value);\\\\n}\\",
+            \\"reduce\\": \\"function (keys, values, rereduce) {\\\\n  if (rereduce) {\\\\n    return sum(values);\\\\n  } else {\\\\n    return values.length;\\\\n  }\\\\n}\\"
+         },
+         \\"byTest\\": {
+            \\"map\\": \\"function (doc) {\\\\n  var date = new Date(doc.date);\\\\n  emit([date.getFullYear(), date.getMonth(), date.getDay(), date.getHours()], doc.value);\\\\n}\\",
+            \\"reduce\\": \\"_approx_count_distinct\\"
+         }
+      }
+   },
+   {
+      \\"_id\\": \\"_design/errors\\",
+      \\"language\\": \\"javascript\\",
+      \\"lib\\": {
+         \\"false\\": \\"function map(doc){\\\\n    emit(doc._id,false);\\\\n}\\\\n\\\\nmodule.exports = {map}\\"
+      },
+      \\"updates\\": {},
+      \\"views\\": {
+         \\"getrow\\": {
+            \\"map\\": \\"function (doc) {\\\\n  var row = getRow();\\\\n}\\"
+         },
+         \\"lib\\": \\"function view(){\\\\n    provides('foo','bar');\\\\n}\\\\n\\\\nmodule.exports = {view}\\",
+         \\"provides\\": {
+            \\"map\\": \\"function (doc) {\\\\n  var lib = require('views/lib');\\\\n\\\\n  lib.view();\\\\n}\\"
+         },
+         \\"require\\": {
+            \\"map\\": \\"function (doc) {\\\\n  var lib = require('lib/false');\\\\n\\\\n  lib.map(doc);\\\\n}\\"
+         }
+      }
+   },
+   {
+      \\"_id\\": \\"_design/querys\\",
+      \\"language\\": \\"query\\",
+      \\"views\\": {
+         \\"bar-index\\": {
+            \\"map\\": {
+               \\"fields\\": {
+                  \\"bar\\": \\"asc\\"
+               },
+               \\"partial_filter_selector\\": {}
+            },
+            \\"reduce\\": \\"_count\\",
+            \\"options\\": {
+               \\"def\\": {
+                  \\"fields\\": [
+                     \\"bar\\"
+                  ]
+               }
+            }
+         },
+         \\"foo-index\\": {
+            \\"map\\": {
+               \\"fields\\": {
+                  \\"foo\\": \\"asc\\"
+               },
+               \\"partial_filter_selector\\": {}
+            },
+            \\"options\\": {
+               \\"def\\": {
+                  \\"fields\\": [
+                     \\"foo\\"
+                  ]
+               }
+            },
+            \\"reduce\\": \\"_sum\\"
+         }
+      }
+   }
+]"
+`;
+
 exports[`designer_edge success edge test 1`] = `
 Array [
   Object {
