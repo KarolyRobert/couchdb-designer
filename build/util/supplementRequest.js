@@ -49,9 +49,8 @@ const supplementRequest = (request = {}, id, contextId, uri, preSupplement = fal
       disk_format_version: 6,
       committed_update_seq: update_seq
     };
-    req = req.userCtx ? req : Object.assign(req, {
-      userCtx
-    });
+    req.userCtx = req.userCtx ? req.userCtx : userCtx;
+    req.body = req.body ? req.body : "undefined";
     req.headers = req.headers ? req.headers : headers;
     req.form = req.form ? req.form : {};
     req.query = req.query ? req.query : {};
@@ -61,7 +60,7 @@ const supplementRequest = (request = {}, id, contextId, uri, preSupplement = fal
     req.uuid = req.uuid ? req.uuid : _crypto.default.createHash('md5').update(Date.now().valueOf().toString()).digest('hex');
     req.path = uri.split('/');
     req.id = id ? id : null;
-    if (req.id) req.path.push(id);
+    if (req.id !== null) req.path.push(id);
     req.requested_path = req.path;
     req.raw_path = `/${req.path.join('/')}`;
     req.info = info;
