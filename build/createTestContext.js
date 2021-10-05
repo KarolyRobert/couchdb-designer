@@ -15,7 +15,7 @@ var _createCouchDBFunctions = _interopRequireDefault(require("./testing/createCo
 
 var _defaults = _interopRequireDefault(require("./testing/defaults"));
 
-var _testBuiltIns = _interopRequireDefault(require("./testing/testBuiltIns"));
+var _contextFunction = _interopRequireDefault(require("./util/contextFunction"));
 
 var _crypto = _interopRequireDefault(require("crypto"));
 
@@ -23,6 +23,7 @@ var _path = _interopRequireDefault(require("path"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//import testBuiltIns from './testing/testBuiltIns';
 function createTestContext(directoryName, testDatabase, userCtx = _defaults.default.userCtx, secObj = _defaults.default.secObj, parentContext = false) {
   if (process.env.JEST_WORKER_ID === undefined) {
     throw new Error('createTestContext can only be used inside Jest Framework!');
@@ -54,14 +55,7 @@ function createTestContext(directoryName, testDatabase, userCtx = _defaults.defa
         root,
         contextId
       };
-
-      testContext = (need, params) => {
-        if (need in _testBuiltIns.default) {
-          return _testBuiltIns.default[need](contextId, params);
-        } else {
-          throw `${need} is not supported! Try "server","emitted","logged" or the needed built-in mockFunction!`;
-        }
-      };
+      testContext = (0, _contextFunction.default)(contextId);
     }
 
     testContext.id = `_design/${name}`;

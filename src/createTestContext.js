@@ -3,7 +3,8 @@ import { registerContext,addValidator,getTestContext } from '../build/testing/te
 import {registerDatabase} from './testing/changes/updateDocument';
 import createCouchDBFunctions from './testing/createCouchDBFunctions';
 import defaults from './testing/defaults';
-import testBuiltIns from './testing/testBuiltIns';
+import contextFunction from './util/contextFunction';
+//import testBuiltIns from './testing/testBuiltIns';
 import crypto from 'crypto';
 import path from 'path';
 
@@ -25,14 +26,7 @@ export default function createTestContext(directoryName,testDatabase,userCtx = d
             let contextId = crypto.createHash('md5').update(fullPath).digest('hex');
          
             contextProps = {root,contextId}
-            testContext = (need,params) => {
-                if(need in testBuiltIns){
-                    return testBuiltIns[need](contextId,params);
-                }else{
-                    throw(`${need} is not supported! Try "server","emitted","logged" or the needed built-in mockFunction!`);
-                }
-            }
-            
+            testContext = contextFunction(contextId); 
         }
 
         testContext.id = `_design/${name}`;

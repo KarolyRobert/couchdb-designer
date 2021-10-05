@@ -1,7 +1,8 @@
 import fs from 'fs/promises';
 import createTestContext from './createTestContext';
 import { registerContext } from '../build/testing/testEnvironment';
-import testBuiltIns from './testing/testBuiltIns';
+//import testBuiltIns from './testing/testBuiltIns';
+import contextFunction from './util/contextFunction';
 import defaults from './testing/defaults';
 import {registerDatabase} from './testing/changes/updateDocument';
 import crypto from 'crypto';
@@ -16,13 +17,7 @@ const createTestServer = (directoryName,testDatabase,userCtx = defaults.userCtx,
             Promise.all(names.map(name => createTestContext(path.join(directoryName,name),null,null,null,contextId)))
                 .then(designContexts => {
 
-                    let serverContext = (need,params) => {
-                        if(need in testBuiltIns){
-                            return testBuiltIns[need](contextId,params);
-                        }else{
-                            throw(`${need} is not supported! Try "server","emitted","logged" or the needed built-in mockFunction!`);
-                        }
-                    }
+                    let serverContext = contextFunction(contextId);
                   
                     for(let designContext of designContexts){
                         if(designContext){

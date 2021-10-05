@@ -11,7 +11,7 @@ var _createTestContext = _interopRequireDefault(require("./createTestContext"));
 
 var _testEnvironment = require("../build/testing/testEnvironment");
 
-var _testBuiltIns = _interopRequireDefault(require("./testing/testBuiltIns"));
+var _contextFunction = _interopRequireDefault(require("./util/contextFunction"));
 
 var _defaults = _interopRequireDefault(require("./testing/defaults"));
 
@@ -23,6 +23,7 @@ var _path = _interopRequireDefault(require("path"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//import testBuiltIns from './testing/testBuiltIns';
 const createTestServer = (directoryName, testDatabase, userCtx = _defaults.default.userCtx, secObj = _defaults.default.secObj) => {
   return new Promise((resolve, reject) => {
     let root = _path.default.join(directoryName);
@@ -33,13 +34,7 @@ const createTestServer = (directoryName, testDatabase, userCtx = _defaults.defau
 
     _promises.default.readdir(root).then(names => {
       Promise.all(names.map(name => (0, _createTestContext.default)(_path.default.join(directoryName, name), null, null, null, contextId))).then(designContexts => {
-        let serverContext = (need, params) => {
-          if (need in _testBuiltIns.default) {
-            return _testBuiltIns.default[need](contextId, params);
-          } else {
-            throw `${need} is not supported! Try "server","emitted","logged" or the needed built-in mockFunction!`;
-          }
-        };
+        let serverContext = (0, _contextFunction.default)(contextId);
 
         for (let designContext of designContexts) {
           if (designContext) {
