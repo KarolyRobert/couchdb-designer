@@ -12,6 +12,8 @@ const createTestServer = (directoryName,testDatabase,userCtx = defaults.userCtx,
         let root = path.join(directoryName);
         let fullPath = path.resolve(process.env.PWD,root);
         let contextId = crypto.createHash('md5').update(fullPath).digest('hex');
+       
+      
         fs.readdir(root).then(names => {
             Promise.all(names.map(name => createTestContext(path.join(directoryName,name),null,null,null,contextId)))
                 .then(designContexts => {
@@ -29,8 +31,8 @@ const createTestServer = (directoryName,testDatabase,userCtx = defaults.userCtx,
                     registerContext(contextId, serverContext,'server', userCtx, secObj);
                     registerDatabase(contextId,testDatabase,userCtx);
                     resolve(serverContext);
-                })
-                .catch(err => reject(err));
+                },err => reject(err));
+               
                 
         },err => reject(err));
 

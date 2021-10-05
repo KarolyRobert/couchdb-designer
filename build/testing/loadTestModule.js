@@ -13,6 +13,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function loadTestModule(fileStats) {
   return new Promise((resolve, reject) => {
+    jest.useFakeTimers();
+
     const jsModule = require(_path.default.resolve(__dirname, fileStats.testModule));
 
     if (Object.keys(jsModule).length > 0) {

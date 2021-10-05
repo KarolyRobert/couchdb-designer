@@ -295,7 +295,7 @@ describe('couchdb',() => {
             expect(context('server').view.byPeriod({group_level:1})).toEqual({rows:[{key:[2021],value:234}]}) // the result depend on map,reduce,testDatabase
 
 
-        }).catch(err => expect(err).toBe('something wrong in directory structure'));
+        });
     });
 
     test('all_ddoc',() => {
@@ -312,7 +312,7 @@ describe('couchdb',() => {
             //changes and filter
             expect(server("_changes")).toMatchSnapshot();
             expect(server("_changes",{filter:'appdesign/mailbox',request:{query:{type:'spam'}}}).results.length).toBe(2);
-        })
+        });
     });
 });
 

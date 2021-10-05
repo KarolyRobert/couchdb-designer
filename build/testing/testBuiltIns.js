@@ -64,7 +64,11 @@ const index = contextId => {
 };
 
 const server = contextId => {
-  return (0, _testEnvironment.getTestContext)(contextId).server;
+  if ((0, _testEnvironment.getTestContext)(contextId) && (0, _testEnvironment.getTestContext)(contextId).server) {
+    return (0, _testEnvironment.getTestContext)(contextId).server;
+  }
+
+  return false;
 };
 
 const _design = contextId => {

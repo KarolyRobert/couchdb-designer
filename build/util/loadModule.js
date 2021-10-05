@@ -14,6 +14,10 @@ function loadModule(directory, name) {
     let jsModule = false;
 
     try {
+      if (process.env.JEST_WORKER_ID) {
+        jest.useFakeTimers();
+      }
+
       jsModule = require(_path.default.resolve(process.env.PWD, directory, name));
 
       if (Object.keys(jsModule).length > 0) {

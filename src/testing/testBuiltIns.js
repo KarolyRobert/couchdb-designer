@@ -53,7 +53,10 @@ const index = (contextId) => {
 }
 
 const server = (contextId) => {
-    return getTestContext(contextId).server;
+    if(getTestContext(contextId) && getTestContext(contextId).server){
+        return getTestContext(contextId).server;
+    }
+    return false;
 }
 const _design = (contextId) => {
     return getTestContext(contextId).server;

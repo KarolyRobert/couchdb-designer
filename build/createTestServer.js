@@ -45,7 +45,7 @@ const createTestServer = (directoryName, testDatabase, userCtx = _defaults.defau
         (0, _testEnvironment.registerContext)(contextId, serverContext, 'server', userCtx, secObj);
         (0, _updateDocument.registerDatabase)(contextId, testDatabase, userCtx);
         resolve(serverContext);
-      }).catch(err => reject(err));
+      }, err => reject(err));
     }, err => reject(err));
   });
 };

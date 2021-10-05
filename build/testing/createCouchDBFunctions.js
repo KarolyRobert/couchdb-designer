@@ -18,41 +18,43 @@ let couchdbSections = {
   updates: 'update'
 };
 
-const createCouchDBFunctions = (contextName, context, parent = false) => {
-  const relatedFunctions = {
-    views: _createTestViewFunction.default,
-    updates: _createTestUpdateFunction.default
-  };
+const createCouchDBFunctions = (contextId, context, parent = false) => {
+  let server = _testBuiltIns.default.server(contextId);
 
-  let server = _testBuiltIns.default.server(contextName);
+  if (server) {
+    const relatedFunctions = {
+      views: _createTestViewFunction.default,
+      updates: _createTestUpdateFunction.default
+    };
 
-  if (parent) {
-    if (!server[parent]) {
-      server[parent] = {};
+    if (parent) {
+      if (!server[parent]) {
+        server[parent] = {};
+      }
     }
-  }
 
-  const sectionKeys = Object.keys(couchdbSections);
+    const sectionKeys = Object.keys(couchdbSections);
 
-  for (let section of sectionKeys) {
-    if (context[section]) {
-      let functionNames = Object.keys(context[section]);
+    for (let section of sectionKeys) {
+      if (context[section]) {
+        let functionNames = Object.keys(context[section]);
 
-      for (let functionName of functionNames) {
-        let functionSection = relatedFunctions[section](contextName, functionName, context);
+        for (let functionName of functionNames) {
+          let functionSection = relatedFunctions[section](contextId, functionName, context);
 
-        if (parent) {
-          if (!server[parent][couchdbSections[section]]) {
-            server[parent][couchdbSections[section]] = {};
+          if (parent) {
+            if (!server[parent][couchdbSections[section]]) {
+              server[parent][couchdbSections[section]] = {};
+            }
+
+            server[parent][couchdbSections[section]][functionName] = functionSection;
+          } else {
+            if (!server[couchdbSections[section]]) {
+              server[couchdbSections[section]] = {};
+            }
+
+            server[couchdbSections[section]][functionName] = functionSection;
           }
-
-          server[parent][couchdbSections[section]][functionName] = functionSection;
-        } else {
-          if (!server[couchdbSections[section]]) {
-            server[couchdbSections[section]] = {};
-          }
-
-          server[couchdbSections[section]][functionName] = functionSection;
         }
       }
     }

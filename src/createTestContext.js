@@ -56,7 +56,7 @@ export default function createTestContext(directoryName,testDatabase,userCtx = d
                 resolve(testContext);
             }
         },err => {
-            reject(err)
+            reject(err);    
         });
         
     });
