@@ -4,7 +4,6 @@ import {registerDatabase} from './testing/changes/updateDocument';
 import createCouchDBFunctions from './testing/createCouchDBFunctions';
 import defaults from './testing/defaults';
 import contextFunction from './util/contextFunction';
-//import testBuiltIns from './testing/testBuiltIns';
 import crypto from 'crypto';
 import path from 'path';
 

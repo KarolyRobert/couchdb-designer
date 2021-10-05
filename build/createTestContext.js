@@ -23,7 +23,6 @@ var _path = _interopRequireDefault(require("path"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//import testBuiltIns from './testing/testBuiltIns';
 function createTestContext(directoryName, testDatabase, userCtx = _defaults.default.userCtx, secObj = _defaults.default.secObj, parentContext = false) {
   if (process.env.JEST_WORKER_ID === undefined) {
     throw new Error('createTestContext can only be used inside Jest Framework!');

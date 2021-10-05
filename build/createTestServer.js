@@ -23,7 +23,6 @@ var _path = _interopRequireDefault(require("path"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//import testBuiltIns from './testing/testBuiltIns';
 const createTestServer = (directoryName, testDatabase, userCtx = _defaults.default.userCtx, secObj = _defaults.default.secObj) => {
   return new Promise((resolve, reject) => {
     let root = _path.default.join(directoryName);

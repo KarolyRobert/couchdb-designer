@@ -21,20 +21,22 @@ const createCouchDBFunctions = (contextName,context,parent = false) => {
     const sectionKeys = Object.keys(couchdbSections);
 
     for(let section of sectionKeys){
-        let functionNames = Object.keys(context[section]);
-        for(let functionName of functionNames) {
+        if(context[section]){
+            let functionNames = Object.keys(context[section]);
+            for(let functionName of functionNames) {
 
-            let functionSection = relatedFunctions[section](contextName,functionName,context);
-            if(parent){
-                if(!server[parent][couchdbSections[section]]){
-                    server[parent][couchdbSections[section]] = {};
+                let functionSection = relatedFunctions[section](contextName,functionName,context);
+                if(parent){
+                    if(!server[parent][couchdbSections[section]]){
+                        server[parent][couchdbSections[section]] = {};
+                    }
+                    server[parent][couchdbSections[section]][functionName] = functionSection;
+                }else{
+                    if(!server[couchdbSections[section]]){
+                        server[couchdbSections[section]] = {};
+                    }
+                    server[couchdbSections[section]][functionName] = functionSection;
                 }
-                server[parent][couchdbSections[section]][functionName] = functionSection;
-            }else{
-                if(!server[couchdbSections[section]]){
-                    server[couchdbSections[section]] = {};
-                }
-                server[couchdbSections[section]][functionName] = functionSection;
             }
         }
     }

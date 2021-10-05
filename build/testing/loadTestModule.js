@@ -13,21 +13,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function loadTestModule(fileStats) {
   return new Promise((resolve, reject) => {
-    try {
-      const jsModule = require(_path.default.resolve(__dirname, fileStats.testModule));
+    const jsModule = require(_path.default.resolve(__dirname, fileStats.testModule));
 
-      if (Object.keys(jsModule).length > 0) {
-        resolve(jsModule);
-      } else {
-        _promises.default.rm(fileStats.testPath, {
-          force: true,
-          maxRetries: 10
-        }).then(() => {
-          reject(`The module ${fileStats.filePath} does not exist't export anything! You must export function/s with module.exports = {...}`);
-        }, err => reject(err));
-      }
-    } catch (err) {
-      reject(err);
+    if (Object.keys(jsModule).length > 0) {
+      resolve(jsModule);
+    } else {
+      _promises.default.rm(fileStats.testPath, {
+        force: true,
+        maxRetries: 10
+      }).then(() => {
+        reject(`The module ${fileStats.filePath} does not exist't export anything! You must export function/s with module.exports = {...}`);
+      }, err => reject(err));
     }
   });
 }

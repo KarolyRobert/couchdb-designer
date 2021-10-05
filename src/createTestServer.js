@@ -1,7 +1,6 @@
 import fs from 'fs/promises';
 import createTestContext from './createTestContext';
 import { registerContext } from '../build/testing/testEnvironment';
-//import testBuiltIns from './testing/testBuiltIns';
 import contextFunction from './util/contextFunction';
 import defaults from './testing/defaults';
 import {registerDatabase} from './testing/changes/updateDocument';
