@@ -18,9 +18,6 @@ const createTestContextModule = (fileStats,contextProps) => {
                 'const start = environment.start;\n'+
                 'const send = environment.send;\n'+
                 'const index = environment.index;\n';
-            if(fileStats.isLib){
-                moduleContent += 'const exports = module.exports;\n';
-            }
                 moduleContent +=`//Original content \n${content}\n`;
             let tempDirectory = path.join(__dirname, '../../temp');
 

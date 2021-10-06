@@ -5,4 +5,4 @@ function view(){
     provides('foo','bar');
 }
 
-module.exports = {view}
+exports.view = view ;

@@ -58,7 +58,7 @@ exports[`designer_edge stringifyed 1`] = `
          \\"getrow\\": {
             \\"map\\": \\"function (doc) {\\\\n  var row = getRow();\\\\n}\\"
          },
-         \\"lib\\": \\"function view(){\\\\n    provides('foo','bar');\\\\n}\\\\n\\\\nmodule.exports = {view}\\",
+         \\"lib\\": \\"function view(){\\\\n    provides('foo','bar');\\\\n}\\\\n\\\\nexports.view = view ;\\",
          \\"provides\\": {
             \\"map\\": \\"function (doc) {\\\\n  var lib = require('views/lib');\\\\n\\\\n  lib.view();\\\\n}\\"
          },
@@ -283,7 +283,7 @@ module.exports = {map}",
     provides('foo','bar');
 }
 
-module.exports = {view}",
+exports.view = view ;",
       "provides": Object {
         "map": "function (doc) {
   var lib = require('views/lib');
