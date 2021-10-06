@@ -58,15 +58,24 @@ const testEnvironment = contextId => {
     const contextedIndex = jest.fn();
     const contextedEmit = jest.fn();
 
-    const contextedRequire = requirePath => {
-      let pathSegments = requirePath.split('/');
+    const contextedRequire = (requirePath, ddocName = false) => {
+      let fullPath = ddocName ? `${ddocName}/${requirePath}` : requirePath;
+      let pathSegments = fullPath.split('/');
       let required = contexts[contextId].context;
 
       for (let segment of pathSegments) {
         if (segment in required) {
           required = required[segment];
         } else {
-          throw `Invalid require ${requirePath} is not in the environment ${contexts[contextId].context.id}`;
+          if (ddocName) {
+            throw {
+              testError: `Invalid require "${requirePath}" is not in the environment ${contexts[contextId].context[ddocName].id}`
+            };
+          } else {
+            throw {
+              testError: `Invalid require "${requirePath}" is not in the environment ${contexts[contextId].context.id}`
+            };
+          }
         }
       }
 
@@ -74,7 +83,9 @@ const testEnvironment = contextId => {
         return required;
       }
 
-      throw `Invalid require ${requirePath}. You can only import which declared by "name.lib.js" rule as a library.`;
+      throw {
+        testError: `Invalid require ${requirePath}. You can only import which declared by "name.lib.js" rule as a library.`
+      };
     };
 
     contexts[contextId] = {

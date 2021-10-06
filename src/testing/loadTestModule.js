@@ -9,8 +9,7 @@ export default function loadTestModule(fileStats){
         const jsModule = require(path.resolve(__dirname,fileStats.testModule));
         if(Object.keys(jsModule).length > 0){
             resolve(jsModule);
-        }else{  
-                            
+        }else{               
             fs.rm(fileStats.testPath,{force:true,maxRetries:10}).then(() => {
                 reject(`The module ${fileStats.filePath} does not exist't export anything! You must export function/s with module.exports = {...}`);
             },err => reject(err));

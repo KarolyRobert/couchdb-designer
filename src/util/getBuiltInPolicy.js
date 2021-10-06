@@ -50,7 +50,7 @@ const getBuiltInPolicy = (fileStats,contextProps,name) => {
     if(functionType === 'library' && fileStats.isLib){
         return {allowed:[],denied:['Require'],type:functionType}
     }else if(functionType === 'library'){
-        throw(`Your function ${name} doesn't match to rules of couchdb design document generation! If ${fileStats.filePath} is a common js library please follow the rule the filename in form name.lib.js for proper ddoc generation.`);
+        throw({testError:`Your module ${fileStats.filePath} doesn't match to rules of couchdb design document! If it is a common js library please follow the rule the filename in form name.lib.js for proper ddoc generation.`});
     }
     let policy;
     switch(functionType){

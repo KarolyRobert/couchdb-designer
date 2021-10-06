@@ -36,11 +36,13 @@ const createMockFunction = (fileStats, contextProps, name, designFunction) => {
       } else if (allowed === 'Require') {
         buildIns.environmentRequire.mockImplementation(requirePath => {
           if (policy.allowed.includes('Emit') && requirePath.indexOf('views') !== 0) {
-            throw `The map function can only require library from under views section! You can fix it in ${fileStats.filePath}`;
+            throw {
+              testError: `The map function can only require library from under views section! You can fix it in ${fileStats.filePath}`
+            };
           }
 
           if (contextProps.name) {
-            return buildIns.contextedRequire(`${contextProps.name}/${requirePath}`);
+            return buildIns.contextedRequire(requirePath, contextProps.name);
           } else {
             return buildIns.contextedRequire(requirePath);
           }
@@ -52,7 +54,10 @@ const createMockFunction = (fileStats, contextProps, name, designFunction) => {
 
     for (let denied of policy.denied) {
       buildIns[`environment${denied}`].mockImplementation(() => {
-        throw `${callingErrors[denied]} You can fix it in ${fileStats.filePath}`;
+        throw {
+          testError: `${callingErrors[denied]} You can fix it in ${fileStats.filePath}`,
+          errorType: denied
+        };
       });
     }
 
@@ -60,7 +65,29 @@ const createMockFunction = (fileStats, contextProps, name, designFunction) => {
       args[1] = (0, _supplementRequest.default)(args[1], null, contextProps.contextId, policy.uri);
     }
 
-    let result = designFunction(...args);
+    let result;
+
+    if (fileStats.isLib) {
+      try {
+        result = designFunction(...args);
+      } catch (err) {
+        if (err.testError) {
+          throw new Error(`${callingErrors[err.errorType]} You can fix it in ${fileStats.filePath}`);
+        } else {
+          throw new Error(`Your library ${fileStats.filePath} throw error: ${err.message}`);
+        }
+      }
+    } else {
+      try {
+        result = designFunction(...args);
+      } catch (designError) {
+        if (designError.testError) {
+          throw designError.testError;
+        } else {
+          throw `Your function ${name} from ${fileStats.filePath} throw error: ${designError.message}`;
+        }
+      }
+    }
 
     if (fileStats.isLib) {
       buildIns.environmentRequire.mockImplementation(requirePath => buildIns.contextedRequire(requirePath));
