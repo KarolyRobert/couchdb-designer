@@ -20,6 +20,10 @@ function loadModule(directory, name) {
 
       jsModule = require(_path.default.resolve(process.env.PWD, directory, name));
 
+      if (process.env.JEST_WORKER_ID) {
+        jest.useRealTimers();
+      }
+
       if (Object.keys(jsModule).length > 0) {
         resolve(jsModule);
       } else {

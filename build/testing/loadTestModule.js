@@ -17,6 +17,8 @@ function loadTestModule(fileStats) {
 
     const jsModule = require(_path.default.resolve(__dirname, fileStats.testModule));
 
+    jest.useRealTimers();
+
     if (Object.keys(jsModule).length > 0) {
       resolve(jsModule);
     } else {

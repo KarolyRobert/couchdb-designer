@@ -21,6 +21,7 @@ const createTestContextModule = (fileStats,contextProps) => {
                 moduleContent +=`//Original content \n${content}\n`;
             let tempDirectory = path.join(__dirname, '../../temp');
 
+
             fs.stat(tempDirectory).then(tempStat => {
                 if(tempStat.isDirectory()){
                     fs.writeFile(path.resolve(__dirname,fileStats.testPath),moduleContent).then(resolve, reject);

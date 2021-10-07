@@ -9,7 +9,9 @@ export default function loadModule(directory,name){
                 jest.useFakeTimers();
             }
             jsModule = require(path.resolve(process.env.PWD,directory,name));
-         
+            if(process.env.JEST_WORKER_ID){
+                jest.useRealTimers();
+            }
             if(Object.keys(jsModule).length > 0){
                 resolve(jsModule);
             }else{

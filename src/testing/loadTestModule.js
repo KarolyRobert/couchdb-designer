@@ -7,6 +7,7 @@ export default function loadTestModule(fileStats){
     return new Promise((resolve,reject) => {
         jest.useFakeTimers();
         const jsModule = require(path.resolve(__dirname,fileStats.testModule));
+        jest.useRealTimers();
         if(Object.keys(jsModule).length > 0){
             resolve(jsModule);
         }else{               
