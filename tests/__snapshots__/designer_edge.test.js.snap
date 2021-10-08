@@ -10,7 +10,7 @@ exports[`designer_edge stringifyed 1`] = `
          \\"nothing\\": \\"function (doc, req) {\\\\n  return false;\\\\n}\\"
       },
       \\"lib\\": {
-         \\"couchdb\\": \\"module.exports.libfunction = function (){\\\\n   return 'libfunction call updated';\\\\n   // https://docs.couchdb.org/en/stable/query-server/javascript.html?highlight=commonJS%20modules#commonjs-modules\\\\n}\\"
+         \\"couchdb\\": \\"function libfunction(){\\\\n   return 'libfunction call updated';\\\\n   // https://docs.couchdb.org/en/stable/query-server/javascript.html?highlight=commonJS%20modules#commonjs-modules\\\\n}\\\\n\\\\nmodule.exports = { libfunction }\\"
       },
       \\"options\\": {
          \\"partitioned\\": false
@@ -58,7 +58,7 @@ exports[`designer_edge stringifyed 1`] = `
          \\"getrow\\": {
             \\"map\\": \\"function (doc) {\\\\n  var row = getRow();\\\\n}\\"
          },
-         \\"lib\\": \\"function view(){\\\\n    provides('foo','bar');\\\\n}\\\\n\\\\nexports.view = view ;\\",
+         \\"lib\\": \\"function view(){\\\\n    provides('foo','bar');\\\\n}\\\\n\\\\nmodule.exports = {view} ;\\",
          \\"provides\\": {
             \\"map\\": \\"function (doc) {\\\\n  var lib = require('views/lib');\\\\n\\\\n  lib.view();\\\\n}\\"
          },
@@ -122,10 +122,12 @@ Array [
     },
     "language": "javascript",
     "lib": Object {
-      "couchdb": "module.exports.libfunction = function (){
+      "couchdb": "function libfunction(){
    return 'libfunction call updated';
    // https://docs.couchdb.org/en/stable/query-server/javascript.html?highlight=commonJS%20modules#commonjs-modules
-}",
+}
+
+module.exports = { libfunction }",
     },
     "options": Object {
       "partitioned": false,
@@ -283,7 +285,7 @@ module.exports = {map}",
     provides('foo','bar');
 }
 
-exports.view = view ;",
+module.exports = {view} ;",
       "provides": Object {
         "map": "function (doc) {
   var lib = require('views/lib');

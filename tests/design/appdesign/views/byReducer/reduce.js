@@ -8,4 +8,4 @@ function reduce (keys, values, rereduce){
     }
 }
 
-module.exports.reduce = reduce;
+module.exports = { reduce };

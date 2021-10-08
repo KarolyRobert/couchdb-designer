@@ -5,15 +5,35 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _loadTestModule = _interopRequireDefault(require("./loadTestModule"));
+var _testEnvironment = require("../../build/testing/testEnvironment");
 
 var _createMockFunction = _interopRequireDefault(require("./createMockFunction"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const creteTestSectionFromModule = (fileStats, contextProps) => {
+const createTestJavascriptModule = (contextId, fileContent) => {
+  const {
+    require,
+    emit,
+    log,
+    sum,
+    getRow,
+    provides,
+    registerType,
+    start,
+    send,
+    index
+  } = (0, _testEnvironment.testEnvironment)(contextId);
+  const toJSON = JSON.stringify;
+  const isArray = Array.isArray;
+  return eval(fileContent);
+};
+
+const createTestJavascriptSection = (fileStats, contextProps, fileContent) => {
   return new Promise((resolve, reject) => {
-    (0, _loadTestModule.default)(fileStats).then(testModule => {
+    const testModule = createTestJavascriptModule(contextProps.contextId, fileContent);
+
+    if (testModule && Object.keys(testModule).length > 0) {
       let testModuleKeys = Object.keys(testModule);
 
       if (!fileStats.isLib && testModuleKeys.length === 1 && testModuleKeys[0] === fileStats.name) {
@@ -39,9 +59,11 @@ const creteTestSectionFromModule = (fileStats, contextProps) => {
           [fileStats.name]: testElementsObject
         });
       }
-    }, err => reject(err));
+    } else {
+      reject(`The module ${fileStats.filePath} does not exist't export anything! You must export function/s with module.exports = {...}`);
+    }
   });
 };
 
-var _default = creteTestSectionFromModule;
+var _default = createTestJavascriptSection;
 exports.default = _default;

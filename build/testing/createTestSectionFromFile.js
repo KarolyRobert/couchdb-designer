@@ -9,18 +9,18 @@ var _promises = _interopRequireDefault(require("fs/promises"));
 
 var _extractFileStats = _interopRequireDefault(require("../util/extractFileStats"));
 
-var _createTestFileContext = _interopRequireDefault(require("./createTestFileContext"));
+var _createTestJavascriptSection = _interopRequireDefault(require("./createTestJavascriptSection"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const creteTestSectionFromFile = (directory, fileName, fileStat, contextProps) => {
+const creteTestSectionFromFile = (directory, fileName, contextProps) => {
   return new Promise((resolve, reject) => {
     let fileStats = (0, _extractFileStats.default)(directory, fileName, contextProps);
 
-    if (!fileStats.isJavaScript) {
-      _promises.default.readFile(fileStats.filePath, {
-        encoding: 'utf8'
-      }).then(content => {
+    _promises.default.readFile(fileStats.filePath, {
+      encoding: 'utf8'
+    }).then(content => {
+      if (!fileStats.isJavaScript) {
         if (fileStats.isJSON) {
           try {
             let jsonObject = JSON.parse(content.trim());
@@ -35,10 +35,10 @@ const creteTestSectionFromFile = (directory, fileName, fileStat, contextProps) =
             [fileStats.name]: content.trim()
           });
         }
-      }, err => reject(`Bad structure! ${fileStats.filePath} must be regular file! ${err.message}`));
-    } else {
-      (0, _createTestFileContext.default)(fileStats, fileStat, contextProps).then(resolve, reject); //testFileContext =>  resolve(testFileContext),err => reject(err));
-    }
+      } else {
+        (0, _createTestJavascriptSection.default)(fileStats, contextProps, content).then(resolve, reject);
+      }
+    }, err => reject(`Bad structure! ${fileStats.filePath} must be regular file! ${err.message}`));
   });
 };
 

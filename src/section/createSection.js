@@ -13,7 +13,7 @@ const createSection = (directory, name, contextProps) => {
             if(fileStat.isFile() || fileStat.isDirectory()){
                 if(fileStat.isFile()){
                     if(contextProps){
-                        createTestSectionFromFile(directory, name, fileStat, contextProps).then(resolve,reject);
+                        createTestSectionFromFile(directory, name, contextProps).then(resolve,reject);
                     }else{
                         createDesignSectionFromFile(directory, name).then(resolve,reject);
                     }

@@ -1,10 +1,19 @@
-import loadTestModule from './loadTestModule';
+import {testEnvironment} from '../../build/testing/testEnvironment';
 import createMockFunction from './createMockFunction';
 
-const creteTestSectionFromModule = (fileStats,contextProps) => {
 
+const createTestJavascriptModule = (contextId,fileContent) => {
+    const {require,emit,log,sum,getRow,provides,registerType,start,send,index} = testEnvironment(contextId);
+    const toJSON = JSON.stringify;
+    const isArray = Array.isArray;
+    return eval(fileContent);
+}
+
+
+const createTestJavascriptSection = (fileStats, contextProps, fileContent) => {
     return new Promise((resolve, reject) => {
-        loadTestModule(fileStats).then(testModule => {
+        const testModule = createTestJavascriptModule(contextProps.contextId, fileContent);
+        if(testModule && Object.keys(testModule).length > 0){
             let testModuleKeys = Object.keys(testModule);
             if(!fileStats.isLib && testModuleKeys.length === 1 && testModuleKeys[0] === fileStats.name){
                 
@@ -21,9 +30,11 @@ const creteTestSectionFromModule = (fileStats,contextProps) => {
                     }
                 }
                 resolve({[fileStats.name]:testElementsObject});
-            }        
-        }, err => reject(err));
+            }   
+        }else{
+            reject(`The module ${fileStats.filePath} does not exist't export anything! You must export function/s with module.exports = {...}`);
+        }  
     });
 }
 
-export default creteTestSectionFromModule;
+export default createTestJavascriptSection;
