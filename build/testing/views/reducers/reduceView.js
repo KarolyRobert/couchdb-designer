@@ -68,12 +68,13 @@ const reduceView = (viewResult, options, contextName, viewName) => {
         let values = [];
 
         for (let row of group) {
-          keys.push([row.key, row._id]);
+          keys.push([row.id, row.key]);
           values.push(row.value);
         }
 
+        console.log(keys);
         return {
-          key: groupKey(keys[0][0], options.group_level),
+          key: groupKey(keys[0][1], options.group_level),
           value: reduce(keys, values, false)
         };
       });
@@ -92,7 +93,7 @@ const reduceView = (viewResult, options, contextName, viewName) => {
     let values = [];
 
     for (let row of viewResult.rows) {
-      keys.push([row._id, row.key]);
+      keys.push([row.id, row.key]);
       values.push(row.value);
     }
 
