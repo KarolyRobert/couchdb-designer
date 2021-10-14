@@ -180,7 +180,7 @@ Another available function is **createTestServer** which you can use to test mul
  - **directory**    : The directory which containing the design document directory structures.
 
 
-### Map/reduce ### testing.
+### Map/reduce ###
 
 An other but much better way of view testing instead of **emitted** is the calling the context with **server** or **_design** parameter which give back an object what you can use as emulator of couchdb. For example **context("server").view.viewname()** insted of **context.views.viewname.map()**. For this opportunity you have to set the **testDatabase** with the createTestContext second parameter. With server object you can testing the given view in context of **map/reduce,grouping** and the previously setted testDatabase. The server object's functions result the same as if you get by the given function's result from a real couchdb.It is waiting for an optional object parameter with **reduce** (boolean), **group** (boolean), **group_level** (integer) field with same meaning like the couchdb's viewFunction query parameters.  These functions return the correct result even if you set one of built-in couchdb reducers instead of self implemented. Additionally if the test database is partitioned, and the design document as well wich containing the given view, you must pass the partition name as second parameter.
 
