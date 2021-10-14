@@ -19,8 +19,8 @@ const createTestUpdateFunction = (contextId,updateName,context) => {
         try{
             if(typeof req === 'object'){
                 let {database} = getTestContext(contextId);
-                let request = supplementRequest(req,id,contextId,`testdatabase/${context.id}/_updates/${updateName}`,true);
-                let oldDoc = getDocument(database,id);
+                let request = supplementRequest(req,id,contextId,`${database.name}/${context.id}/_updates/${updateName}`,true);
+                let oldDoc = getDocument(database.data,id);
                 let result = context.updates[updateName](oldDoc ? {...oldDoc} : undefined ,request);
                 if(result && Array.isArray(result) && result.length === 2){
                     let newDoc = result[0];

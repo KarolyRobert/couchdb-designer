@@ -62,24 +62,28 @@ function createTestContext(directoryName, testDatabase, userCtx = _defaults.defa
     (0, _createSectionFromDirectory.default)(directory, name, contextProps).then(section => {
       testContext = Object.assign(testContext, section[name]);
 
-      if (testContext.language.toLowerCase() === 'javascript') {
-        if (testContext.validate_doc_update) {
-          (0, _testEnvironment.addValidator)(contextProps.contextId, testContext.id, testContext.validate_doc_update);
-        }
-
-        if (!parentContext) {
-          (0, _createCouchDBFunctions.default)(contextProps.contextId, testContext);
-          (0, _testEnvironment.registerContext)(contextProps.contextId, testContext, 'context', userCtx, secObj);
-          (0, _updateDocument.registerDatabase)(contextProps.contextId, testDatabase, userCtx);
-        } else {
-          (0, _createCouchDBFunctions.default)(contextProps.contextId, testContext, name);
-        }
-
-        resolve(testContext);
-      } else if (!parentContext) {
-        reject(`Only "javascript" type design document testing is supported yet. This directory structure defining one "${testContext.language}" type design document!`);
+      if (!testDatabase.partitioned && testContext.options && testContext.options.partitioned) {
+        reject('partitioned option cannot be true in a non-partitioned database.');
       } else {
-        resolve(testContext);
+        if (testContext.language.toLowerCase() === 'javascript') {
+          if (testContext.validate_doc_update) {
+            (0, _testEnvironment.addValidator)(contextProps.contextId, testContext.id, testContext.validate_doc_update);
+          }
+
+          if (!parentContext) {
+            (0, _createCouchDBFunctions.default)(contextProps.contextId, testContext);
+            (0, _testEnvironment.registerContext)(contextProps.contextId, testContext, 'context', userCtx, secObj);
+            (0, _updateDocument.registerDatabase)(contextProps.contextId, testDatabase, userCtx);
+          } else {
+            (0, _createCouchDBFunctions.default)(contextProps.contextId, testContext, name);
+          }
+
+          resolve(testContext);
+        } else if (!parentContext) {
+          reject(`Only "javascript" type design document testing is supported yet. This directory structure defining one "${testContext.language}" type design document!`);
+        } else {
+          resolve(testContext);
+        }
       }
     }, err => {
       reject(err);

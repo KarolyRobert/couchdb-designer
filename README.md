@@ -1,6 +1,17 @@
 # couchdb-designer
 
-With this package you can easily manage your couchdb design documents by storing them in directory structure and create javascript object from them. Chouchdb-designer provide two functions for that purpose: The first **"designer"** wait for a path of root directory of multiple design documents and gives back the array of design document objects. The second **"createDesignDocument"** do the same but only with one design document. Another feature is the **"createTestContext"**  and **createTestServer** which allows you to [testing](#Testing) your design document with jest testing framework.
+### Release notes:
+The new feature is that supporting partitioned test Database. From last release you need to specify test Database as an object as i show you here.
+```javascript
+    const testDatabase = {
+        name:'DBname',
+        data:[{_id:'users:1254252'...},...],
+        partitioned:true
+    }
+```
+You can testing partitioned [map/reduce](#Map/reduce testing.) by give the partition name in second parameter.
+
+With this package you can easily manage and [testing](#Testing) your couchdb design documents by storing them in directory structure and by create javascript object or testing context from them. Chouchdb-designer provide two functions for that purpose: The first **"designer"** wait for a path of root directory of multiple design documents and gives back the array of design document objects. The second **"createDesignDocument"** do the same but only with one design document. Another feature is the **"createTestContext"**  and **createTestServer** which allows you to testing your design document with jest testing framework.
 
 >#### Warnings
 >The design document generation doesn't check if the directory structure matching to the rules of couchdb design document syntax, although able to generate any type of them without attachmented. For proper use you need to know this rules. By testing you can discover many case of different missable usage.
@@ -144,14 +155,17 @@ With **createTestContext** you can create a **context** represented by directory
 ```javascript
     createTestContext(directory,testDatabase[,userCtx, secObj])
 ```
- - **directory**    : The root directory of the design document directory structure.
- - **testDatabase** : An array of objects representing the test database.
- - **userCtx**      : Default userCtx object if not declared the userCtx will be:
+ - **directory**        : The root directory of the design document directory structure.
+ - **testDatabase**     : An object representing the test database.
+    - **name**          : The name of the test database.
+    - **data**          : An array of objects representing th test database's data.
+    - **partitioned**   : Optional boolean value to indicate if database is partitioned. 
+ - **userCtx**          : Default userCtx object if not declared the userCtx will be:
 ```javascript
     {db:'testdatabase',name:null,roles:["_admin"]}
 ```
 
- - **secObj**       : Default security object if not declared will be:
+ - **secObj**           : Default security object if not declared will be:
  ```javascript
     {members:{roles:["_admin"]},admins:{roles:["_admin"]}}
 ```
@@ -166,9 +180,9 @@ Another available function is **createTestServer** which you can use to test mul
  - **directory**    : The directory which containing the design document directory structures.
 
 
-#### Map/reduce testing.
+#### Map/reduce testing. ####
 
-An other but much better way of view testing instead of **emitted** is the calling the context with **server** or **_design** parameter which give back an object what you can use as emulator of couchdb. For example **context("server").view.viewname()** insted of **context.views.viewname.map()**. For this opportunity you have to set the **testDatabase** with the createTestContext second parameter.The testDatabase is an array of objects. With server object you can testing the given view in context of **map/reduce,grouping** and the previously setted testDatabase. The server object's functions result the same as if you get by the given function's result from a real couchdb.It is waiting for an optional object parameter with **reduce** (boolean), **group** (boolean), **group_level** (integer) field with same meaning like the couchdb's viewFunction query parameters. These functions return the correct result even if you set one of built-in couchdb reducers instead of self implemented.
+An other but much better way of view testing instead of **emitted** is the calling the context with **server** or **_design** parameter which give back an object what you can use as emulator of couchdb. For example **context("server").view.viewname()** insted of **context.views.viewname.map()**. For this opportunity you have to set the **testDatabase** with the createTestContext second parameter. With server object you can testing the given view in context of **map/reduce,grouping** and the previously setted testDatabase. The server object's functions result the same as if you get by the given function's result from a real couchdb.It is waiting for an optional object parameter with **reduce** (boolean), **group** (boolean), **group_level** (integer) field with same meaning like the couchdb's viewFunction query parameters.  These functions return the correct result even if you set one of built-in couchdb reducers instead of self implemented. Additionally if the test database is partitioned, and the design document as well wich containing the given view, you must pass the partition name as second parameter.
 
 
 #### Update testing.
@@ -242,7 +256,8 @@ const request = {
 
 - **server**:                  It is Gives an object with you can test "**views**" and "**updates**" the context of environment
     - **view.viewName**:       map/reduce testing.
-        - **{reduce:true,group:true,group_level:2}** Available map/reduce parameter fields.
+        - **{reduce:boolean,group:boolean,group_level:integer}** Available map/reduce parameter fields.
+        - **partition**        Partition name for partitioned view.  
     - **update.updateName**:   "updates" with "validators" even multiple design documents by "createTestSetrver". Impact to testdatabase and _changes.
 - **_design**:                 Alias of "server".
 - **emitted**:                 Collection of Result of map functions when its was called directly on context object.
@@ -292,7 +307,7 @@ describe('couchdb',() => {
             expect(context('registerType')).not.toHaveBeenCalled(); // built-in mockFunction
 
             // Map/reduce view testing
-            expect(context('server').view.byPeriod({group_level:1})).toEqual({rows:[{key:[2021],value:234}]}) // the result depend on map,reduce,testDatabase
+            expect(context('server').view.byPeriod({group_level:1},'partitionName')).toEqual({rows:[{key:[2021],value:234}]}) // the result depend on map,reduce,testDatabase
 
 
         });
@@ -317,6 +332,3 @@ describe('couchdb',() => {
 });
 
 ```
-
->#### Release note:
->I hope I was successfull to make a usefull package to them who like couchdb. Although my purpose at the start was only to make a simple generator function. I was learn a lot of about "CouchDB" and "Jest" and it's was a good opportunity to practise the english as well, and by seeing it's popularity, for my part its was worth to continue. At the future I will try to polish on its, I don't to plan further supplement it, but if you have an idea to done it more usable and comfortable, or you find something error please tell me in an issue.

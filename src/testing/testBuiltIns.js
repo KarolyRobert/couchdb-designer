@@ -66,14 +66,14 @@ const database = (contextId,id) => {
     if(id){
         let {database} = getTestContext(contextId);
         let result = {error:"not_found",reason:"missing"}
-        for(let doc of database){
+        for(let doc of database.data){
             if(doc._id === id){
                 result = {...doc};
             }
         }
         return result;
     }else{
-        return [...getTestContext(contextId).database];
+        return [...getTestContext(contextId).database.data];
     }
 }
 

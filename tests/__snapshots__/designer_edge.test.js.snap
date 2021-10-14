@@ -13,7 +13,7 @@ exports[`designer_edge stringifyed 1`] = `
          \\"couchdb\\": \\"function libfunction(){\\\\n   return 'libfunction call updated';\\\\n   // https://docs.couchdb.org/en/stable/query-server/javascript.html?highlight=commonJS%20modules#commonjs-modules\\\\n}\\\\n\\\\nmodule.exports = { libfunction }\\"
       },
       \\"options\\": {
-         \\"partitioned\\": false
+         \\"partitioned\\": true
       },
       \\"updates\\": {
          \\"updateFromDir\\": \\"function (doc, req) {\\\\n  log('log from updateFromDir');\\\\n\\\\n  var probalib = require('lib/couchdb').libfunction;\\\\n\\\\n  doc.updateByUpdateFromDir = probalib();\\\\n  return [doc, req];\\\\n}\\",
@@ -39,11 +39,11 @@ exports[`designer_edge stringifyed 1`] = `
          },
          \\"byReducer\\": {
             \\"map\\": \\"function (doc) {\\\\n  var date = new Date(doc.date);\\\\n  emit([date.getFullYear(), date.getMonth(), date.getDay(), date.getHours()], doc.value);\\\\n}\\",
-            \\"reduce\\": \\"function (keys, values, rereduce) {\\\\n  if (rereduce) {\\\\n    return sum(values);\\\\n  } else {\\\\n    return values.length;\\\\n  }\\\\n}\\"
+            \\"reduce\\": \\"_count\\"
          },
          \\"byTest\\": {
             \\"map\\": \\"function (doc) {\\\\n  var date = new Date(doc.date);\\\\n  emit([date.getFullYear(), date.getMonth(), date.getDay(), date.getHours()], doc.value);\\\\n}\\",
-            \\"reduce\\": \\"_approx_count_distinct\\"
+            \\"reduce\\": \\"_sum\\"
          }
       }
    },
@@ -130,7 +130,7 @@ Array [
 module.exports = { libfunction }",
     },
     "options": Object {
-      "partitioned": false,
+      "partitioned": true,
     },
     "updates": Object {
       "otherUpdate": "function (doc, req) {
@@ -247,20 +247,14 @@ module.exports = { libfunction }",
   var date = new Date(doc.date);
   emit([date.getFullYear(), date.getMonth(), date.getDay(), date.getHours()], doc.value);
 }",
-        "reduce": "function (keys, values, rereduce) {
-  if (rereduce) {
-    return sum(values);
-  } else {
-    return values.length;
-  }
-}",
+        "reduce": "_count",
       },
       "byTest": Object {
         "map": "function (doc) {
   var date = new Date(doc.date);
   emit([date.getFullYear(), date.getMonth(), date.getDay(), date.getHours()], doc.value);
 }",
-        "reduce": "_approx_count_distinct",
+        "reduce": "_sum",
       },
     },
   },

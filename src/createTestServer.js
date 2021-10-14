@@ -15,7 +15,7 @@ const createTestServer = (directoryName,testDatabase,userCtx = defaults.userCtx,
        
       
         fs.readdir(root).then(names => {
-            Promise.all(names.map(name => createTestContext(path.join(directoryName,name),null,null,null,contextId)))
+            Promise.all(names.map(name => createTestContext(path.join(directoryName,name),testDatabase,null,null,contextId)))
                 .then(designContexts => {
 
                     let serverContext = contextFunction(contextId);

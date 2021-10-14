@@ -21,7 +21,7 @@ const addValidator = (contextId,parentName,validator) => {
 }
 
 const registerContext = (contextId,testContext,type,secObj,userCtx) => {
-    contexts[contextId] = Object.assign(contexts[contextId],{context:testContext,secObj,userCtx,database:[],type});
+    contexts[contextId] = Object.assign(contexts[contextId],{context:testContext,secObj,userCtx,database:{data:[]},type});
 }
 
 

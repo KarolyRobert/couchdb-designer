@@ -3,20 +3,33 @@ import { emitted } from '../testBuiltIns';
 import { validateViewOptions } from './viewUtils';
 import reduceView from './reducers/reduceView';
 
-const createTestViewFunction = (contextName,viewName,context) => {
-    return (opts) => {
-        let {database} = getTestContext(contextName);
+//{"error":"query_parse_error","reason":"`partition` parameter is mandatory for queries to this view."}
+//{"error":"query_parse_error","reason":"`partition` parameter is not supported in this design doc"}
+
+const createTestViewFunction = (contextId,viewName,context) => {
+    return (opts,partition) => {
+        let {database} = getTestContext(contextId);
         if(context.views[viewName].map){
             let options = validateViewOptions(Boolean(context.views[viewName].reduce),opts);
             let viewResult;
-            if(database){
-                database.forEach(doc => context.views[viewName].map(doc));
-                viewResult = emitted(contextName);
+            if((partition && context.options && context.options.partitioned) || (partition && !context.options)){
+                database.data.filter(doc => {
+                    return partition === doc._id.split(':')[0];
+                }).forEach(pdoc => context.views[viewName].map(pdoc));
             }else{
-                throw('For map/reduce testing you need to provide a testDatabase in createTestContext second parameter.');
+                if(partition){
+                    throw({error:"query_parse_error",reason:"`partition` parameter is not supported in this design doc"});
+                }else{
+                    if((context.options && context.options.partitioned) || (database.partitioned && !context.options)){
+                        throw({error:"query_parse_error",reason:"`partition` parameter is mandatory for queries to this view."});
+                    }   
+                    database.data.forEach(doc => context.views[viewName].map(doc));
+                }
             }
+            viewResult = emitted(contextId);
+         
             if(options.reduce){
-                return reduceView(viewResult,options,contextName,viewName);
+                return reduceView(viewResult,options,contextId,viewName);
             }else{
                 return viewResult;    
             }

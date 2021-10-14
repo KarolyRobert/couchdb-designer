@@ -85,7 +85,7 @@ const database = (contextId, id) => {
       reason: "missing"
     };
 
-    for (let doc of database) {
+    for (let doc of database.data) {
       if (doc._id === id) {
         result = { ...doc
         };
@@ -94,7 +94,7 @@ const database = (contextId, id) => {
 
     return result;
   } else {
-    return [...(0, _testEnvironment.getTestContext)(contextId).database];
+    return [...(0, _testEnvironment.getTestContext)(contextId).database.data];
   }
 };
 

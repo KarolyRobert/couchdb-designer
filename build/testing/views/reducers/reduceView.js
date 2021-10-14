@@ -72,7 +72,6 @@ const reduceView = (viewResult, options, contextName, viewName) => {
           values.push(row.value);
         }
 
-        console.log(keys);
         return {
           key: groupKey(keys[0][1], options.group_level),
           value: reduce(keys, values, false)

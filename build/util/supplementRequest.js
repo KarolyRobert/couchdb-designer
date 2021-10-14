@@ -34,7 +34,7 @@ const supplementRequest = (request = {}, id, contextId, uri, preSupplement = fal
       "User-Agent": "couchdb-designer/testing environment"
     };
     let info = {
-      db_name: "testdatabase",
+      db_name: database.name,
       doc_count: database.length,
       doc_del_count: 0,
       update_seq: update_seq,

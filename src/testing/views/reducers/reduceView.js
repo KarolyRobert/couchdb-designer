@@ -52,7 +52,6 @@ const reduceView = (viewResult,options,contextName,viewName) => {
                     keys.push([row.id, row.key]);
                     values.push(row.value);
                 }
-                console.log(keys);
                 return {key:groupKey(keys[0][1],options.group_level),value:reduce(keys,values,false)}
             });
             let rereduceRows = reduceRows.map(row => {

@@ -28,7 +28,9 @@ const registerContext = (contextId, testContext, type, secObj, userCtx) => {
     context: testContext,
     secObj,
     userCtx,
-    database: [],
+    database: {
+      data: []
+    },
     type
   });
 };
