@@ -11,6 +11,8 @@ var _getBuiltInPolicy = _interopRequireDefault(require("../util/getBuiltInPolicy
 
 var _supplementRequest = _interopRequireDefault(require("../util/supplementRequest"));
 
+var _builtInFunction = _interopRequireDefault(require("../builtin/builtInFunction"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const callingErrors = {
@@ -23,13 +25,15 @@ const callingErrors = {
   Send: "Calling 'send' allows only in list functions!",
   Index: "Calling 'index' allows only in index functions!"
 };
+const hasJest = Boolean(process.env.JEST_WORKER_ID);
 
 const createMockFunction = (fileStats, contextProps, name, designFunction) => {
   let policy = (0, _getBuiltInPolicy.default)(fileStats, contextProps, name);
   const {
     buildIns
   } = (0, _testEnvironment.getTestContext)(contextProps.contextId);
-  return jest.fn((...args) => {
+
+  const mockFunction = (...args) => {
     for (let allowed of policy.allowed) {
       if (allowed === 'Emit') {
         buildIns.environmentEmit.mockImplementation((...emitargs) => buildIns.contextedEmit(args[0], ...emitargs));
@@ -94,7 +98,9 @@ const createMockFunction = (fileStats, contextProps, name, designFunction) => {
     }
 
     return result;
-  });
+  };
+
+  return hasJest ? jest.fn(mockFunction) : (0, _builtInFunction.default)(mockFunction);
 };
 
 var _default = createMockFunction;

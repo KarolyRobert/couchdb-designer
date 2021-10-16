@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createMangoDocument success 1`] = `
+Object {
+  "_id": "_design/name",
+  "language": "query",
+  "options": Object {
+    "partitioned": false,
+  },
+  "views": Object {
+    "mongo": Object {
+      "map": Object {
+        "fields": Object {
+          "_id": "asc",
+          "_rev": "asc",
+          "title": "asc",
+          "year": "asc",
+        },
+        "partial_filter_selector": Object {
+          "limit": 10,
+          "skip": 0,
+          "year": Object {
+            "$gt": 2010,
+          },
+        },
+      },
+      "options": Object {
+        "def": Object {
+          "fields": Array [
+            "_id",
+            Object {
+              "_rev": "asc",
+            },
+            "year",
+            "title",
+          ],
+          "partial_filter_selector": Object {
+            "limit": 10,
+            "skip": 0,
+            "year": Object {
+              "$gt": 2010,
+            },
+          },
+        },
+      },
+      "reduce": "_count",
+    },
+  },
+}
+`;

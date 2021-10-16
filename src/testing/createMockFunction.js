@@ -1,6 +1,7 @@
 import { getTestContext } from '../../build/testing/testEnvironment';
 import getBuiltInPolicy from '../util/getBuiltInPolicy';
 import supplementRequest from '../util/supplementRequest';
+import builtInFunction from '../builtin/builtInFunction';
 
 
 const callingErrors = {
@@ -14,11 +15,12 @@ const callingErrors = {
     Index:"Calling 'index' allows only in index functions!"
 }
 
+const hasJest = Boolean(process.env.JEST_WORKER_ID);
 
 const createMockFunction = (fileStats,contextProps,name,designFunction) => {
     let policy = getBuiltInPolicy(fileStats,contextProps,name);
     const {buildIns} = getTestContext(contextProps.contextId);
-    return jest.fn((...args) => {
+    const mockFunction = (...args) => {
         for(let allowed of policy.allowed){
             if(allowed === 'Emit'){
                 buildIns.environmentEmit.mockImplementation((...emitargs) => buildIns.contextedEmit(args[0],...emitargs));
@@ -77,7 +79,8 @@ const createMockFunction = (fileStats,contextProps,name,designFunction) => {
             buildIns.environmentRequire.mockImplementation(requirePath => buildIns.contextedRequire(requirePath));
         }
         return result;
-    })
+    }
+    return hasJest ? jest.fn(mockFunction) : builtInFunction(mockFunction);
 }
 
 

@@ -8,9 +8,6 @@ import crypto from 'crypto';
 import path from 'path';
 
 export default function createTestContext(directoryName,testDatabase,userCtx = defaults.userCtx,secObj = defaults.secObj,parentContext = false){
-    if(process.env.JEST_WORKER_ID === undefined){
-        throw new Error('createTestContext can only be used inside Jest Framework!');
-    }
     return new Promise((resolve,reject) => {
         let testContext;
         let contextProps;

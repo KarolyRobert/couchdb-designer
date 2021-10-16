@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "babel src -d build"
+    "build": "babel src -d build --ignore '**/*.test.js,**/__mocks__'"
   },
   "repository": {
     "type": "git",

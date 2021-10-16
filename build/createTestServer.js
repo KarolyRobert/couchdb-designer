@@ -32,7 +32,11 @@ const createTestServer = (directoryName, testDatabase, userCtx = _defaults.defau
     let contextId = _crypto.default.createHash('md5').update(fullPath).digest('hex');
 
     _promises.default.readdir(root).then(names => {
-      Promise.all(names.map(name => (0, _createTestContext.default)(_path.default.join(directoryName, name), testDatabase, null, null, contextId))).then(designContexts => {
+      Promise.all(names.map(name => {
+        if (/.*\.json$/.test(name.toLowerCase())) {} else {
+          return (0, _createTestContext.default)(_path.default.join(directoryName, name), testDatabase, null, null, contextId);
+        }
+      })).then(designContexts => {
         let serverContext = (0, _contextFunction.default)(contextId);
 
         for (let designContext of designContexts) {

@@ -1,0 +1,19 @@
+
+{
+    "partitioned":false,
+    "mongo":{
+        "partial_filter_selector": {
+            "year": {
+                "$gt": 2010
+            },
+            "limit": 10,
+            "skip": 0
+        },
+        "fields": [
+            "_id",
+            {"_rev":"asc"},
+            "year",
+            "title"
+        ]
+    } 
+}

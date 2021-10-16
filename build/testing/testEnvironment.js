@@ -1,5 +1,9 @@
 "use strict";
 
+var _builtInFunction = _interopRequireDefault(require("../builtin/builtInFunction"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 const contexts = {};
 
 const environmentSum = arr => {
@@ -39,26 +43,28 @@ const getTestContext = contextId => {
   return contexts[contextId];
 };
 
+const hasJest = Boolean(process.env.JEST_WORKER_ID);
+
 const testEnvironment = contextId => {
   if (contexts[contextId]) {
     return contexts[contextId].environment;
   } else {
-    const environmentRequire = jest.fn();
-    const environmentEmit = jest.fn();
-    const environmentLog = jest.fn();
-    const environmentGetRow = jest.fn();
-    const environmentProvides = jest.fn();
-    const environmentRegisterType = jest.fn();
-    const environmentStart = jest.fn();
-    const environmentSend = jest.fn();
-    const environmentIndex = jest.fn();
-    const contextedGetRow = jest.fn();
-    const contextedProvides = jest.fn();
-    const contextedRegisterType = jest.fn();
-    const contextedStart = jest.fn();
-    const contextedSend = jest.fn();
-    const contextedIndex = jest.fn();
-    const contextedEmit = jest.fn();
+    const environmentRequire = hasJest ? jest.fn() : (0, _builtInFunction.default)();
+    const environmentEmit = hasJest ? jest.fn() : (0, _builtInFunction.default)();
+    const environmentLog = hasJest ? jest.fn() : (0, _builtInFunction.default)();
+    const environmentGetRow = hasJest ? jest.fn() : (0, _builtInFunction.default)();
+    const environmentProvides = hasJest ? jest.fn() : (0, _builtInFunction.default)();
+    const environmentRegisterType = hasJest ? jest.fn() : (0, _builtInFunction.default)();
+    const environmentStart = hasJest ? jest.fn() : (0, _builtInFunction.default)();
+    const environmentSend = hasJest ? jest.fn() : (0, _builtInFunction.default)();
+    const environmentIndex = hasJest ? jest.fn() : (0, _builtInFunction.default)();
+    const contextedGetRow = hasJest ? jest.fn() : (0, _builtInFunction.default)();
+    const contextedProvides = hasJest ? jest.fn() : (0, _builtInFunction.default)();
+    const contextedRegisterType = hasJest ? jest.fn() : (0, _builtInFunction.default)();
+    const contextedStart = hasJest ? jest.fn() : (0, _builtInFunction.default)();
+    const contextedSend = hasJest ? jest.fn() : (0, _builtInFunction.default)();
+    const contextedIndex = hasJest ? jest.fn() : (0, _builtInFunction.default)();
+    const contextedEmit = hasJest ? jest.fn() : (0, _builtInFunction.default)();
 
     const contextedRequire = (requirePath, ddocName = false) => {
       let fullPath = ddocName ? `${ddocName}/${requirePath}` : requirePath;

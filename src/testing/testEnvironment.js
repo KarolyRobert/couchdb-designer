@@ -1,4 +1,4 @@
-
+import builtInFunction from "../builtin/builtInFunction";
 
 const contexts = {}
 
@@ -21,7 +21,15 @@ const addValidator = (contextId,parentName,validator) => {
 }
 
 const registerContext = (contextId,testContext,type,secObj,userCtx) => {
-    contexts[contextId] = Object.assign(contexts[contextId],{context:testContext,secObj,userCtx,database:{data:[]},type});
+    contexts[contextId] = Object.assign(contexts[contextId],{
+        context:testContext,
+        secObj,
+        userCtx,
+        database:{
+            data:[]
+        },
+        type
+    });
 }
 
 
@@ -29,33 +37,35 @@ const getTestContext = (contextId) => {
     return contexts[contextId];
 }
 
-const testEnvironment = (contextId) => {
+const hasJest = Boolean(process.env.JEST_WORKER_ID);
 
+const testEnvironment = (contextId) => {
+    
     if(contexts[contextId]){
 
         return contexts[contextId].environment;
 
     }else{
 
-        const environmentRequire = jest.fn();
-        const environmentEmit = jest.fn();
-        const environmentLog = jest.fn();
+        const environmentRequire = hasJest ? jest.fn() : builtInFunction();
+        const environmentEmit = hasJest ? jest.fn() : builtInFunction();
+        const environmentLog = hasJest ? jest.fn() : builtInFunction();
 
-        const environmentGetRow = jest.fn();
-        const environmentProvides = jest.fn();
-        const environmentRegisterType = jest.fn();
-        const environmentStart = jest.fn();
-        const environmentSend = jest.fn();
-        const environmentIndex = jest.fn();
+        const environmentGetRow = hasJest ? jest.fn() : builtInFunction();
+        const environmentProvides = hasJest ? jest.fn() : builtInFunction();
+        const environmentRegisterType = hasJest ? jest.fn() : builtInFunction();
+        const environmentStart = hasJest ? jest.fn() : builtInFunction();
+        const environmentSend = hasJest ? jest.fn() : builtInFunction();
+        const environmentIndex = hasJest ? jest.fn() : builtInFunction();
 
-        const contextedGetRow = jest.fn();
-        const contextedProvides = jest.fn();
-        const contextedRegisterType = jest.fn();
-        const contextedStart = jest.fn();
-        const contextedSend = jest.fn();
-        const contextedIndex = jest.fn();
+        const contextedGetRow = hasJest ? jest.fn() : builtInFunction();
+        const contextedProvides = hasJest ? jest.fn() : builtInFunction();
+        const contextedRegisterType = hasJest ? jest.fn() : builtInFunction();
+        const contextedStart = hasJest ? jest.fn() : builtInFunction();
+        const contextedSend = hasJest ? jest.fn() : builtInFunction();
+        const contextedIndex = hasJest ? jest.fn() : builtInFunction();
 
-        const contextedEmit = jest.fn();
+        const contextedEmit = hasJest ? jest.fn() : builtInFunction();
 
         const contextedRequire = (requirePath,ddocName = false) => {
             let fullPath = ddocName ? `${ddocName}/${requirePath}` : requirePath;

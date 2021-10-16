@@ -117,19 +117,23 @@ const update = (contextId, doc, user) => {
 };
 
 const registerDatabase = (contextId, testDatabase, userCtx) => {
-  if (typeof testDatabase !== 'object' || !testDatabase.name || !testDatabase.data || !Array.isArray(testDatabase.data)) {
-    throw 'The testdatabase must be an object with at least name and data field, data must be an array and you can specify with partitioned field if your testdatabase is partitioned.';
-  }
-
   if (testDatabase) {
+    if (typeof testDatabase !== 'object') {
+      throw 'The test database must be an object!';
+    }
+
     let {
       database
     } = (0, _testEnvironment.getTestContext)(contextId);
-    database.name = testDatabase.name;
+    database.name = testDatabase.name ? testDatabase.name : 'testdatabase';
     database.partitioned = testDatabase.partitioned ? testDatabase.partitioned : false;
 
-    for (let doc of testDatabase.data) {
-      update(contextId, doc, userCtx);
+    if (testDatabase.data && Array.isArray(testDatabase.data) && testDatabase.data.length) {
+      for (let doc of testDatabase.data) {
+        update(contextId, doc, userCtx);
+      }
+    } else if (!Array.isArray(testDatabase.data)) {
+      throw 'The data field of test database must be an array of object representing the documents of database!';
     }
   }
 };
