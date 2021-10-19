@@ -9,42 +9,11 @@ var _promises = _interopRequireDefault(require("fs/promises"));
 
 var _path = _interopRequireDefault(require("path"));
 
+var _mangoFields = _interopRequireDefault(require("./util/mangoFields"));
+
+var _compileSelector = _interopRequireDefault(require("./util/compileSelector"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-const mapFields = (fields, fileName, indexName) => {
-  let fieldsObject = {};
-  let direction = false;
-
-  for (let field of fields) {
-    if (typeof field === 'string') {
-      if (direction && direction !== 'asc') {
-        throw `(unsupported_mixed_sort) Sorts currently only support a single direction for all fields. You can fix it in ${fileName} - index: ${indexName}.`;
-      } else if (!direction) {
-        direction = 'asc';
-      }
-
-      fieldsObject[field] = direction;
-    } else if (typeof field === 'object') {
-      let fieldName = Object.keys(field);
-
-      if (fieldName.length === 1 && (field[fieldName[0]] === 'asc' || field[fieldName[0]] === 'desc')) {
-        if (direction && direction !== field[fieldName[0]]) {
-          throw `(unsupported_mixed_sort) Sorts currently only support a single direction for all fields. You can fix it in ${fileName} - index: ${indexName}.`;
-        } else if (!direction) {
-          direction = field[fieldName[0]];
-        }
-
-        fieldsObject[fieldName[0]] = direction;
-      } else {
-        throw `(invalid_sort_field) Invalid sort field: ${fieldName[0]}:${field[fieldName[0]]}. You can fix it in ${fileName},${indexName} index.`;
-      }
-    } else {
-      throw `(invalid_sort_field) Invalid sort field: ${field}. You can fix it in ${fileName},${indexName} index.`;
-    }
-  }
-
-  return fieldsObject;
-};
 
 const createMangoDocument = (root, name) => {
   return new Promise((resolve, reject) => {
@@ -75,8 +44,8 @@ const createMangoDocument = (root, name) => {
           } else {
             let view = {
               map: {
-                fields: mapFields(json[key].fields, file, key),
-                partial_filter_selector: json[key].partial_filter_selector ? json[key].partial_filter_selector : {}
+                fields: (0, _mangoFields.default)(json[key].fields, file, key),
+                partial_filter_selector: json[key].partial_filter_selector ? (0, _compileSelector.default)(json[key].partial_filter_selector, file, key) : {}
               },
               reduce: '_count',
               options: {

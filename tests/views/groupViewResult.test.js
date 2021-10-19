@@ -1,5 +1,5 @@
 import groupViewResult from '../../src/testing/views/groupViewResult';
-import viewSort from '../../src/testing/views/viewSort';
+import compareAny from '../../src/util/compareAny';
 
 
 describe('groupViewResult',() => {
@@ -27,7 +27,7 @@ describe('groupViewResult',() => {
             {id: 20, key:["a",1,3], value:20},
         ]
         let vResult = {total_rows:20,offset:0,rows};
-        vResult.rows.sort(viewSort);
+        vResult.rows.sort((a,b) => compareAny(a.key, b.key));
         expect(groupViewResult(vResult.rows,1)).toMatchSnapshot();
         expect(groupViewResult(vResult.rows,2)).toMatchSnapshot();
         expect(groupViewResult(vResult.rows,3)).toMatchSnapshot();

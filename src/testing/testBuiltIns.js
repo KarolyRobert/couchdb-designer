@@ -1,4 +1,4 @@
-import viewSort from './views/viewSort';
+import compareAny from '../util/compareAny';
 import { getTestContext } from '../../build/testing/testEnvironment';
 import filter from './changes/filter';
 
@@ -8,7 +8,7 @@ const emitted = (contextId) => {
     let rows = buildIns.contextedEmit.mock.calls.map(params => ({id:params[0]._id,key:params[1],value:params[2]}))
     let count = buildIns.contextedEmit.mock.calls.length;
     if(rows.length){
-        rows.sort(viewSort);
+        rows.sort((a,b) => compareAny(a.key,b.key));
     }
     buildIns.contextedEmit.mockClear();
     return {

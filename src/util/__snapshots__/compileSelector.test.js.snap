@@ -1,0 +1,167 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`compileSelector all case 1`] = `
+Object {
+  "$and": Array [
+    Object {
+      "foo": Object {
+        "$eq": "bar",
+      },
+    },
+    Object {
+      "bar": Object {
+        "$and": Array [
+          Object {
+            "foo": Object {
+              "$eq": "bar",
+            },
+          },
+          Object {
+            "bar": Object {
+              "$and": Array [
+                Object {
+                  "baz": Object {
+                    "$and": Array [
+                      Object {
+                        "$lte": "bar",
+                      },
+                      Object {
+                        "$gte": "foo",
+                      },
+                    ],
+                  },
+                },
+                Object {
+                  "foo": Object {
+                    "$exists": false,
+                  },
+                },
+                Object {
+                  "bar": Object {
+                    "$type": "array",
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    Object {
+      "baz": Object {
+        "$and": Array [
+          Object {
+            "$lt": 2010,
+          },
+          Object {
+            "$gt": 1000,
+          },
+          Object {
+            "$ne": 1500,
+          },
+        ],
+      },
+    },
+    Object {
+      "foobar": Object {
+        "$and": Array [
+          Object {
+            "$in": Array [
+              1,
+              2,
+            ],
+          },
+          Object {
+            "$nin": Array [
+              3,
+              4,
+            ],
+          },
+          Object {
+            "$size": 5,
+          },
+          Object {
+            "$all": Array [
+              6,
+              7,
+            ],
+          },
+          Object {
+            "$elemMatch": Object {
+              "$eq": 10,
+            },
+          },
+          Object {
+            "$allMatch": Object {
+              "$and": Array [
+                Object {
+                  "$lt": 20,
+                },
+                Object {
+                  "$gt": 0,
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    Object {
+      "barbaz": Object {
+        "$and": Array [
+          Object {
+            "$mod": Array [
+              11,
+              3,
+            ],
+          },
+          Object {
+            "$regex": "^foo",
+          },
+        ],
+      },
+    },
+    Object {
+      "foobaz": Object {
+        "$and": Array [
+          Object {
+            "foo": Object {
+              "$eq": "bar",
+            },
+          },
+          Object {
+            "bar": Object {
+              "$or": Array [
+                Object {
+                  "foo": Object {
+                    "$eq": "bar",
+                  },
+                },
+                Object {
+                  "bar": Object {
+                    "$eq": "baz",
+                  },
+                },
+                Object {
+                  "$not": Object {
+                    "baz": Object {
+                      "$eq": "foo",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    Object {
+      "bazbar": Object {
+        "$keyMapMatch": Object {
+          "$eq": "bar",
+        },
+      },
+    },
+  ],
+}
+`;

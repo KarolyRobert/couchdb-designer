@@ -1,4 +1,4 @@
-import viewSort from '../../src/testing/views/viewSort';
+import compareAny from '../../src/util/compareAny';
 
 
 
@@ -24,7 +24,7 @@ describe('viewSort',() => {
             {key:false},
             {key:null}
         ]
-        rows.sort(viewSort);
+        rows.sort((a,b) => compareAny(a.key, b.key));
         expect(rows).toMatchSnapshot();
     })
 })

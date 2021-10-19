@@ -1,6 +1,6 @@
 "use strict";
 
-var _viewSort = _interopRequireDefault(require("./views/viewSort"));
+var _compareAny = _interopRequireDefault(require("../util/compareAny"));
 
 var _testEnvironment = require("../../build/testing/testEnvironment");
 
@@ -18,7 +18,7 @@ const emitted = contextId => {
   let count = buildIns.contextedEmit.mock.calls.length;
 
   if (rows.length) {
-    rows.sort(_viewSort.default);
+    rows.sort((a, b) => (0, _compareAny.default)(a.key, b.key));
   }
 
   buildIns.contextedEmit.mockClear();

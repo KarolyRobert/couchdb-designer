@@ -3,7 +3,7 @@ const byArray = (a,b) => {
     let index = 0;
     let relation = 0;//joker(a[index],b[index]);
     while(relation === 0 && a.length > index && b.length > index){
-        relation = joker(a[index],b[index]);
+        relation = compareAny(a[index],b[index]);
         index++;
     }
     if(relation === 0){
@@ -20,8 +20,8 @@ const byArray = (a,b) => {
     let keyRelation = 0;
     let valueRelation = 0;
     while(keyRelation === 0 && valueRelation === 0 && aKeys.length > index && bKeys.length > index){
-      keyRelation = joker(aKeys[index],bKeys[index]);
-      valueRelation = joker(a[aKeys[index]],b[bKeys[index]]);
+      keyRelation = compareAny(aKeys[index],bKeys[index]);
+      valueRelation = compareAny(a[aKeys[index]],b[bKeys[index]]);
       index++;
     }
     if(keyRelation === 0 && valueRelation === 0){
@@ -35,7 +35,7 @@ const byArray = (a,b) => {
     }
   }
   
-  const joker = (a,b) => {
+  const compareAny = (a,b) => {
     let aType = a === null ? 'null' : Array.isArray(a) ? 'array' : typeof a;
     let bType = b === null ? 'null' : Array.isArray(b) ? 'array' : typeof b;
     let sortType = aType+bType;
@@ -108,7 +108,7 @@ const byArray = (a,b) => {
     }
   }
 
-const viewSort = (a,b) => joker(a.key, b.key);
+const viewSort = (a,b) => compareAny(a.key, b.key);
 
 
-export default viewSort;
+export default compareAny;

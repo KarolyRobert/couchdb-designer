@@ -80,11 +80,23 @@ exports[`designer_edge stringifyed 1`] = `
                   \\"title\\": \\"asc\\"
                },
                \\"partial_filter_selector\\": {
-                  \\"year\\": {
-                     \\"$gt\\": 2010
-                  },
-                  \\"limit\\": 10,
-                  \\"skip\\": 0
+                  \\"$and\\": [
+                     {
+                        \\"year\\": {
+                           \\"$gt\\": 2010
+                        }
+                     },
+                     {
+                        \\"limit\\": {
+                           \\"$eq\\": 10
+                        }
+                     },
+                     {
+                        \\"skip\\": {
+                           \\"$eq\\": 0
+                        }
+                     }
+                  ]
                }
             },
             \\"reduce\\": \\"_count\\",
@@ -358,11 +370,23 @@ module.exports = {view} ;",
             "year": "asc",
           },
           "partial_filter_selector": Object {
-            "limit": 10,
-            "skip": 0,
-            "year": Object {
-              "$gt": 2010,
-            },
+            "$and": Array [
+              Object {
+                "year": Object {
+                  "$gt": 2010,
+                },
+              },
+              Object {
+                "limit": Object {
+                  "$eq": 10,
+                },
+              },
+              Object {
+                "skip": Object {
+                  "$eq": 0,
+                },
+              },
+            ],
           },
         },
         "options": Object {

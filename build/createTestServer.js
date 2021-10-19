@@ -9,6 +9,8 @@ var _promises = _interopRequireDefault(require("fs/promises"));
 
 var _createTestContext = _interopRequireDefault(require("./createTestContext"));
 
+var _createMangoContext = _interopRequireDefault(require("./createMangoContext"));
+
 var _testEnvironment = require("../build/testing/testEnvironment");
 
 var _contextFunction = _interopRequireDefault(require("./util/contextFunction"));
@@ -33,7 +35,9 @@ const createTestServer = (directoryName, testDatabase, userCtx = _defaults.defau
 
     _promises.default.readdir(root).then(names => {
       Promise.all(names.map(name => {
-        if (/.*\.json$/.test(name.toLowerCase())) {} else {
+        if (/.*\.json$/.test(name.toLowerCase())) {
+          return (0, _createMangoContext.default)(directoryName, name, testDatabase.partitioned ? true : false, contextId);
+        } else {
           return (0, _createTestContext.default)(_path.default.join(directoryName, name), testDatabase, null, null, contextId);
         }
       })).then(designContexts => {

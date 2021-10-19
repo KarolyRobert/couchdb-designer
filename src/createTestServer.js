@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import createTestContext from './createTestContext';
+import createMangoContext from './createMangoContext';
 import { registerContext } from '../build/testing/testEnvironment';
 import contextFunction from './util/contextFunction';
 import defaults from './testing/defaults';
@@ -12,12 +13,11 @@ const createTestServer = (directoryName,testDatabase,userCtx = defaults.userCtx,
         let root = path.join(directoryName);
         let fullPath = path.resolve(process.env.PWD,root);
         let contextId = crypto.createHash('md5').update(fullPath).digest('hex');
-       
       
         fs.readdir(root).then(names => {
             Promise.all(names.map(name => {
                 if(/.*\.json$/.test(name.toLowerCase())){
-                    
+                    return createMangoContext(directoryName,name,testDatabase.partitioned ? true : false,contextId);
                 }else{
                     return createTestContext(path.join(directoryName,name),testDatabase,null,null,contextId);
                 }
