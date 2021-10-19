@@ -115,9 +115,15 @@ const filters = {
 
     return false;
   },
+
+  /*
+   $regex is not 100% reliable becouse of differencies among PCRE library and node.js regular expression.
+   The usage of $regex for partial_filter_selector not recommended.
+   */
   "$regex": (docValue, filterValue) => {
     if (docValue !== undefined && typeof docValue === "string") {
-      return false;
+      let regex = new RegExp(filterValue);
+      return regex.test(docValue);
     }
 
     return false;

@@ -320,4 +320,22 @@ describe("createMangoFilter",() =>{
         expect(filter(doc3)).toBeFalsy();
     })
 
+    test('$regex',() => {
+
+        const keyMapMatchfilter = {
+            a:{
+                "$regex":"^foo"
+            }
+        }
+        const doc1 = {a:"foobar"};
+        const doc2 = {a:"barbaz"}
+        const doc3 = {a:"foobaz"}
+
+        let filter = createMangoFilter(keyMapMatchfilter);
+        expect(filter(doc1)).toBeTruthy();
+        expect(filter(doc2)).toBeFalsy();
+        expect(filter(doc3)).toBeTruthy();
+    })
+
+
 })
