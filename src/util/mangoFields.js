@@ -1,4 +1,4 @@
-
+import {inspect} from 'util';
 
 
 const mangoFields = (fields,fileName,indexName) => {
@@ -22,7 +22,7 @@ const mangoFields = (fields,fileName,indexName) => {
                 }
                 fieldsObject[fieldName[0]] = direction;
             }else{
-                throw(`(invalid_sort_field) Invalid sort field: ${fieldName[0]}:${field[fieldName[0]]}. You can fix it in ${fileName},${indexName} index.`);
+                throw(`(invalid_sort_field) Invalid sort field: ${inspect(field)}. You can fix it in ${fileName},${indexName} index.`);
             }
         }else{
             throw(`(invalid_sort_field) Invalid sort field: ${field}. You can fix it in ${fileName},${indexName} index.`);

@@ -183,7 +183,7 @@ describe('createMangoDocument',() => {
     test('invalid sort1', () => {
         fs.readFile.mockResolvedValue(jsonInvalidSort1);
         return createMangoContext('root','name',true).catch(error => {
-            expect(error).toBe('(invalid_sort_field) Invalid sort field: _rev:desac. You can fix it in root/name,mongo index.');
+            expect(error).toBe("(invalid_sort_field) Invalid sort field: { _rev: 'desac' }. You can fix it in root/name,mongo index.");
         });
     });
 
@@ -197,7 +197,7 @@ describe('createMangoDocument',() => {
     test('invalid sort3', () => {
         fs.readFile.mockResolvedValue(jsonInvalidSort3);
         return createMangoContext('root','name',true).catch(error => {
-            expect(error).toBe('(invalid_sort_field) Invalid sort field: helo:asc. You can fix it in root/name,mongo index.');
+            expect(error).toBe("(invalid_sort_field) Invalid sort field: { helo: 'asc', szia: 'desc' }. You can fix it in root/name,mongo index.");
         });
     });
 

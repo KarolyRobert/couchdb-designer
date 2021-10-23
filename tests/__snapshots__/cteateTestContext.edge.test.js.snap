@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createTestContext server 1`] = `
+Object {
+  "offset": 0,
+  "rows": Array [
+    Object {
+      "id": "p:doc1",
+      "key": "p:doc1",
+      "value": Object {
+        "rev": "1-8a769907c5062489ba0c72727c6e906e",
+      },
+    },
+    Object {
+      "id": "p:doc2",
+      "key": "p:doc2",
+      "value": Object {
+        "rev": "2-b07835dae7ff0c087c23d2b4b72709a8",
+      },
+    },
+  ],
+  "total_rows": 2,
+}
+`;

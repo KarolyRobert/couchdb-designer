@@ -7,7 +7,7 @@ const emitted = (contextId) => {
     let buildIns = getTestContext(contextId).buildIns;
     let rows = buildIns.contextedEmit.mock.calls.map(params => ({id:params[0]._id,key:params[1],value:params[2]}))
     let count = buildIns.contextedEmit.mock.calls.length;
-    if(rows.length){
+    if(rows.length > 1){
         rows.sort((a,b) => compareAny(a.key,b.key));
     }
     buildIns.contextedEmit.mockClear();

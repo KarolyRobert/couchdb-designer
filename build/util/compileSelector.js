@@ -37,6 +37,8 @@ const getValidArgument = selectorKey => {
 };
 
 const compileSelector = (selector, file, index, selectorKey = false) => {
+  let errorFix = file ? ` You can fix it in ${file} / ${index}!` : '';
+
   if (selectorKey) {
     let selectorType = selector === null ? 'null' : Array.isArray(selector) ? 'array' : typeof selector;
 
@@ -52,42 +54,42 @@ const compileSelector = (selector, file, index, selectorKey = false) => {
           if (selectorType === argumentType) {
             return selector;
           } else {
-            throw `${selectorKey}'s argument must be ${argumentType}! You can fix it in ${file} / ${index}`;
+            throw `${selectorKey}'s argument must be ${argumentType}!${errorFix}`;
           }
 
         case 'integer':
           if (Number.isInteger(selector)) {
             return selector;
           } else {
-            throw `${selectorKey}'s argument must be ${argumentType}! You can fix it in ${file} / ${index}`;
+            throw `${selectorKey}'s argument must be ${argumentType}!${errorFix}`;
           }
 
         case 'regex':
           if (selectorType === 'string') {
             return selector;
           } else {
-            throw `${selectorKey}'s argument must be a regular expression! You can fix it in ${file} / ${index}`;
+            throw `${selectorKey}'s argument must be a regular expression!${errorFix}`;
           }
 
         case 'type':
           if (['null', 'boolean', 'number', 'string', 'array', 'object'].includes(selector)) {
             return selector;
           } else {
-            throw `${selectorKey}'s argument must be one of the null,boolean,number,string,array,object values! You can fix it in ${file} / ${index}`;
+            throw `${selectorKey}'s argument must be one of the null,boolean,number,string,array,object values!${errorFix}`;
           }
 
         case 'mod':
           if (selectorType === 'array' && selector.length === 2 && Number.isInteger(selector[0]) && Number.isInteger(selector[1])) {
             return selector;
           } else {
-            throw '$mod argument must be an two element array of integers! You can fix it in ${file} / ${index}';
+            throw `$mod argument must be an two element array of integers!${errorFix}`;
           }
 
         case 'selector':
           if (selectorType === 'object') {
             return compileSelector(selector, file, index);
           } else {
-            throw `${selectorKey}'s argument must be ${argumentType}! You can fix it in ${file} / ${index}`;
+            throw `${selectorKey}'s argument must be ${argumentType}!${errorFix}`;
           }
 
         case 'selectors':
@@ -98,13 +100,13 @@ const compileSelector = (selector, file, index, selectorKey = false) => {
               try {
                 selectorArray.push(compileSelector(partSelector, file, index));
               } catch (err) {
-                throw `${selectorKey}'s argument must be an array of selectors! You can fix it in ${file} / ${index}`;
+                throw `${selectorKey}'s argument must be an array of selectors!${errorFix}`;
               }
             }
 
             return selectorArray;
           } else {
-            throw `${selectorKey}'s argument must be an array of selectors! You can fix it in ${file} / ${index}`;
+            throw `${selectorKey}'s argument must be an array of selectors!${errorFix}`;
           }
 
       }
@@ -143,7 +145,7 @@ const compileSelector = (selector, file, index, selectorKey = false) => {
 
     return compiledSelector;
   } else {
-    throw 'The selector must be an object! You can fix it in ${file} / ${index}';
+    throw `The selector must be an object!${errorFix}`;
   }
 };
 

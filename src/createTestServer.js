@@ -5,6 +5,8 @@ import { registerContext } from '../build/testing/testEnvironment';
 import contextFunction from './util/contextFunction';
 import defaults from './testing/defaults';
 import {registerDatabase} from './testing/changes/updateDocument';
+import createAllDocs from './testing/indexes/createAllDocs';
+import createMangoFunctions from './testing/createMangoFunctions';
 import crypto from 'crypto';
 import path from 'path';
 
@@ -36,6 +38,8 @@ const createTestServer = (directoryName,testDatabase,userCtx = defaults.userCtx,
                 }
                 registerContext(contextId, serverContext,'server', userCtx, secObj);
                 registerDatabase(contextId,testDatabase,userCtx);
+                createAllDocs(contextId);
+                createMangoFunctions(contextId);
                 resolve(serverContext);
             },err => reject(err));
                

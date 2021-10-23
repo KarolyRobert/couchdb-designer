@@ -46,7 +46,7 @@ const createTestUpdateFunction = (contextId, updateName, context) => {
           if (newDoc === null) {
             return result[1];
           } else if (typeof newDoc === 'object' && newDoc._id) {
-            let change = (0, _updateDocument.update)(contextId, newDoc, request.userCtx);
+            (0, _updateDocument.update)(contextId, newDoc, request.userCtx);
             return result[1];
           } else {
             return `An update function result's first element must be null or object but this is ${newDoc}!`;

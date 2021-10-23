@@ -19,6 +19,10 @@ var _defaults = _interopRequireDefault(require("./testing/defaults"));
 
 var _updateDocument = require("./testing/changes/updateDocument");
 
+var _createAllDocs = _interopRequireDefault(require("./testing/indexes/createAllDocs"));
+
+var _createMangoFunctions = _interopRequireDefault(require("./testing/createMangoFunctions"));
+
 var _crypto = _interopRequireDefault(require("crypto"));
 
 var _path = _interopRequireDefault(require("path"));
@@ -52,6 +56,8 @@ const createTestServer = (directoryName, testDatabase, userCtx = _defaults.defau
 
         (0, _testEnvironment.registerContext)(contextId, serverContext, 'server', userCtx, secObj);
         (0, _updateDocument.registerDatabase)(contextId, testDatabase, userCtx);
+        (0, _createAllDocs.default)(contextId);
+        (0, _createMangoFunctions.default)(contextId);
         resolve(serverContext);
       }, err => reject(err));
     }, err => reject(err));

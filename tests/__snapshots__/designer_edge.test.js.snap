@@ -74,55 +74,31 @@ exports[`designer_edge stringifyed 1`] = `
          \\"mongo\\": {
             \\"map\\": {
                \\"fields\\": {
-                  \\"_id\\": \\"asc\\",
-                  \\"_rev\\": \\"asc\\",
-                  \\"year\\": \\"asc\\",
-                  \\"title\\": \\"asc\\"
+                  \\"parent\\": \\"asc\\"
                },
                \\"partial_filter_selector\\": {
-                  \\"$and\\": [
-                     {
-                        \\"year\\": {
-                           \\"$gt\\": 2010
-                        }
-                     },
-                     {
-                        \\"limit\\": {
-                           \\"$eq\\": 10
-                        }
-                     },
-                     {
-                        \\"skip\\": {
-                           \\"$eq\\": 0
-                        }
-                     }
-                  ]
+                  \\"parent\\": {
+                     \\"$gt\\": \\"s\\"
+                  }
                }
             },
             \\"reduce\\": \\"_count\\",
             \\"options\\": {
                \\"def\\": {
                   \\"partial_filter_selector\\": {
-                     \\"year\\": {
-                        \\"$gt\\": 2010
-                     },
-                     \\"limit\\": 10,
-                     \\"skip\\": 0
+                     \\"parent\\": {
+                        \\"$gt\\": \\"s\\"
+                     }
                   },
                   \\"fields\\": [
-                     \\"_id\\",
-                     {
-                        \\"_rev\\": \\"asc\\"
-                     },
-                     \\"year\\",
-                     \\"title\\"
+                     \\"parent\\"
                   ]
                }
             }
          }
       },
       \\"options\\": {
-         \\"partitioned\\": false
+         \\"partitioned\\": true
       }
    },
    {
@@ -358,52 +334,28 @@ module.exports = {view} ;",
     "_id": "_design/mango",
     "language": "query",
     "options": Object {
-      "partitioned": false,
+      "partitioned": true,
     },
     "views": Object {
       "mongo": Object {
         "map": Object {
           "fields": Object {
-            "_id": "asc",
-            "_rev": "asc",
-            "title": "asc",
-            "year": "asc",
+            "parent": "asc",
           },
           "partial_filter_selector": Object {
-            "$and": Array [
-              Object {
-                "year": Object {
-                  "$gt": 2010,
-                },
-              },
-              Object {
-                "limit": Object {
-                  "$eq": 10,
-                },
-              },
-              Object {
-                "skip": Object {
-                  "$eq": 0,
-                },
-              },
-            ],
+            "parent": Object {
+              "$gt": "s",
+            },
           },
         },
         "options": Object {
           "def": Object {
             "fields": Array [
-              "_id",
-              Object {
-                "_rev": "asc",
-              },
-              "year",
-              "title",
+              "parent",
             ],
             "partial_filter_selector": Object {
-              "limit": 10,
-              "skip": 0,
-              "year": Object {
-                "$gt": 2010,
+              "parent": Object {
+                "$gt": "s",
               },
             },
           },

@@ -3,7 +3,10 @@ import createTestServer from "../src/createTestServer";
 
 const testDatabase = {name:'proba1',partitioned:true,data:[
     {_id:'p:doc1',name:[[10,10],9,13],parent:'roger'},
-    {_id:'p:doc2',name:[[10,10],9,10],parent:'zargu'}
+    {_id:'p:doc2',name:[[10,10],9,10],parent:{name:"zargu"}},
+    {_id:'s:doc1',name:[[10,10],9,13],parent:'roger'},
+    {_id:'s:doc2',name:[[10,10],9,10],parent:'zargu'}
+    
 ]}
 
 const testDatabase2 = {name:'proba2',partitioned:true,data:[
@@ -36,7 +39,7 @@ const testDatabase2 = {name:'proba2',partitioned:true,data:[
                 expect(() => context('server').view.byName({group_level:1})).toThrow();
                 expect(context('_design').update.updateFromDir({uuid:'uid1'},'p:doc1').__supplemented).toBeUndefined();
                 expect(context('database')[0].updateByUpdateFromDir).toBe("libfunction call updated");
-                expect(context('_changes',{filter:'appdesign/all'}).results.length).toBe(2);
+                expect(context('_changes',{filter:'appdesign/all'}).results.length).toBe(4);
             })
         });
 
@@ -47,12 +50,14 @@ const testDatabase2 = {name:'proba2',partitioned:true,data:[
         });
         test('server', () => {
             return createTestServer('./tests/design',testDatabase).then(server => {
-                expect(server('server').appdesign.update.updateFromDir({uuid:'uid1'},'p:doc2').info.update_seq).toBe(2);
+                expect(server('server').appdesign.update.updateFromDir({uuid:'uid1'},'p:doc2').info.update_seq).toBe(4);
                 expect(server('database')[1].updateByUpdateFromDir).toBe("libfunction call updated");
                 expect(server('database','p:doc2').updateByUpdateFromDir).toBe("libfunction call updated");
                 expect(server('database','p:doc1').parent).toBe("roger");
-                expect(server('_changes',{filter:'appdesign/nothing'}).last_seq).toBe("2-tb1aLXeSfOfr/beiNIEwCQ==");
+                expect(server('_changes',{filter:'appdesign/nothing'}).last_seq).toBe("4-AbRomqy2vFXcd0Yf4RijLw==");
                 expect(() => server('_changes',{filter:'appdesig/nothing'})).toThrow('It is not appdesig design document in testdatabase!');
+                expect(server('server').allDocs('p')).toMatchSnapshot();
+                expect(server('server').find({selector:{parent:{"$gt":"aoger"}},sort:['parent'],use_index:['mango','mongo'],fields:['parent.name']},'s')).toEqual({docs:[{}]});
             });
         });
     });

@@ -21,15 +21,19 @@ const addValidator = (contextId,parentName,validator) => {
 }
 
 const registerContext = (contextId,testContext,type,secObj,userCtx) => {
-    contexts[contextId] = Object.assign(contexts[contextId],{
-        context:testContext,
-        secObj,
-        userCtx,
-        database:{
-            data:[]
-        },
-        type
-    });
+    if(contexts[contextId]){
+        contexts[contextId] = Object.assign(contexts[contextId],{
+            context:testContext,
+            secObj,
+            userCtx,
+            database:{
+                data:[]
+            },
+            type
+        });
+    }else{
+        throw('The context have not anything functionality.');
+    }
 }
 
 
@@ -124,6 +128,7 @@ const testEnvironment = (contextId) => {
             server:{},
             changes:[],
             validators:[],
+            indexes:[{"ddoc":null,"name":"_all_docs","type":"special","def":{"fields":[{"_id":"asc"}]}}],
             update_seq:0
         }
 

@@ -17,7 +17,7 @@ const emitted = contextId => {
   }));
   let count = buildIns.contextedEmit.mock.calls.length;
 
-  if (rows.length) {
+  if (rows.length > 1) {
     rows.sort((a, b) => (0, _compareAny.default)(a.key, b.key));
   }
 
