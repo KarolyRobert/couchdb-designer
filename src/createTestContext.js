@@ -49,7 +49,11 @@ export default function createTestContext(directoryName,testDatabase,userCtx = d
                     }
                     resolve(testContext);
                 }else if(!parentContext){
-                    reject(`Only "javascript" type design document testing is supported yet. This directory structure defining one "${testContext.language}" type design document!`);
+                    if(testContext.language.toLowerCase() === 'qurey'){
+                        reject('Warning! You can testing Mango index with createTestServer by defining them in a json file under its root directory.');
+                    }else{
+                        reject(`Only "javascript" type design document testing is supported yet. This directory structure defining one "${testContext.language}" type design document!`);
+                    }
                 }else{
                     resolve(testContext);
                 }

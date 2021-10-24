@@ -1,67 +1,64 @@
 # couchdb-designer
 
-### Release notes:
-The new feature is that supporting partitioned test Database. From last release you need to specify test Database as an object as i show you here.
-```javascript
-    const testDatabase = {
-        name:'DBname',
-        data:[{_id:'users:1254252'...},...],
-        partitioned:true
-    }
-```
-You can testing partitioned [map/reduce](#Map_reduce) by give the partition name in second parameter.
+With this package you can easily manage and [testing](#Testing) your couchdb design documents and Mango indexes by storing them in directory structure and by create javascript object or testing context from them. Chouchdb-designer provide two functions for ddoc generation: The first `designer` wait for a path of root directory of multiple design documents and Magno indexes and gives back the array of design document objects. The second `createDesignDocument` do the same but only with one javascript design document. Another feature is the `createTestContext`  and `createTestServer` which allows you to testing your design document with jest testing framework.
 
-With this package you can easily manage and [testing](#Testing) your couchdb design documents by storing them in directory structure and by create javascript object or testing context from them. Chouchdb-designer provide two functions for that purpose: The first **"designer"** wait for a path of root directory of multiple design documents and gives back the array of design document objects. The second **"createDesignDocument"** do the same but only with one design document. Another feature is the **"createTestContext"**  and **createTestServer** which allows you to testing your design document with jest testing framework.
+### Contents:
+ - [Generating javascript design documents](#Generating_javascript_design_documents)
+ - [Generating Mango indexes](#Generating_Mango_indexes)
+ - [Generating exapmles](#Generating_exapmles);
+ - [Testing](#Testing)
+ - [Map/reduce testing](#Map_reduce)
+ - [Update testing](#Update_testing)
+ - [Changes and Filters](#Changes_and_Filters)
+ - [Mango indexes and queries](#Mango_indexes_and_queries)
+ - [Automatic request supplementing](#Automatic_request_supplementing)
+ - [All context function parameters](#All_context_function_parameters)
+ - [Examples](#Examples)
+
+
 
 >#### Warnings
->The design document generation doesn't check if the directory structure matching to the rules of couchdb design document syntax, although able to generate any type of them without attachmented. For proper use you need to know this rules. By testing you can discover many case of different missable usage.
+>The design document generation doesn't check if the directory structure matching to the rules of couchdb design document syntax, although able to generate any type of them without attachmented. For proper use you need to know this rules. By [testing](#Testing) you can discover many case of different missable usage.
 
-### generating design documents
+### Generating_javascript_design_documents ###
 
 It is work the way. if a directory then becomes to object type field and a file becomes to string or object field depend on rules belove:
-1. If the file is json file then becomes field contain the json file content.
-2. If the file not json or js file then becomes to String field.
-3. If the file is in shape name.lib.js then becomes to String field named as the filename name part and containing the js file content and becomes to available as a common js library in testing case.
+1. If the file is json file then becomes field contain the json file content. (you can use this to specify ddoc options.)
+2. If the file not json or js file then becomes to String field. (you can use this to specify a built-in reducer for a view.)
+3. If the file is shape name.lib.js, then becomes String field named as the filename name part and containing the js file content and becomes to available as a common js library in testing case.
 4. If the file is a js file contain a function or functions for example view map function and reduce function then additional rules apply.
      - These functions must be named. (This is a benefit because the syntax check doesn't indicated as wrong.)
-     - The functions must be exported with **module.exports = { functionName, otherFunction }**
+     - The functions must be exported with `module.exports = { functionName, otherFunction }`
      - If the file contain only one function with the same name as file itself then becomes to String field containing the proper function implementation. Otherwise if it contain more then one function or different named function then becomes to object type field with the proper content.
-     - You can export constans as well for example a **reduce** constat for a "view" to use built-in coucdb reducer.
+     - You can export constans as well for example a `reduce` constat for a `view` to use built-in coucdb reducer.
 
->By the feature: js file contain only one function with the same name as file itself then becomes to String field. You can create more sophisticated structure. For example if you have several update functions writen in a single **updates.js** file you can even create an **updates** directory with additional files followed rules of same name function. This way the result will be an updates object containing the updates.js and the updates directory content.
+>By the feature: js file contain only one function with the same name as file itself then becomes to String field. You can create more sophisticated structure. For example if you have several update functions writen in a single `updates.js` file you can even create an `updates` directory with additional files followed rules of same name function. This way the result will be an updates object containing the updates.js and the updates directory content.
 
 
-##### Example directory structure for two design documents:
+#### Example directory structure for a javascript design document
 
 ```bash
 
 design
-├── appdesign
-│   ├── lib
-│   │   └── couchdb.lib.js
-│   ├── options.json
-│   ├── updates
-│   │   └── updateFomDir.js
-│   ├── updates.js
-│   ├── validate_doc_update.js
-│   └── views
-│       ├── byDate
-│       │   ├── map.js
-│       │   └── reduce.js
-│       ├── byName
-│       │   └── map.js
-│       └── byParent.js
-└── querys
-    ├── language.txt
+└── appdesign
+    ├── lib
+    │   └── couchdb.lib.js
+    ├── options.json
+    ├── updates
+    │   └── updateFomDir.js
+    ├── updates.js
+    ├── validate_doc_update.js
     └── views
-        ├── bar-index.json
-        └── foo-index
-            ├── map.json
-            ├── options.json
-            └── reduce.txt
+        ├── byDate
+        │   ├── map.js
+        │   └── reduce.js
+        ├── byName
+        │   └── map.js
+        └── byParent.js
+
 
 ```
-##### Exapmle files:
+#### Exapmle files:
 
 view by file:
 //ddocName/views/viewname.js
@@ -123,7 +120,36 @@ module.exports = { libfunc1, libfunc2 }
 
 ```
 
-Create multiple design documents from root directory of them.
+>To generate a javascript design document its structure always must be specifyed in a directory, but you can generating design documents for Mango indexes by specify them in a single json file. This feature only available by `designer`, the `createDesignDocument` able generate only javascript type ddoc.
+
+### Generating_Mango_indexes ###
+
+The mango indexes storing too is in design documents but its laguage field is `query`. You can generate indexes by specify them in a json file with the rules below:
+ 1. The json file name will becomes to ddoc name. (you can generate multiple index ddocs with multiple json.)
+ 2. The given content's `partitioned` boolean field specify if the generated ddoc's indexes is partotioned or not. 
+ 3. Every further field in json will becomes an index by its name and by its value what follow the rules of couchdb index endpoint's index field.
+
+ #### Example json for Mango indexes:
+
+ ```json
+ design/mangoddoc.json
+{
+    "partitioned":true,
+    "parent-index":{
+        "partial_filter_selector": {
+            "type":{"$ne":"orphan"}
+        },
+        "fields": [
+           "parent"
+        ]
+    } 
+}
+ ```
+
+
+### Generating_exapmles ###
+
+Create multiple design documents from root directory of them. 
 
 ```javascript
 
@@ -131,8 +157,8 @@ import {designer,createDesignDocument} from '@zargu/couchdb-designer';
 
 designer('./design').then(documents => {
     /* documents here [
-        {_id:'_design/appdesign',lib:{couchdb:{...}} ...},
-        {_id:'_design/querys',views:{"bar-index":{...}}...}
+        {_id:"_design/appdesign",language:"javascript",lib:{couchdb:{...}} ...},
+        {_id:"_design/mangoddoc",language:"query",views:{"parent-index":{...}}...}
     ]*/
 },err => console.log(err));
 
@@ -143,41 +169,42 @@ Create single design document.
 ```javascript
 
 createDesignDocument('./design/appdesign').then(document => {
-    // documents here: {_id:'_design/appdesign',lib:{couchdb:{...}} ...}
+    // documents here: {_id:"_design/appdesign",language:"javascript",lib:{couchdb:{...}} ...}
 },err => console.log(err));
 
 ```
+>You can only generate javascript ddocs with this function!
 
 ### Testing ###
 
-With **createTestContext** you can create a **context** represented by directory by the same way like at **createDesignDocument** but you can here declare a testDatabase, userCtx, secObj in parameters. This context object has the same structure as design ducument has but with invokeable functions. These functions in the context object have the near same environment as in a real couchdb. Some of these functions by them nature return result which you can use testing with jest easily. But what if you want to test something like a view's map function which doesn't return the result directly, only call the couchdb built-in **emit** and maybe **log** functions. In these cases you can call the context as a function with the **"emitted"** or **"logged"** string parameter for get the indirect result of previously called functions. After calling the previously gathered data will be deleted but among two calling of them gathering every indirect data. The rest built-in couchdb functions is mockFunctions and available in the same way by calling the context as a function and give their name as a string parameter, for example **context("registerType")** will give you the given built-in mockFunction. When calling the available functions under the context object, they will verify their own implementation then throws error if something wrong happen, for example when calling irrelevant built in function inside your ddoc function.
+With `createTestContext` you can create a `context` represented by directory by the same way like at `createDesignDocument` but you can here declare a testDatabase, userCtx, secObj in parameters. This context object has the same structure as design ducument has but with invokeable functions. These functions in the context object have the near same environment as in a real couchdb. Some of these functions by them nature return result which you can use testing with jest easily. But what if you want to test something like a view's map function which doesn't return the result directly, only call the couchdb built-in `emit` and maybe `log` functions. In these cases you can call the context as a function with the `emitted` or `logged` string parameter for get the indirect result of previously called functions. After calling the previously gathered data will be deleted but among two calling of them gathering every indirect data. The rest built-in couchdb functions is mockFunctions and available in the same way by calling the context as a function and give their name as a string parameter, for example `context("registerType")` will give you the given built-in mockFunction. When calling the available functions under the context object, they will verify their own implementation then throws error if something wrong happen, for example when calling irrelevant built in function inside your ddoc function.
 
 ```javascript
     createTestContext(directory,testDatabase[,userCtx, secObj])
 ```
- - **directory**        : The root directory of the design document directory structure.
- - **testDatabase**     : An object representing the test database.
-    - **name**          : The name of the test database.
-    - **data**          : An array of objects representing th test database's data.
-    - **partitioned**   : Optional boolean value to indicate if database is partitioned. 
- - **userCtx**          : Default userCtx object if not declared the userCtx will be:
+ - `directory`        : The root directory of the design document directory structure.
+ - `testDatabase`     : An object representing the test database.
+    - `name`          : The name of the test database.
+    - `data`          : An array of objects representing th test database's data.
+    - `partitioned`   : Optional boolean value to indicate if database is partitioned. 
+ - `userCtx`          : Default userCtx object if not declared the userCtx will be:
 ```javascript
     {db:'testdatabase',name:null,roles:["_admin"]}
 ```
 
- - **secObj**           : Default security object if not declared will be:
+ - `secObj`           : Default security object if not declared will be:
  ```javascript
     {members:{roles:["_admin"]},admins:{roles:["_admin"]}}
 ```
 
 
-Another available function is **createTestServer** which you can use to test multiple ddocs by create a context acting like a real couchdb. It is work the same way like createTestContext but you have to supplement of path the given ddoc name to call functions. The benifit of use this capability is that when you test updateFunctions then the result is depend on all ddocs validate_doc_update.
+Another available function is `createTestServer` which you can use to test multiple ddocs by create a context acting like a real couchdb. It is work the same way like createTestContext but you have to supplement of path the given ddoc name to call functions. The benifit of use this capability is that when you test updateFunctions then the result is depend on all ddocs validate_doc_update and you can testing your mango indexes by calling them map function or run a mango query by `find` endpoint.
 
 
 ```javascript
     createTestServer(directory,testDatabase[,userCtx, secObj])
 ```
- - **directory**    : The directory which containing the design document directory structures.
+ - `directory`    : The directory which containing the design document directory structures.
 
 
 ### Map_reduce ###
@@ -185,7 +212,7 @@ Another available function is **createTestServer** which you can use to test mul
 An other but much better way of view testing instead of **emitted** is the calling the context with **server** or **_design** parameter which give back an object what you can use as emulator of couchdb. For example **context("server").view.viewname()** insted of **context.views.viewname.map()**. For this opportunity you have to set the **testDatabase** with the createTestContext second parameter. With server object you can testing the given view in context of **map/reduce,grouping** and the previously setted testDatabase. The server object's functions result the same as if you get by the given function's result from a real couchdb.It is waiting for an optional object parameter with **reduce** (boolean), **group** (boolean), **group_level** (integer) field with same meaning like the couchdb's viewFunction query parameters.  These functions return the correct result even if you set one of built-in couchdb reducers instead of self implemented. Additionally if the test database is partitioned, and the design document as well wich containing the given view, you must pass the partition name as second parameter.
 
 
-#### Update testing.
+### Update_testing ###
 
 Similar to map/reduce testing you can test updateFunctions for example:
 ```javascript
@@ -198,7 +225,7 @@ Similar to map/reduce testing you can test updateFunctions for example:
 
 The result will be the original updateFunction result's second element depending on the updated testDatabase or an error message from validate_doc_update or another error if your functions do something dirty. You can verify the updated testDatabase by calling context as function with **database** string or can get a particular document by specify them id in second parameter. Note that if it is the only way to make impact of testDatabases and _changes state. Any other direct calling of your functions will non impact.
 
-#### Changes and Filters.
+### Changes_and_Filters ###
 
 Both of in context function you can pass the **_changes** string parameter for get the changes of testdatabase. If you pass a second parameter then its must be an "object" with the field "**filter**" contain the path of your filterFunction and an optional field **request** which will be give to your filterFunction at its invocation. This request object will be supplemented similar as at updateFunction's.
 
@@ -207,7 +234,34 @@ for example: /database/_changes?filter=ddocname/filtername
     context('_changes',{filter:'ddocname/filtername'})
 ```
 
-#### Automatic "request" supplementing.
+### Mango_indexes_and_queries ###
+
+The Mango indexes in a couchdb database is working the same way like views. For tesing them you have to define them by json file as describe in [earlyer](#Generating_Mango_indexes) and you have to create the test context with `createTestServer` function. ( The createTestContext dosen't support Mango indexes and find endpoint ) The index themself you can testing by calling its map function as if it is a view, or you can use the map/reduce testing the same way like views. ( remember the reducer of the mango indexes is the built in _count reducer which you can disable by view parameter ) Additionally you can testing mango queries with `find` endpoint. The result will be depend on the defined indexes and on test database and on the given partition name. In a query you can give the `selector`,`sort`,`fields`,`use_index` fields and get the waited results or errors if the query or indexes was defined wrong. You can specify the partition name in find function second parameter.
+
+```javascript
+    createTestServer('./design',testDatabase).then(context => {
+            // calling index map function.
+            expect(context.mangoddoc.views.indexName.map(doc)).toEqual({_id:...});
+            // 
+            expect(context('_design').mangoddoc.view.indexName({reduce:false},'partition')).toEqual({_id:...});
+            // run a mango query.
+            expect(server('server').find({
+                selector:{
+                    parent:{
+                        "$gt":"aoger"
+                    }
+                },
+                sort:['parent'],
+                fields:['parent','type'],
+                use_index:['mangoddoc','parent-index']
+            },
+            'partition'
+            )).toEqual({docs:{parent:"..."...}});
+    })
+```
+
+
+### Automatic_request_supplementing ###
 
 The supplementing of request object not only even valid the case of particular context functions like "_changes -> filter" or "_design -> update" testing but in case of direct calling of "**update,show,list,filter**" functions. The content of supplemented request object depend on "testDatabase,userCtx,secObj" parameters. By specify the request's "**headers,body,form,query,cookie,method,peer,uuid,userCtx**" fields you can overwrite the default values.
 
@@ -252,31 +306,43 @@ const request = {
 ```
 
 
-#### All context function's parameters:
+### All_context_function_parameters ###
 
-- **server**:                  It is Gives an object with you can test "**views**" and "**updates**" the context of environment
-    - **view.viewName**:       map/reduce testing.
-        - **{reduce:boolean,group:boolean,group_level:integer}** Available map/reduce parameter fields.
-        - **partition**        Partition name for partitioned view.  
-    - **update.updateName**:   "updates" with "validators" even multiple design documents by "createTestSetrver". Impact to testdatabase and _changes.
-- **_design**:                 Alias of "server".
-- **emitted**:                 Collection of Result of map functions when its was called directly on context object.
-- **logged** :                 Collection of built-in log invocations result.
-- **database**,**document_id**:The testDatabase current state, or the given document by document_id given.
-- **_changes**,**filter**:     The current changes or the filtered changes by filter given.
-    - **filter**:              The optional filter parameter. If it is given it's must have a **filter** field.
-        - **filter**:              The required filter path "ddocName/filtername",
-        - **request**:             The pre specifyed request object.
-- **send**:                    mockFunction of built-in send.
-- **getRow**:                  mockFunction of built-in getRow.
-- **provides**:                mockFunction of built-in provides.
-- **registerType**:            mockFunction of built-in registerType.
-- **start**:                   mockFunction of built-in start.
-- **index**:                   mockFunction of built-in index.
+- `server`:                  It is Gives an object with you can test `views`,`updates`,`allDocs` and `find` the context of environment
+    - `view.viewName`:       map/reduce testing.
+        - `optoins`:         object to define view parameters.
+            - `reduce`:        boolean field to define the view useing reduce or not.
+            - `group`:         boolean field to define the reduce is grouped or not.
+            - `group_level`:   integer field to define the level of grouping.
+        - `partition`        Partition name for partitioned view.  
+    - `update.updateName`:   "updates" with "validators" even multiple design documents by "createTestSetrver". Impact to testdatabase and _changes.
+    - `allDocs`:             _all_docs endpoint.
+        - `partition`:       The name of partition in a partitioned test database.
+    - `find`:                _find endpoint.
+        - `query`            A simplifyed mango query with supporting the significant fields in point of testing.
+            - `selector`:    Selector.(The $regex selector is unsupported yet it will be supported in  the future by plugin.)
+            - `sort`:        Array in sort-sintax.
+            - `fields`:      Array of needed fields of result.
+            - `use_index`:   The used index ( String or Array of strings)
+        - `partition`:       The name of partition in a partitioned query.
+- `_design`:                 Alias of "server".
+- `emitted`:                 Collection of Result of map functions when its was called directly on context object.
+- `logged` :                 Collection of built-in log invocations result.
+- `database`,`document_id`:  The testDatabase current state, or the given document by document_id given.
+- `_changes`,`filter`:     The current changes or the filtered changes by filter given.
+    - `filter`:              The optional filter parameter. If it is given it's must have a `filter` field.
+        - `filter`:              The required filter path "ddocName/filtername",
+        - `request`:             The pre specifyed request object.
+- `send`:                    mockFunction of built-in send.
+- `getRow`:                  mockFunction of built-in getRow.
+- `provides`:                mockFunction of built-in provides.
+- `registerType`:            mockFunction of built-in registerType.
+- `start`:                   mockFunction of built-in start.
+- `index`:                   mockFunction of built-in index.
 
 
 
-### Examples:
+### Examples ###
 ```javascript
 
 import { createTestContext,createTestServer } from '@zargu/couchdb-designer';
@@ -313,7 +379,7 @@ describe('couchdb',() => {
         });
     });
 
-    test('all_ddoc',() => {
+    test('all design and mango indexes',() => {
         return createTestServer('./design').then(server => {
             let validCtx = {...};
             let invalidCtx = {...};
@@ -327,6 +393,24 @@ describe('couchdb',() => {
             //changes and filter
             expect(server("_changes")).toMatchSnapshot();
             expect(server("_changes",{filter:'appdesign/mailbox',request:{query:{type:'spam'}}}).results.length).toBe(2);
+
+            //mango indexes
+            // you can call the index map function or map/reduce the same way as at the javascript ddocs.
+            expect(server.mangoddoc.views['parent-index'].map(doc)).toEqual({_id:...});
+            expect(server('_design').mangoddoc.view['parent-index'] ({reduce:false},'partition')).toEqual({_id:...});
+            // run a mango query.
+            expect(server('server').find({
+                selector:{
+                    parent:{
+                        "$gt":"aoger"
+                    }
+                },
+                sort:['parent'],
+                fields:['parent','type'],
+                use_index:['mangoddoc','parent-index']
+            },
+            'partition'
+            )).toEqual({docs:{parent:"..."...}});
         });
     });
 });
