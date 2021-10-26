@@ -3,8 +3,6 @@ import { emitted } from '../testBuiltIns';
 import { validateViewOptions } from './viewUtils';
 import reduceView from './reducers/reduceView';
 
-//{"error":"query_parse_error","reason":"`partition` parameter is mandatory for queries to this view."}
-//{"error":"query_parse_error","reason":"`partition` parameter is not supported in this design doc"}
 
 const createTestViewFunction = (contextId,viewName,context) => {
     return (opts,partition) => {
@@ -29,7 +27,7 @@ const createTestViewFunction = (contextId,viewName,context) => {
             viewResult = emitted(contextId);
          
             if(options.reduce){
-                return reduceView(viewResult,options,contextId,viewName);
+                return reduceView(viewResult,options,context,viewName);
             }else{
                 return viewResult;    
             }

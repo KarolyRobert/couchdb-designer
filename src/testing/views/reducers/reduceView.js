@@ -1,4 +1,3 @@
-import {getTestContext} from '../../../../build/testing/testEnvironment';
 import groupViewResult from '../groupViewResult';
 import builtInReducers from './builtInReducers';
 
@@ -26,8 +25,7 @@ const getReducer = reducer => {
     }
 }
 
-const reduceView = (viewResult,options,contextName,viewName) => {
-    let {context} = getTestContext(contextName);
+const reduceView = (viewResult,options,context,viewName) => {
     if(context.options && context.options.partitioned && typeof context.views[viewName].reduce === 'function'){
         throw('Custom reduce function in a partitioned design document is not supported in couchdb!\nUse a builtin reduce function or make the design document global by options.partitioned:false');
     }

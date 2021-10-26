@@ -1,4 +1,4 @@
-import createTestContext from '../../src/createTestContext';
+import createTestServer from '../../src/createTestServer';
 
 
 const reduceDatabase = {name:'proba1',partitioned:true,data:[
@@ -58,13 +58,13 @@ const reduceDatabase2 = {name: 'proba2',partitioned:true,data:[
 describe('map/reduce',() => {
 
     test('reducer test 1',() => {
-        return createTestContext('./tests/design/appdesign',reduceDatabase).then(context => {
-            expect(context('server').view.byTest({},'test')).toEqual({rows:[{key:null,value:{object:[271,16],value:{field:271}}}]});
+        return createTestServer('./tests/design',reduceDatabase).then(context => {
+            expect(context('server').appdesign.view.byTest({},'test')).toEqual({rows:[{key:null,value:{object:[271,16],value:{field:271}}}]});
         });
     });
     test('reducer test 2',() => {
-        return createTestContext('./tests/design/appdesign',reduceDatabase2).then(context => {
-            expect(context('server').view.byReducer({group_level:1},'proba')).toEqual({rows:[{key:[2021],value:2}]});
+        return createTestServer('./tests/design',reduceDatabase2).then(context => {
+            expect(context('server').appdesign.view.byReducer({group_level:1},'proba')).toEqual({rows:[{key:[2021],value:2}]});
         });
     });
 })

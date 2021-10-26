@@ -13,15 +13,16 @@ import path from 'path';
 const createTestServer = (directoryName,testDatabase,userCtx = defaults.userCtx,secObj = defaults.secObj) => {
     return new Promise((resolve,reject) => {
         let root = path.join(directoryName);
-        let fullPath = path.resolve(process.env.PWD,root);
-        let contextId = crypto.createHash('md5').update(fullPath).digest('hex');
+        let hasKey = Date.now().valueOf().toString();
+        let contextId = crypto.createHash('md5').update(hasKey).digest('hex');
+        let isDatabasePartitioned = testDatabase.partitioned ? true : false;
       
         fs.readdir(root).then(names => {
             Promise.all(names.map(name => {
                 if(/.*\.json$/.test(name.toLowerCase())){
-                    return createMangoContext(directoryName,name,testDatabase.partitioned ? true : false,contextId);
+                    return createMangoContext(directoryName,name,isDatabasePartitioned,contextId);
                 }else{
-                    return createTestContext(path.join(directoryName,name),testDatabase,null,null,contextId);
+                    return createTestContext(directoryName,name,isDatabasePartitioned,contextId);
                 }
             }))
             .then(designContexts => {

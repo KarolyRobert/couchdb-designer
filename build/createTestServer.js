@@ -33,16 +33,18 @@ const createTestServer = (directoryName, testDatabase, userCtx = _defaults.defau
   return new Promise((resolve, reject) => {
     let root = _path.default.join(directoryName);
 
-    let fullPath = _path.default.resolve(process.env.PWD, root);
+    let hasKey = Date.now().valueOf().toString();
 
-    let contextId = _crypto.default.createHash('md5').update(fullPath).digest('hex');
+    let contextId = _crypto.default.createHash('md5').update(hasKey).digest('hex');
+
+    let isDatabasePartitioned = testDatabase.partitioned ? true : false;
 
     _promises.default.readdir(root).then(names => {
       Promise.all(names.map(name => {
         if (/.*\.json$/.test(name.toLowerCase())) {
-          return (0, _createMangoContext.default)(directoryName, name, testDatabase.partitioned ? true : false, contextId);
+          return (0, _createMangoContext.default)(directoryName, name, isDatabasePartitioned, contextId);
         } else {
-          return (0, _createTestContext.default)(_path.default.join(directoryName, name), testDatabase, null, null, contextId);
+          return (0, _createTestContext.default)(directoryName, name, isDatabasePartitioned, contextId);
         }
       })).then(designContexts => {
         let serverContext = (0, _contextFunction.default)(contextId);

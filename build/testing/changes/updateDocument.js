@@ -116,14 +116,15 @@ const update = (contextId, doc, user) => {
   }
 };
 
-const registerDatabase = (contextId, testDatabase, userCtx) => {
+const registerDatabase = (contextId, testDatabase) => {
   if (testDatabase) {
     if (typeof testDatabase !== 'object') {
       throw 'The test database must be an object!';
     }
 
     let {
-      database
+      database,
+      userCtx
     } = (0, _testEnvironment.getTestContext)(contextId);
     database.name = testDatabase.name ? testDatabase.name : 'testdatabase';
     database.partitioned = testDatabase.partitioned ? testDatabase.partitioned : false;

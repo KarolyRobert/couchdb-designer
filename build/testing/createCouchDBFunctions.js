@@ -18,7 +18,7 @@ let couchdbSections = {
   updates: 'update'
 };
 
-const createCouchDBFunctions = (contextId, context, parent = false) => {
+const createCouchDBFunctions = (contextId, context, parent) => {
   let server = _testBuiltIns.default.server(contextId);
 
   if (server) {
@@ -27,10 +27,8 @@ const createCouchDBFunctions = (contextId, context, parent = false) => {
       updates: _createTestUpdateFunction.default
     };
 
-    if (parent) {
-      if (!server[parent]) {
-        server[parent] = {};
-      }
+    if (!server[parent]) {
+      server[parent] = {};
     }
 
     const sectionKeys = Object.keys(couchdbSections);
@@ -42,19 +40,11 @@ const createCouchDBFunctions = (contextId, context, parent = false) => {
         for (let functionName of functionNames) {
           let functionSection = relatedFunctions[section](contextId, functionName, context);
 
-          if (parent) {
-            if (!server[parent][couchdbSections[section]]) {
-              server[parent][couchdbSections[section]] = {};
-            }
-
-            server[parent][couchdbSections[section]][functionName] = functionSection;
-          } else {
-            if (!server[couchdbSections[section]]) {
-              server[couchdbSections[section]] = {};
-            }
-
-            server[couchdbSections[section]][functionName] = functionSection;
+          if (!server[parent][couchdbSections[section]]) {
+            server[parent][couchdbSections[section]] = {};
           }
+
+          server[parent][couchdbSections[section]][functionName] = functionSection;
         }
       }
     }

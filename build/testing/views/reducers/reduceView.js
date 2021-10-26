@@ -5,8 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _testEnvironment = require("../../../../build/testing/testEnvironment");
-
 var _groupViewResult = _interopRequireDefault(require("../groupViewResult"));
 
 var _builtInReducers = _interopRequireDefault(require("./builtInReducers"));
@@ -37,11 +35,7 @@ const getReducer = reducer => {
   }
 };
 
-const reduceView = (viewResult, options, contextName, viewName) => {
-  let {
-    context
-  } = (0, _testEnvironment.getTestContext)(contextName);
-
+const reduceView = (viewResult, options, context, viewName) => {
   if (context.options && context.options.partitioned && typeof context.views[viewName].reduce === 'function') {
     throw 'Custom reduce function in a partitioned design document is not supported in couchdb!\nUse a builtin reduce function or make the design document global by options.partitioned:false';
   }

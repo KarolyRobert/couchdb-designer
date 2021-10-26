@@ -9,7 +9,7 @@ const secObj = {
   }
 };
 const userCtx = {
-  db: 'testdatabase',
+  db: '',
   name: null,
   roles: ["_admin"]
 };

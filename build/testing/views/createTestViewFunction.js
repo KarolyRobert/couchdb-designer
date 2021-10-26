@@ -15,8 +15,6 @@ var _reduceView = _interopRequireDefault(require("./reducers/reduceView"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//{"error":"query_parse_error","reason":"`partition` parameter is mandatory for queries to this view."}
-//{"error":"query_parse_error","reason":"`partition` parameter is not supported in this design doc"}
 const createTestViewFunction = (contextId, viewName, context) => {
   return (opts, partition) => {
     let {
@@ -52,7 +50,7 @@ const createTestViewFunction = (contextId, viewName, context) => {
       viewResult = (0, _testBuiltIns.emitted)(contextId);
 
       if (options.reduce) {
-        return (0, _reduceView.default)(viewResult, options, contextId, viewName);
+        return (0, _reduceView.default)(viewResult, options, context, viewName);
       } else {
         return viewResult;
       }

@@ -100,44 +100,6 @@ exports[`designer_edge stringifyed 1`] = `
       \\"options\\": {
          \\"partitioned\\": true
       }
-   },
-   {
-      \\"_id\\": \\"_design/querys\\",
-      \\"language\\": \\"query\\",
-      \\"views\\": {
-         \\"bar-index\\": {
-            \\"map\\": {
-               \\"fields\\": {
-                  \\"bar\\": \\"asc\\"
-               },
-               \\"partial_filter_selector\\": {}
-            },
-            \\"reduce\\": \\"_count\\",
-            \\"options\\": {
-               \\"def\\": {
-                  \\"fields\\": [
-                     \\"bar\\"
-                  ]
-               }
-            }
-         },
-         \\"foo-index\\": {
-            \\"map\\": {
-               \\"fields\\": {
-                  \\"foo\\": \\"asc\\"
-               },
-               \\"partial_filter_selector\\": {}
-            },
-            \\"options\\": {
-               \\"def\\": {
-                  \\"fields\\": [
-                     \\"foo\\"
-                  ]
-               }
-            },
-            \\"reduce\\": \\"_sum\\"
-         }
-      }
    }
 ]"
 `;
@@ -361,44 +323,6 @@ module.exports = {view} ;",
           },
         },
         "reduce": "_count",
-      },
-    },
-  },
-  Object {
-    "_id": "_design/querys",
-    "language": "query",
-    "views": Object {
-      "bar-index": Object {
-        "map": Object {
-          "fields": Object {
-            "bar": "asc",
-          },
-          "partial_filter_selector": Object {},
-        },
-        "options": Object {
-          "def": Object {
-            "fields": Array [
-              "bar",
-            ],
-          },
-        },
-        "reduce": "_count",
-      },
-      "foo-index": Object {
-        "map": Object {
-          "fields": Object {
-            "foo": "asc",
-          },
-          "partial_filter_selector": Object {},
-        },
-        "options": Object {
-          "def": Object {
-            "fields": Array [
-              "foo",
-            ],
-          },
-        },
-        "reduce": "_sum",
       },
     },
   },

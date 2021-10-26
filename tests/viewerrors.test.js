@@ -12,15 +12,7 @@ describe('viewErrors',() => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
-    describe('by context',() => {
-        test('all case', () => {
-            return createTestContext('./tests/design/errors',testDatabase).then(context => {
-                expect(() => context('server').view.require({},'p')).toThrow('The map function can only require library from under views section! You can fix it in tests/design/errors/views/require.js');
-                expect(() => context('server').view.getrow({},'p')).toThrow("Calling 'getRow' allows only in list functions! You can fix it in tests/design/errors/views/getrow.js");
-                expect(() => context('server').view.provides({},'p')).toThrow("Your function map from tests/design/errors/views/provides.js throw error: Calling 'provides' allows only in list and show functions! You can fix it in tests/design/errors/views/lib.lib.js");
-            })
-        })
-    })
+   
     describe('by server',() => {
         test('all case', () => {
             return createTestServer('./tests/design',testDatabase).then(server => {
