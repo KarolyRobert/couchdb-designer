@@ -5,7 +5,7 @@ With this package you can easily manage and [testing](#Testing) your couchdb des
 ### Contents:
  - [Generating javascript design documents](#Generating_javascript_design_documents)
  - [Generating Mango indexes](#Generating_Mango_indexes)
- - [Generating exapmle](#Generating_exapmle);
+ - [Generating exapmle](#Generating_exapmle)
  - [Testing](#Testing)
  - [Map/reduce testing](#Map_reduce)
  - [Update testing](#Update_testing)
@@ -128,10 +128,9 @@ The mango indexes storing too is in design documents but its laguage field is `q
  2. The given content's `partitioned` boolean field specify if the generated ddoc's indexes is partotioned or not. 
  3. Every further field in json will becomes an index by its name and by its value what follow the rules of couchdb index endpoint's index field.
 
- #### Example json for Mango indexes:
-
+#### Example json for Mango indexes:
+./design/mangoddoc.json
  ```json
- design/mangoddoc.json
 {
     "partitioned":true,
     "parent-index":{
